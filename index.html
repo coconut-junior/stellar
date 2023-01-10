@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pickup Tool</title>
+        <link rel = "stylesheet" href = "style.css">
+        <link rel = "icon" type = "image/x-icon" href = "images/favicon.ico">
+        <script src = "jquery-3.6.3.min.js"></script>
+        <script src = "main.js" defer></script>
+    </head>
+    <body>
+        <div class = "wrapper">
+            <p id = "timestamp">Last Indexed: unknown</p>
+            <div class = "file-selectors">
+                <div id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+                    <p>Drop JSON here ...</p>
+                </div>
+            </div>
+            <input id = "searchBox" type="search" placeholder = "Search">
+            <button onclick="search()">Search</button>
+            <div class = "resultBox"></div>
+        </div>
+    </body>
+</html>
