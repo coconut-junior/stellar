@@ -17,8 +17,7 @@
       "target": ["nsis"],
       "publish": {
         "provider": "github",
-        "releaseType": "release",
-        "token": "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"
+        "releaseType": "release"
       }
     },
     "mac": {
@@ -29,8 +28,7 @@
       ],
       "publish": {
         "provider": "github",
-        "releaseType": "release",
-        "token": "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"
+        "releaseType": "release"
       }
     }
   },
