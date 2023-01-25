@@ -1,88 +1,94 @@
-var jsonFile = null;
-var jsonData = null;
+// Modules to control application life and create native browser window
+const {app, BrowserWindow, shell} = require('electron');
+const path = require('path');
+const {dialog} = require('electron');
+const { fstat } = require('fs');
+const fs = require('fs');
+const {ipcMain} = require('electron');
+const {autoUpdater} = require('electron-updater');
+const {globalShortcut} = require('electron');
 
-$(`body`).keyup(function(event) {
-    if(event.which == 13) {
-        search();
-    }
+autoUpdater.autoDownload = true;
+autoUpdater.autoInstallOnAppQuit = true;
+
+var homePath = require('os').homedir();
+
+ipcMain.handle('showAbout',(event) => {
+  about();
 });
 
-function dropHandler(ev) {
-    console.log('File(s) dropped');
+ipcMain.on('getHome', function(event) {
+    event.returnValue = homePath;
+});
 
-    // Prevent default behavior (Prevent file from being opened)
-    ev.preventDefault();
-
-    if (ev.dataTransfer.items) {
-        // Use DataTransferItemList interface to access the file(s)
-        for (var i = 0; i < ev.dataTransfer.items.length; i++) {
-            // If dropped items aren't files, reject them
-            if (ev.dataTransfer.items[i].kind === 'file') {
-                var file = ev.dataTransfer.items[i].getAsFile();
-                var files = ev.dataTransfer.files;
-
-                if (file.name.includes(".json")) {
-                    jsonFile = file;
-                    $(`#drop_zone`).css('color','white');
-                    $(`#drop_zone`).css('backgroundColor', "#6B9EFF");
-                    $(`#drop_zone`).css('border', "2px solid #6B9EFF");
-                }
-                else {
-                    alert("Doesn't look like a JSON file. Please try a different file. :)");
-                }
-
-            }
-        }
-    }
+function about() {
+  const { dialog } = require('electron');
+  const options = {
+    type: 'info',
+    message: 'Pasteboard',
+    detail:'Developed and maintained by Jimmy Blanck www.jbx.design\n\nCopyright © 2023 Jimmy Blanck',
+    title:'About',
+    icon:'icon.png'
+  };
+  dialog.showMessageBox(options).then(box => {});
 }
 
-function dragOverHandler(ev) {
-    console.log('File(s) in drop zone');
-    // Prevent default behavior (Prevent file from being opened)
-    $(`#drop_zone`).css('background', "#ECF9FF")
-    $(`#drop_zone`).css('border', "2px dashed #CDCDCD")
-    $(`#drop_zone`).css('border-radius', "20px");
-    ev.preventDefault();
+function createWindow () {
+  // Create the browser window.
+  const mainWindow = new BrowserWindow({
+    width: 1280,
+    height: 768,
+    title: 'Layout Engine',
+    icon: path.join(__dirname, 'icon.icns'),
+    webPreferences: {
+      nodeIntegration: true,
+      enableRemoteModule: true,
+      contextIsolation: false,
+    },
+    titleBarStyle: "hiddenInset"
+  });
+
+  globalShortcut.register('CommandOrControl+R', function() {
+		console.log('CommandOrControl+R is pressed')
+		mainWindow.reload()
+	})
+
+  mainWindow.loadFile('index.html');
+  // Open the DevTools.
+  // mainWindow.webContents.openDevTools()
 }
 
-function search() {
-    results = [];
-    $(`.resultBox`).html('');
-    var term = $(`#searchBox`).val();
-    var reader = new FileReader();
-    
-    try {
-        reader.readAsText(jsonFile);
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.whenReady().then(() => {
+  var folders = ['Pasteboard','Pasteboard/temp','Pasteboard/scripts'];
+  for(var f = 0;f<folders.length;++f){
+    if(!fs.existsSync(homePath + '/' + folders[f])){
+      fs.mkdirSync(homePath + '/' + folders[f]);
     }
-    catch(error) {
-        console.log("couldn't read from database");
-    }
+  }
 
-    reader.onload = function() {
-        var jsonText = reader.result;
-        jsonData = JSON.parse(jsonText);
-        var products = jsonData['products'];
-        $(`#timestamp`).html(`Last Indexed: ${jsonData['timestamp']}`);
+  createWindow() 
 
-        console.log(`${products.length} products in database`);
+  app.on('activate', function () {
+    // On macOS it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  })
 
-        for (var i = 0;i<products.length;++i) {
-            var product = products[i];
-            if(product['title'].toLowerCase().includes(term.toLowerCase())) {
-                results.push(products[i]);
-                console.log(products[i]);
+  console.log("Checking for updates...");
+  autoUpdater.checkForUpdatesAndNotify()
+  //autoUpdater.checkForUpdates();
+});
 
-                $(`.resultBox`).append(`<div class = "result">
-                    <p>${product.title}</p>
-                    <p>${product.ours}</p>
-                    <p>${product.theirs}</p>
-                </div>
-                `);
-            }
-        }
+// Quit when all windows are closed, except on macOS. There, it's common
+// for applications and their menu bar to stay active until the user quits
+// explicitly with Cmd + Q.
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') app.quit()
+});
 
-        console.log(`${results.length} matches found`);
-    };
-    
-    return results;
-}
+autoUpdater.on('update-downloaded', (info) => {
+  console.log('Update downloaded');
+});

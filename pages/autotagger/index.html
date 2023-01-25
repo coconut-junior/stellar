@@ -1,0 +1,54 @@
+<!--Changelog: Updated 8/27/22 to support GO item lists-->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=UTF-8>
+		<title>Alt Tag Generator</title>
+			<script
+			  src="https://code.jquery.com/jquery-3.6.0.js"
+			  integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+			  crossorigin="anonymous">
+			</script>
+			<script src = "https://cdn.jsdelivr.net/npm/xlsx@0.14.3/dist/xlsx.full.min.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js" integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+			<link rel = "stylesheet" href = "stylesheet.css">
+
+			<link rel="preconnect" href="https://fonts.googleapis.com">
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+			<link href="https://fonts.googleapis.com/css2?family=Asap:wght@400;600&display=swap" rel="stylesheet">
+			<script src = "formatting.js"></script>
+			<script defer src = "main.js"></script>
+
+		</head>
+	<body>
+		<div class = "bodyWrapper">
+			<div class = "wrapper">
+
+				<div>
+					<div class = "file-selectors">
+						<div id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+							<p>Drop XLS here ...</p>
+					</div>
+
+					</div>
+					<textarea id = "tagBox"></textarea>
+
+					<div style = "display: flex;">
+						<div class = "buttonPrimary" onclick = "autotag()" id = "tagButton" disabled style = "width:235px;">TAG IT!</div>
+						<textarea id = "percentBox">0</textarea>
+						<p id = "percent_off">% off</p>
+					</div>
+					
+					<div class = "buttonSecondary" onclick = "download()" id = "downloadButton" disabled>Save List</div>
+
+
+				</div>
+				<textarea id = "tagList"></textarea>
+			</div>
+		</div>
+
+		<div class = "cursor"></div>
+
+	</body>
+</html>

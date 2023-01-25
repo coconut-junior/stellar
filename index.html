@@ -1,23 +1,69 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Pickup Tool</title>
+        <title>Pasteboard</title>
+        <link rel = "stylesheet" href = "fonts/cabinet-grotesk.css">
         <link rel = "stylesheet" href = "style.css">
         <link rel = "icon" type = "image/x-icon" href = "images/favicon.ico">
         <script src = "jquery-3.6.3.min.js"></script>
-        <script src = "main.js" defer></script>
+        <script src = "renderer.js" defer></script>
     </head>
     <body>
-        <div class = "wrapper">
-            <p id = "timestamp">Last Indexed: unknown</p>
-            <div class = "file-selectors">
-                <div id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
-                    <p>Drop JSON here ...</p>
+        <svg id = "wave_bg" viewBox="0 0 1728 448" xmlns="http://www.w3.org/2000/svg">
+            <path id = "waves" d="M0 0H1728V447.5C938.064 309.299 316.536 17.3351 0 447.5V0Z"/>
+            <defs>
+            <radialGradient id="paint0_radial_231_762" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(864 223.75) rotate(90) scale(223.75 864)">
+            <stop stop-color="var(--primary2)"/>
+            <stop offset="1" stop-color="var(--primary2)" stop-opacity="0"/>
+            </radialGradient>
+            </defs>
+        </svg>
+
+            <a id = "downloadLink" style = "display: none;">download</a>
+            <div class = "active wrapper" id = "searchPage" data-tab-page>
+
+                <div class = "workingArea">
+                    <div class = "resultBox"></div>
+                    <div class = "adBuilder">
+                        <h1>Ad Builder</h1>
+                        <div id="drop_zone" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
+                            <p style = "text-align: center;padding: 10px;">Drop products here to start a list ...</p>
+                        </div>
+                        <div class = "listOptions"></div>
+                        <button>Create Document</button>
+                    </div>
+                </div>
+
+                <div class = "toolbar">
+                    <div class = "controls">
+                        <input id = "searchBox" type="search" placeholder = "Search" oninput = "search()">
+                        <!-- <button id = "searchButton" onclick="search()">Search</button> -->
+                    </div>
+                    <p id = "timestamp">Last Indexed: Never</p>
+                    <p id = "resultCounter">0 Results</p>
+                    <div class = "viewToggle" onclick = "toggleView()">
+                        <div class = "toggleSwitch"></div>
+                    </div>
                 </div>
             </div>
-            <input id = "searchBox" type="search" placeholder = "Search">
-            <button onclick="search()">Search</button>
-            <div class = "resultBox"></div>
-        </div>
+
+            <div class = "wrapper" id = "automationPage" data-tab-page>
+                <h1>Automation Dashboard</h1>
+            </div>
+
+            <div class = "wrapper" id = "settingsPage" data-tab-page>
+                <h1>Settings</h1>
+            </div>
+
+            <div id = "ollieLogo" onclick = "openWebsite()"></div>
+            <div id = "betaIcon"></div>
+
+            <ul class = "navigation">
+                <li class = "navButton" id = "navSearch" title = "Home" data-tab-target = "#searchPage" style = "background-color: var(--primary3)"></li>
+                <li class = "navButton" id = "navAutomation" title = "Create Alt Tags" data-tab-target = "#automationPage"></li>
+                <li class = "navButton" id = "navSettings" title = "Settings" data-tab-target = "#settingsPage"></li>
+                <li class = "navButton" id = "navInfo" title = "About" onclick="showAbout()"></li>
+            </ul>
+            
     </body>
 </html>

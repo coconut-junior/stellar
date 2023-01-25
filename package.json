@@ -1,0 +1,55 @@
+{
+  "name": "pasteboard",
+  "productName": "Pasteboard",
+  "version": "1.0.2",
+  "description": "Quickly access creative assets and find product info.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js",
+    "pack": "electron-builder --dir",
+    "lint": "echo \"No linting configured\"",
+    "postinstall": "electron-builder install-app-deps",
+    "release": "electron-builder -mw --x64 --arm64"
+  },
+  "build": {
+    "appId": "design.jbx.pasteboard",
+    "win": {
+      "target": ["nsis"],
+      "publish": {
+        "provider": "github",
+        "releaseType": "release",
+        "token": "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"
+      }
+    },
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "zip",
+        "dmg"
+      ],
+      "publish": {
+        "provider": "github",
+        "releaseType": "release",
+        "token": "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"
+      }
+    }
+  },
+  "repository": "https://github.com/coconut-junior/pasteboard",
+  "keywords": [],
+  "author": {
+    "name": "Jimmy Blanck",
+    "email": "blanckjm@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@electron/notarize": "^1.2.3",
+    "electron-notarize": "^1.2.2",
+    "electron-updater": "^5.3.0",
+    "jquery": "^3.6.3"
+  },
+  "devDependencies": {
+    "electron": "22.0.3",
+    "electron-builder": "^23.6.0",
+    "node": "^19.4.0"
+  }
+}
