@@ -5,8 +5,9 @@
         <link rel = "stylesheet" href = "fonts/cabinet-grotesk.css">
         <link rel = "stylesheet" href = "style.css">
         <link rel = "icon" type = "image/x-icon" href = "images/favicon.ico">
-        <script src = "jquery-3.6.3.min.js"></script>
         <script src = "renderer.js" defer></script>
+        <script src = "indesign_io.js" defer></script>
+        
     </head>
     <body>
         <svg id = "wave_bg" viewBox="0 0 1728 448" xmlns="http://www.w3.org/2000/svg">
@@ -22,17 +23,7 @@
             <a id = "downloadLink" style = "display: none;">download</a>
             <div class = "active wrapper" id = "searchPage" data-tab-page>
 
-                <div class = "workingArea">
-                    <div class = "resultBox"></div>
-                    <div class = "adBuilder">
-                        <h1>Ad Builder</h1>
-                        <div id="drop_zone" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)">
-                            <p style = "text-align: center;padding: 10px;">Drop products here to start a list ...</p>
-                        </div>
-                        <div class = "listOptions"></div>
-                        <button>Create Document</button>
-                    </div>
-                </div>
+                
 
                 <div class = "toolbar">
                     <div class = "controls">
@@ -41,14 +32,32 @@
                     </div>
                     <p id = "timestamp">Last Indexed: Never</p>
                     <p id = "resultCounter">0 Results</p>
-                    <div class = "viewToggle" onclick = "toggleView()">
-                        <div class = "toggleSwitch"></div>
+                    <div class = "viewOptions">
+                        <div class = "viewToggle" onclick = "toggleView()">
+                            <div class = "toggleSwitch"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class = "workingArea">
+                    <div class = "resultBox"></div>
+                    <div class = "adBuilder">
+                        <h1>Ad Builder</h1>
+                        <ul id = "adList"></ul>
+                        <div id="drop_zone" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)" ondragleave="dragLeave()">
+                            <p style = "text-align: center;padding: 10px;">Drop products here to start a list ...</p>
+                        </div>
+                        <div class = "listOptions"></div>
+                        <button>Create Document</button>
                     </div>
                 </div>
             </div>
 
             <div class = "wrapper" id = "automationPage" data-tab-page>
                 <h1>Automation Dashboard</h1>
+                <div class = "automationTasks">
+                    
+                </div>
             </div>
 
             <div class = "wrapper" id = "settingsPage" data-tab-page>

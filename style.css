@@ -48,11 +48,11 @@
 ::-webkit-scrollbar {
     width: 10px;
 }
+
 ::-webkit-scrollbar-track {
     border-radius: 10px;
     background-color: var(--secondary2);
     margin: 20px;
-    right: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -193,6 +193,7 @@ button:active {
     border: 2px dashed var(--primary1);
     background-color: transparent;
     width:  100%;
+    min-height: 200px;
     height: 100%;
     border-radius: 20px;
     transition: 0.6s;
@@ -229,7 +230,7 @@ input[type="search"], input[type="text"] {
 
 input[type="search"] {
     width: 640px;
-    background-image: url('images/search.svg');
+    background-image: url('images/search_black.svg');
     background-size: 20px;
     background-position: left;
     background-position-x: 20px;
@@ -325,7 +326,7 @@ input[type="search"]:active, input[type="text"]:active {
 
 .resultBox {
     overflow-x:hidden;
-    height: 60vh;
+    height: calc(100vh - 270px);
     width: 540px;
     padding: 20px;
     border-radius: 20px;
@@ -333,6 +334,7 @@ input[type="search"]:active, input[type="text"]:active {
     background-size: 50px;
     background-repeat: no-repeat;
     background-position: center;
+    background-color: var(--secondary2);
 }
 
 #betaIcon {
@@ -367,7 +369,8 @@ input[type="search"]:active, input[type="text"]:active {
 }
 
 hr {
-    border: 1px dashed lightgray;
+    border: 0;
+    border-top: 2px dotted lightgray;
     margin: 10px 0px 10px 0px;
 }
 
@@ -375,6 +378,20 @@ hr {
     font-size: 24px;
     font-weight: bold;
     padding-left: 20px;
+}
+
+.viewOptions {
+    position: relative;
+    top: -60px;
+    left: -357px;
+    height: 80px;
+    width: auto;
+    padding: 0px 20px 5px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px 20px 0px 0px;
+    background-color: var(--secondary2);
 }
 
 .viewToggle {
@@ -391,8 +408,6 @@ hr {
     background-position: center;
     transition: 0.3s;
     position: relative;
-    top: 0px;
-    left: -350px;
     flex-shrink: 0;
 }
 
@@ -428,7 +443,7 @@ hr {
 .adBuilder {
     background-color: var(--white);
     width: 200px;
-    height: 70vh;
+    height: calc(100vh - 270px);
     border-radius: 20px;
     display: flex;
     flex-direction: column;
@@ -482,6 +497,42 @@ hr {
     padding: 10px;
 }
 
+#adList {
+    padding: 5px;
+    display: none;
+    height: 100%;
+    width: auto;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+}
+
+.adItem {
+    padding: 5px;
+    border-radius: 5px;
+    background-color: blue;
+    background-color: var(--gray);
+    color: var(--black);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.removeButton {
+    height: 20px;
+    width: 20px;
+    background-image: url('images/remove.svg');
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.removeButton:active {
+    scale: 0.9;
+}
+
 @media(max-width: 1024px) {
     .wrapper {
         width: 100%;
@@ -489,9 +540,8 @@ hr {
     .workingArea,.toolbar {
         width: 100%
     }
-    .viewToggle {
-        left: -220px;
-        top: -40px;
+    .viewOptions {
+        left: -226px;
     }
     .navigation {
         flex-direction: row;
@@ -520,7 +570,7 @@ hr {
     display:flex;
 }
 
-@media(prefers-color-scheme: dark) {
+/* @media(prefers-color-scheme: dark) { */
     /*dark mode*/
     :root {
         --white: #212836;
@@ -529,6 +579,7 @@ hr {
         --primary0: #384357;
         --primary1: #2C3340;
         --primary2: #212836;
+        --primary3: #4B73FF;
         --secondary1: #0D1520;
         --secondary2: #121927;
         --waveFill: url(#paint0_radial_231_762);
@@ -536,9 +587,15 @@ hr {
     .resultIcon {
         filter: invert();
     }
+    #searchBox {
+        background-image: url('images/search_default.svg');
+    }
     .resultBox {
         background-image: url('images/loading_dark.gif');
     }
+    .removeButton {
+        filter:invert();
+    }
     /*dark mode*/
-}
+/* } */
 

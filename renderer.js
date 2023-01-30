@@ -1,10 +1,20 @@
 const { shell } = require('electron');
 const fs = require("fs");
 const {ipcRenderer} = require('electron');
+const path = require('path');
+const { addListener } = require('process');
 const ViewModes = {normal: 0, compact: 1};
 window.$ = window.jQuery = require('jquery');
 
+var jsonData = null;
+var dbURL = "https://www.dropbox.com/s/iy2ykin3udwdbb4/product_db.json?dl=1";
+var viewMode = ViewModes.normal;
+var results = [];
+var products = [];
+var adBuilderList = [];
 
+
+//assign tab click events
 $(`[data-tab-target]`).each(function(index,value) {
     $(this).on('click', function(event) {
         $(`[data-tab-target]`).each(function(index,value) {
@@ -22,45 +32,12 @@ $(`[data-tab-target]`).each(function(index,value) {
     });
 });
 
-var jsonData = null;
-var dbURL = "https://www.dropbox.com/s/iy2ykin3udwdbb4/product_db.json?dl=1";
-var viewMode = ViewModes.normal;
-var results = [];
-var products = [];
-var adBuilderList = [];
-
 function showAbout() {
     ipcRenderer.invoke('showAbout');
 }
 
 function getHomePath() {
     return ipcRenderer.sendSync('getHome');
-}
-
-runJSX('indexer.jsx');
-
-function runJSX(scriptName) {
-    //create bash script
-    let homePath = getHomePath();
-    let bashScript = `osascript -e 'tell application id "com.adobe.indesign"\ndo script "${homePath}/Pasteboard/scripts/${scriptName}" language javascript\nend tell'`;
-
-    fs.writeFileSync(`${homePath}/Pasteboard/scripts/shell.sh`, bashScript);
-    let script = `${homePath}/Pasteboard/scripts/shell.sh`;
-
-    //run bash script
-    // const { exec } = require("child_process");
-
-    // exec(`bash ${script}`, (error, stdout, stderr) => {
-    //     if (error) {
-    //         console.log(`error: ${error.message}`);
-    //         return;
-    //     }
-    //     if (stderr) {
-    //         console.log(`stderr: ${stderr}`);
-    //         return;
-    //     }
-    //     console.log(`stdout: ${stdout}`);
-    // });
 }
 
 function createTitleBar() {
@@ -78,12 +55,41 @@ function drag(event) {
     event.dataTransfer.setData('text',event.target.id);
 }
 
+function dragLeave(event) {
+    $(`#drop_zone`).css('border-color','var(--primary1)');
+    $(`#drop_zone`).css('background-color','transparent');
+    $(`.adBuilder`).css('transform','perspective(50em) rotateX(0deg)');
+    $(`.adBuilder`).css('scale','1');
+}
+
 function dropHandler(event) {
     event.preventDefault();
     let id = event.dataTransfer.getData('text/plain');
     let product = products[parseInt(id.split('_')[1])];
-    adBuilderList.push(product);
-    console.log(product.title);
+    
+    if(!adBuilderList.includes(product)) {
+        adBuilderList.push(product);
+        $(`#adList`).css('display','flex');
+        $(`#adList`).append(
+            `<li class = "adItem">${product.title}
+                <div class = "removeButton"></div>
+            </li>`
+        )
+        $(`.adItem`).on('click',(event)=>{
+            $.each(adBuilderList, function(index, value) {
+                if(value.title == event.target.parentElement.innerText) {
+                    adBuilderList.splice(index,1);
+                    return false;
+                }
+            });
+
+            if(adBuilderList.length == 0) {
+                $(`#adList`).css('display','none');
+            }
+            event.target.parentElement.remove();
+        });
+    }
+
     $(`#drop_zone`).css('border-color','var(--primary1)');
     $(`#drop_zone`).css('background-color','transparent');
     $(`.adBuilder`).css('transform','perspective(50em) rotateX(0deg)');
@@ -165,14 +171,11 @@ function readDatabase(jsonText) {
     $(`.resultBox`).html('');
 
     let term = $(`#searchBox`).val();
-    console.log(`searching for ${term}...`);
     
     try {
         jsonData = JSON.parse(jsonText);
         products= jsonData['products'];
         $(`#timestamp`).html(`Last Indexed: ${jsonData['timestamp']}`);
-        
-        console.log(`${products.length} products in database`);
 
         for (let i in products) {
             let product = products[i];
@@ -222,7 +225,13 @@ function readDatabase(jsonText) {
                 `);
             }
 
-            $(`#resultCounter`).html(`${results.length} Results`);
+            if(results.length == 1) {
+                $(`#resultCounter`).html(`${results.length} Result`);
+            }
+            else {
+                $(`#resultCounter`).html(`${results.length} Results`);
+            }
+
             $(`.resultBox`).css("background-size","0");
         }
     }
