@@ -214,7 +214,7 @@ function readDatabase(jsonText) {
 
                         <div style = "display:flex;gap:10px;flex-direction:column;">
                             <button class = "entryButton" id = "flyerButton" onclick="openDoc('${product.source}')">Flyer</button>
-                            <button class = "entryButton" id = "productBlockButton" onclick="alert('Coming soon!')">Block</button>
+                            <button class = "entryButton" id = "productBlockButton" onclick="openProductBlock('${product.source}','${product.indexes}')">Block</button>
                         </div>
                     
                         <button class = "entryButton" id = "assetButton" onclick="downloadAssets('${links}')">Assets</button>
@@ -240,10 +240,6 @@ function readDatabase(jsonText) {
     }
     
     return results;
-}
-
-function openDoc(fileName) {
-    shell.openPath(getRelativePath(`${fileName}`));
 }
 
 function downloadAssets(assetList) {

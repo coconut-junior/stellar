@@ -1,17 +1,70 @@
 const { run } = require("node:test");
+const dependencyURL = "https://www.dropbox.com/s/0t7yxgxf3msoll5/dependencies.json?dl=1";
+var dependencies = [];
+var scriptPath = getScriptPath();
+const { exec } = require("child_process");
 
-function getJSX(scriptName) {
-    // const fs = require("fs");
-    // let contents = fs.readFileSync(`scripts/indesign/${scriptName}`,{encoding:'utf8', flag:'r'});
-    let iframe = document.createElement('iframe');
-    iframe.setAttribute('src',`scripts/indesign/${scriptName}`);
-    contents = iframe.contentWindow.document.body.innerHTML;
-    console.log(contents);
+$.ajax({
+    url: dependencyURL,
+    success: function(data) {
+        dependencies = JSON.parse(data);
+        downloadDependencies();
+    },
+    statusCode: {
+        404: function() {
+            console.log("Error 404: Couldn't reach the database.");
+        },
+    }
+});
+
+function downloadDependencies() {
+    console.log('Downloading dependencies...')
+    console.log(dependencies);
+    dependencies['scripts'].forEach(function(dependency) {
+        var fileName = dependency['filename'];
+        var filePath = `${scriptPath}/${fileName}`;
+        var homePath = getHomePath();
+        
+        $.ajax({
+            url: dependency['url'],
+            success: function(data) {
+                //fs.chmod(scriptPath, '755', function(error){console.log(error);});
+                fs.writeFileSync(`${getScriptPath()}/${fileName}`, data);
+            }
+        });
+        
+    });
 }
 
-runJSX(`indexer.jsx`,null);
+function openDoc(fileName) {
+    shell.openPath(getRelativePath(`${fileName}`));
+}
 
+function openProductBlock(fileName, indexes){
+    runJSX(`isolate_items.jsx`,`{"${fileName}","${indexes}"}`);
+}
+
+//runJSX(`isolate_items.jsx`,`{"/Users/jblanck/Library/CloudStorage/OneDrive-SharedLibraries-OlliesBargainOutlet/Creative Services - Designs/emails/2023/item_emails/1_31_coffee_email/1_31_coffee_email.indd","2,7"}`);
 //runTool('autotagger/index.html');
+
+function getScriptPath() {
+    let path = getHomePath() + `/Library/Preferences/Adobe InDesign`;
+    let folders = fs.readdirSync(path);
+    let latestVersionInt = 0;
+    let latestVersion = '';
+
+    folders.forEach( function(element, index) {
+        if(element.toLowerCase().match('version')) {
+            //get latest version
+            let version = parseInt(element.replace(/[^0-9]/g, ''));
+            if(version > latestVersionInt) {latestVersion = element;}
+        }
+    });
+
+    return path + '/' + latestVersion + '/en_US/Scripts/Scripts Panel';
+}
+
+console.log(getScriptPath());
 
 function getInDesignPath() {
     const fs = require("fs");
@@ -35,13 +88,12 @@ function runJSX(scriptName, args) {
     //create bash script
     if(args == null || args == ''){args = `{""}`}
     let homePath = getHomePath();
-    let bashScript = `osascript -e 'tell application id "com.adobe.indesign"\nset args to ${args}\ndo script "${getInDesignPath()}/Scripts/Community/Scripts Panel/${scriptName}" language javascript with arguments args\nend tell'`;
+    let bashScript = `osascript -e 'tell application id "com.adobe.indesign"\nset args to ${args}\ndo script "${scriptPath}/${scriptName}" language javascript with arguments args\nend tell'`;
     console.log(bashScript);
     fs.writeFileSync(`${homePath}/Pasteboard/scripts/shell.sh`, bashScript);
     let script = `${homePath}/Pasteboard/scripts/shell.sh`;
 
     //run bash script
-    const { exec } = require("child_process");
 
     exec(`bash ${script}`, (error, stdout, stderr) => {
         if (error) {
