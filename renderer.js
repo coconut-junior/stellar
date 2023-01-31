@@ -242,26 +242,6 @@ function readDatabase(jsonText) {
     return results;
 }
 
-function downloadAssets(assetList) {
-    let assets = assetList.split(',');
-    console.log("downloading assets...");
-    
-    for (let i in assets) {
-        let asset = assets[i];
-        if(asset.match("file:")) {
-            let link = "file://" + asset.replace("file:","");
-            console.log(link);
-            if(fs.existsSync(link.replace('file://',''))) {
-                $(`#downloadLink`).attr('href',link);
-                $(`#downloadLink`)[0].click();
-            }
-            else {
-                console.log('file does not exist');
-            }
-        }
-    }
-}
-
 function openWebsite() {
     console.log('opening website');
     window.open('https://jbx.design/','_blank','width=1280px,height=720px');

@@ -125,3 +125,23 @@ function runTool(fileName, args) {
             console.log('unknown tool type');
     }
 }
+
+function downloadAssets(assetList) {
+    let assets = assetList.split(',');
+    console.log("downloading assets...");
+    
+    for (let i in assets) {
+        let asset = assets[i];
+        if(asset.match("file:")) {
+            let link = "file://" + getRelativePath(asset.replace("file:","").replaceAll('%20',' '));
+            console.log(link);
+            if(fs.existsSync(link.replace('file://',''))) {
+                $(`#downloadLink`).attr('href',link);
+                $(`#downloadLink`)[0].click();
+            }
+            else {
+                console.log('file does not exist');
+            }
+        }
+    }
+}
