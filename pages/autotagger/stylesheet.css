@@ -25,6 +25,8 @@ body {
   background-size: contain;
   background-repeat: no-repeat;
   pointer-events: none;
+
+  display: none;
 }
 
 .file-selectors {

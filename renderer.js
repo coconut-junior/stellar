@@ -53,6 +53,7 @@ function createTitleBar() {
 
 function drag(event) {
     event.dataTransfer.setData('text',event.target.id);
+    $(`.adBuilder`).css('transition','0.3s');
 }
 
 function dragLeave(event) {
@@ -62,8 +63,18 @@ function dragLeave(event) {
     $(`.adBuilder`).css('scale','1');
 }
 
+function dragStart(event) {
+    
+}
+
+function dragEnd(event) {
+    event.preventDefault();
+    $(`.adBuilder`).css('transition','0s');
+}
+
 function dropHandler(event) {
     event.preventDefault();
+    $(`.adBuilder`).css('transition','0s');
     let id = event.dataTransfer.getData('text/plain');
     let product = products[parseInt(id.split('_')[1])];
     
@@ -122,6 +133,9 @@ function viewCompact() {
     $(`.resultButtons`).css('display','none');
     $(`.toggleSwitch`).css('left',"0px");
     $(`.toggleSwitch`).css('background-image',"url('images/compactview_icon.svg')");
+    $(`hr`).css('border','0');
+    $(`hr`).css('border-right','2px dotted lightgray');
+    $(`hr`).css('margin','0px 30px 0px 0px');
 }
 
 function viewNormal() {
@@ -130,6 +144,9 @@ function viewNormal() {
     $(`.resultButtons`).css('display','flex');
     $(`.toggleSwitch`).css('left',"40px");
     $(`.toggleSwitch`).css('background-image',"url('images/normalview_icon.svg')");
+    $(`hr`).css('border','0');
+    $(`hr`).css('border-top','2px dotted lightgray');
+    $(`hr`).css('margin','10px 0px 10px 0px');
 }
 
 
@@ -213,11 +230,11 @@ function readDatabase(jsonText) {
                     <div class = "resultButtons">
 
                         <div style = "display:flex;gap:10px;flex-direction:column;">
-                            <button class = "entryButton" id = "flyerButton" onclick="openDoc('${product.source}')">Flyer</button>
+                            <button class = "entryButton" id = "flyerButton" onclick="openDoc('${product.source}')">Ad</button>
                             <button class = "entryButton" id = "productBlockButton" onclick="openProductBlock('${product.source}','${product.indexes}')">Block</button>
                         </div>
                     
-                        <button class = "entryButton" id = "assetButton" onclick="downloadAssets('${links}')">Assets</button>
+                        <button class = "entryButton" id = "assetButton" title = "Save Images" onclick="downloadAssets('${links}')"></button>
                     </div>
                 
                 </div>
