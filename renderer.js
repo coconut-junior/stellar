@@ -230,8 +230,8 @@ function readDatabase(jsonText) {
                     <div class = "resultButtons">
 
                         <div style = "display:flex;gap:10px;flex-direction:column;">
-                            <button class = "entryButton" id = "flyerButton" onclick="openDoc('${product.source}')">Ad</button>
-                            <button class = "entryButton" id = "productBlockButton" onclick="openProductBlock('${product.source}','${product.indexes}')">Block</button>
+                            <button class = "entryButton" id = "flyerButton" onclick="openDoc('${product.source}')">Open Ad</button>
+                            <button class = "entryButton" id = "productBlockButton" onclick="openProductBlock('${product.source}','${product.indexes}')">Open Block</button>
                         </div>
                     
                         <button class = "entryButton" id = "assetButton" title = "Save Images" onclick="downloadAssets('${links}')"></button>

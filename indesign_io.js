@@ -41,7 +41,7 @@ function openDoc(fileName) {
 }
 
 function openProductBlock(fileName, indexes){
-    runJSX(`isolate_items.jsx`,`{"${fileName}","${indexes}"}`);
+    runJSX(`isolate_items.jsx`,`{"${getRelativePath(fileName)}","${indexes}"}`);
 }
 
 //runJSX(`isolate_items.jsx`,`{"/Users/jblanck/Library/CloudStorage/OneDrive-SharedLibraries-OlliesBargainOutlet/Creative Services - Designs/emails/2023/item_emails/1_31_coffee_email/1_31_coffee_email.indd","2,7"}`);

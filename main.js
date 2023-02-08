@@ -25,7 +25,7 @@ function about() {
   const { dialog } = require('electron');
   const options = {
     type: 'info',
-    message: 'Pasteboard',
+    message: 'Pasteboard ' + app.getVersion(),
     detail:'Developed and maintained by Jimmy Blanck www.jbx.design\n\nCopyright © 2023 Jimmy Blanck',
     title:'About',
     icon:'icon.png'

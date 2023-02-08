@@ -33,7 +33,7 @@
     --primary3: #4B73FF;
 
     --secondary1: #FBFEFF;
-    --secondary2: #D1EFFF;
+    --secondary2: #e4f6ff;
 
     --black: #262121;
     --gray : #ECF6FA;
@@ -133,7 +133,7 @@ button {
     background-color: var(--primary1);
     color: var(--primary3);
     border-radius: 10px;
-    transition: 0.3s;
+    transition: 0.1s;
     border: 0;
     padding: 20px;
     min-width: 80px;
@@ -451,7 +451,7 @@ hr {
     flex-direction: column;
     gap: 10px;
     padding: 20px;
-    box-shadow: 0px 4px 100px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 4px 100px rgba(0, 0, 0, 0.1);
 }
 
 .result {
@@ -464,7 +464,7 @@ hr {
     border-radius: 20px;
     gap: 10px;
     border: 3px solid var(--gray);
-    transition: 0.2s;
+    transition: 0.3s;
 }
 
 .result:hover {
@@ -584,7 +584,7 @@ hr {
         --primary3: #4B73FF;
         --secondary1: #0D1520;
         --secondary2: #121927;
-        --waveFill: url(#paint0_radial_231_762);
+        --waveFill: #0D1520;
     }
     .resultIcon {
         filter: invert();
