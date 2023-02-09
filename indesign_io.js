@@ -47,6 +47,21 @@ function openProductBlock(fileName, indexes){
 //runJSX(`isolate_items.jsx`,`{"/Users/jblanck/Library/CloudStorage/OneDrive-SharedLibraries-OlliesBargainOutlet/Creative Services - Designs/emails/2023/item_emails/1_31_coffee_email/1_31_coffee_email.indd","2,7"}`);
 //runTool('autotagger/index.html');
 
+function buildAd() {
+    let blocks = [];
+    adBuilderList.forEach(function(product, index) {
+        let elements = product.indexes;
+        let url = getRelativePath(product.source);
+        blocks.push(url + ':' + elements);
+    });
+    let blockList = blocks.join(';');
+    runJSX(`build_ad.jsx`,`{"${blockList}"}`);
+
+    adBuilderList = [];
+    $(`#adList`).html('');
+    $(`#adList`).css('display','none');
+}
+
 function getScriptPath() {
     let path = getHomePath() + `/Library/Preferences/Adobe InDesign`;
     let folders = fs.readdirSync(path);
