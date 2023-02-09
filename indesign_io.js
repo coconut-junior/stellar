@@ -121,6 +121,8 @@ function runJSX(scriptName, args) {
         }
         console.log(`stdout: ${stdout}`);
     });
+
+    minimizeApp();
 }
 
 function runTool(fileName, args) {

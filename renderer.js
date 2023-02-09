@@ -40,6 +40,10 @@ function getHomePath() {
     return ipcRenderer.sendSync('getHome');
 }
 
+function minimizeApp() {
+    ipcRenderer.invoke('minimize');
+}
+
 function createTitleBar() {
     var windowTopBar = document.createElement('div')
     windowTopBar.style.width = "100%"
@@ -230,8 +234,8 @@ function readDatabase(jsonText) {
                     <div class = "resultButtons">
 
                         <div style = "display:flex;gap:10px;flex-direction:column;">
-                            <button class = "entryButton" id = "flyerButton" onclick="openDoc('${product.source}')">Open Ad</button>
-                            <button class = "entryButton" id = "productBlockButton" onclick="openProductBlock('${product.source}','${product.indexes}')">Open Block</button>
+                            <button class = "entryButton" id = "flyerButton" onclick="openDoc('${product.source}')">&#128240; Open Ad</button>
+                            <button class = "entryButton" id = "productBlockButton" onclick="openProductBlock('${product.source}','${product.indexes}')">&#129330; Pick Up</button>
                         </div>
                     
                         <button class = "entryButton" id = "assetButton" title = "Save Images" onclick="downloadAssets('${links}')"></button>

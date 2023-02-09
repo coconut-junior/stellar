@@ -17,6 +17,10 @@ ipcMain.handle('showAbout',(event) => {
   about();
 });
 
+ipcMain.handle('minimize', function(event){
+  BrowserWindow.getFocusedWindow().minimize();
+});
+
 ipcMain.on('getHome', function(event) {
     event.returnValue = homePath;
 });
