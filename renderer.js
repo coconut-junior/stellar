@@ -86,7 +86,7 @@ function dropHandler(event) {
                 <div class = "removeButton"></div>
             </li>`
         )
-        $(`.adItem`).on('click',(event)=>{
+        $(`.adItem .removeButton`).on('click',(event)=>{
             $.each(adBuilderList, function(index, value) {
                 if(value.title == event.target.parentElement.innerText) {
                     adBuilderList.splice(index,1);
