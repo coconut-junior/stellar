@@ -21,15 +21,27 @@ function downloadDependencies() {
     console.log('Downloading dependencies...')
     console.log(dependencies);
     dependencies['scripts'].forEach(function(dependency) {
-        var fileName = dependency['filename'];
-        var filePath = `${scriptPath}/${fileName}`;
-        var homePath = getHomePath();
+        let fileName = dependency['filename'];
+        let scriptName = dependency['name'];
+        let version = dependency['version'];
+        let hidden = dependency['hidden'];
+        let filePath = `${scriptPath}/${fileName}`;
+        let homePath = getHomePath();
         
         $.ajax({
             url: dependency['url'],
             success: function(data) {
-                //fs.chmod(scriptPath, '755', function(error){console.log(error);});
                 fs.writeFileSync(`${getScriptPath()}/${fileName}`, data);
+                if(!hidden) {
+                    let html = `
+                    <div class="result" style = "padding:10px;">
+                        <h2 class = "productTitle">${scriptName}</h2>
+                        <p class = "resultEntry">Version: ${version}</p>
+                        <button onclick = "runJSX('${fileName}',null)">&#9889; Launch</button>
+                    </div>
+                    `;
+                    $(`#automationTasks`).append(html);
+                }
             }
         });
         

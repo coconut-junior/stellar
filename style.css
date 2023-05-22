@@ -1,29 +1,3 @@
-:root {
-    /*pink theme*/
-    --white: white;
-    --primary0: #FFEBEB;
-    --primary1: #FFDADA;
-    --primary2: #FF9E9E;
-    --primary3: #FF7070;
-
-    --secondary1: #FFF8E1;
-    --secondary2: #fbecb9;
-
-    --black: #262121;
-    --gray : #F4F2FB;
-    --waveFill: #fbecb9;
-}
-
-/*lemony*/
-/* :root {
-    --white: white;
-    --primary0: #f1f1f6;
-    --primary1: #ECEEF3;
-    --primary2: #9aaef8;
-    --primary3: #003049;
-} */
-/*lemony*/
-
 /*mint blue*/
 :root {
     --white: white;
@@ -37,7 +11,6 @@
 
     --black: #262121;
     --gray : #ECF6FA;
-    --waveFill: url(#paint0_radial_231_762);
 }
 /**/
 
@@ -77,22 +50,24 @@ p, h1, input {
 h1 {
     font-size: 24px;
     text-align: center;
+    padding: 40px;
 }
 
 li {
     list-style: none;
 }
 
-#wave_bg {
-    position: absolute;
-    fill:var(--secondary2);
-    width: 100%;
-    top:0;
-    left:0;
+#automationTasks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
 }
 
-#waves {
-    fill: var(--waveFill);
+.cardGroup {
+    padding: 0px 20px 20px 20px;
+    background-color: var(--secondary2);
+    height: 80vh;
+    border-radius: 20px;
 }
 
 .medium {
@@ -325,6 +300,8 @@ input[type="search"]:active, input[type="text"]:active {
 }
 
 .resultBox {
+    display: grid;
+    grid-gap: 10px;
     overflow-x:hidden;
     height: calc(100vh - 270px);
     width: 540px;
@@ -375,16 +352,17 @@ hr {
     margin: 10px 0px 10px 0px;
 }
 
-.productTitle {
-    font-size: 24px;
+h2 {
+    text-align: center;
+    color: var(--black);
+    font-size: 20px;
     font-weight: bold;
-    padding-left: 20px;
 }
 
 .viewOptions {
     position: relative;
-    top: -60px;
-    left: -357px;
+    top: -80px;
+    left: -380px;
     height: 80px;
     width: auto;
     padding: 0px 20px 5px 20px;
@@ -392,7 +370,7 @@ hr {
     align-items: center;
     justify-content: center;
     border-radius: 20px 20px 0px 0px;
-    background-color: var(--secondary2);
+    background-color: none;
 }
 
 .viewToggle {
@@ -455,15 +433,14 @@ hr {
 }
 
 .result {
-    margin-bottom: 10px;
     background-color: var(--white);
     display:flex;
     flex-direction: column;
-    padding: 20px 20px 20px 0px;
+    padding: 20px 20px 20px 20px;
     cursor: grab;
     border-radius: 20px;
     gap: 10px;
-    border: 3px solid var(--gray);
+    border: 2px solid var(--gray);
     transition: 0.3s;
 }
 
@@ -572,7 +549,13 @@ hr {
     display:flex;
 }
 
-/* @media(prefers-color-scheme: dark) { */
+@media (max-width: 480px) {
+    #automationTasks {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(prefers-color-scheme: dark) {
     /*dark mode*/
     :root {
         --white: #212836;
@@ -599,5 +582,5 @@ hr {
         filter:invert();
     }
     /*dark mode*/
-/* } */
+}
 

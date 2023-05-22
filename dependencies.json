@@ -1,12 +1,44 @@
 {
     "scripts": [
         {
+            "name": "Isolate PageItems",
             "filename":"isolate_items.jsx",
-            "url":"https://www.dropbox.com/s/hz4g8wmd64u2lyv/isolate_items.jsx?dl=1"
+            "url":"https://www.dropbox.com/s/hz4g8wmd64u2lyv/isolate_items.jsx?dl=1",
+            "hidden": true,
+            "version": 1.0,
+            "description": ""
         },
         {
+            "name": "Build Ad",
             "filename":"build_ad.jsx",
-            "url":"https://www.dropbox.com/s/07nz2t1c6rx69wc/build_ad.jsx?dl=1"
+            "url":"https://www.dropbox.com/s/07nz2t1c6rx69wc/build_ad.jsx?dl=1",
+            "hidden": true,
+            "version": 1.0,
+            "description": ""
+        },
+        {
+            "name": "Clean Up Document",
+            "filename":"cleanup.jsx",
+            "url":"https://www.dropbox.com/s/ixn1oj7apksj8e0/cleanup.jsx?dl=1",
+            "hidden": false,
+            "version": 1.0,
+            "description": ""
+        },
+        {
+            "name": "Clean Up Document Config",
+            "filename":"cleanup_demo.ini",
+            "url":"https://www.dropbox.com/s/vd4amv42wxz2i1f/cleanup_demo.ini?dl=1",
+            "hidden":true,
+            "version": 1.0,
+            "description":""
+        },
+        {
+            "name": "Fix Broken Links",
+            "filename":"search_for_links.jsx",
+            "url":"https://www.dropbox.com/s/yfhs7rypnwn2u9z/search_for_links.jsx?dl=1",
+            "hidden":false,
+            "version": 1.2,
+            "description": ""
         }
     ]
 }

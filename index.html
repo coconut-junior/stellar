@@ -6,26 +6,18 @@
         <link rel = "stylesheet" href = "fonts/cabinet-grotesk.css">
         <link rel = "stylesheet" href = "style.css">
         <link rel = "icon" type = "image/x-icon" href = "images/favicon.ico">
-        <script src = "database.js"></script>
+
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
         <script src = "renderer.js" defer></script>
         <script src = "indesign_io.js" defer></script>
+        <script src = "lytho.js" defer></script>
         
     </head>
     <body>
-        <svg id = "wave_bg" viewBox="0 0 1728 448" xmlns="http://www.w3.org/2000/svg">
-            <path id = "waves" d="M0 0H1728V447.5C938.064 309.299 316.536 17.3351 0 447.5V0Z"/>
-            <defs>
-            <radialGradient id="paint0_radial_231_762" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(864 223.75) rotate(90) scale(223.75 864)">
-            <stop stop-color="var(--primary2)"/>
-            <stop offset="1" stop-color="var(--primary2)" stop-opacity="0"/>
-            </radialGradient>
-            </defs>
-        </svg>
+
 
             <a id = "downloadLink" style = "display: none;">download</a>
             <div class = "active wrapper" id = "searchPage" data-tab-page>
-
-                
 
                 <div class = "toolbar">
                     <div class = "controls">
@@ -55,9 +47,20 @@
             </div>
 
             <div class = "wrapper" id = "automationPage" data-tab-page>
-                <h1>Automation Dashboard</h1>
-                <div class = "automationTasks">
-                    
+                <div class = "cardGroup">
+                    <h1>Automated Tasks</h1>
+                    <div id = "automationTasks">
+                        
+                        <div class="result">
+                            <h2 class = "productTitle">${product.title}</h2>
+                        </div>
+                        <div class="result">
+                            <h2 class = "productTitle">${product.title}</h2>
+                        </div>
+                        <div class="result">
+                            <h2 class = "productTitle">${product.title}</h2>
+                        </div>
+                    </div>
                 </div>
             </div>
 

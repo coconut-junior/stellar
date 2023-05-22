@@ -125,6 +125,8 @@ function openSheet(file) {
             prices = prices.replaceAll("OurPrice:","Our Price:");
             prices = prices.replaceAll("TheirPrice:"," theirs:");
             prices = prices.replaceAll(",,",", ");
+            iname = iname.replaceAll('"','');
+            iname = iname.replaceAll("&","and");
             iname = iname.replaceAll("  "," ");
             var tag = iname.replaceAll(" (logo)","") + ": " + prices;
             matched_items.push(tag);

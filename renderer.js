@@ -13,7 +13,6 @@ var results = [];
 var products = [];
 var adBuilderList = [];
 
-
 //assign tab click events
 $(`[data-tab-target]`).each(function(index,value) {
     $(this).on('click', function(event) {
@@ -207,43 +206,45 @@ function readDatabase(jsonText) {
 
                 let links = product.links.join(',');
 
-                $(`.resultBox`).append(`<div class = "result" draggable="true" id = "result_${i}" ondragstart = "drag(event)">
-                <p class = "resultEntry productTitle">${product.title}</p>
-
-                <div class = "resultGroup">
-                    <div class = "productInfo">
-                        <div>
-                            <img class = "resultIcon" src = "images/ourprice_icon.png">
-                            <p class = "resultEntry"><span class = "medium">Our Price:</span> ${product.ours}</p>
+                let data = `
+                <div class = "result" draggable="true" id = "result_${i}" ondragstart = "drag(event)">
+                    <h2 class = "resultEntry">${product.title}</h2>
+                
+                    <div class = "resultGroup">
+                        <div class = "productInfo">
+                            <div>
+                                <img class = "resultIcon" src = "images/ourprice_icon.png">
+                                <p class = "resultEntry"><span class = "medium">Our Price:</span> ${product.ours}</p>
+                            </div>
+                            <div>
+                                <img class = "resultIcon" src = "images/theirprice_icon.png">
+                                <p class = "resultEntry"><span class = "medium">Their Price:</span> ${product.theirs}</p>
+                            </div>
+                            <hr>
+                            <div>
+                                <img class = "resultIcon" src = "images/flyer_icon.png">
+                                <p class = "resultEntry"><span class = "medium">Page:</span> ${product.page}</p>
+                            </div>
+                            <div>
+                                <img class = "resultIcon" src = "images/layer_icon.png">
+                                <p class = "resultEntry"><span class = "medium">Layer:</span> ${product.layer}</p>
+                            </div>
                         </div>
-                        <div>
-                            <img class = "resultIcon" src = "images/theirprice_icon.png">
-                            <p class = "resultEntry"><span class = "medium">Their Price:</span> ${product.theirs}</p>
-                        </div>
-                        <hr>
-                        <div>
-                            <img class = "resultIcon" src = "images/flyer_icon.png">
-                            <p class = "resultEntry"><span class = "medium">Page:</span> ${product.page}</p>
-                        </div>
-                        <div>
-                            <img class = "resultIcon" src = "images/layer_icon.png">
-                            <p class = "resultEntry"><span class = "medium">Layer:</span> ${product.layer}</p>
-                        </div>
-                    </div>
-
-                    <div class = "resultButtons">
-
-                        <div style = "display:flex;gap:10px;flex-direction:column;">
-                            <button class = "entryButton" id = "flyerButton" onclick="openDoc('${product.source}')">&#128240; Open Ad</button>
-                            <button class = "entryButton" id = "productBlockButton" onclick="openProductBlock('${product.source}','${product.indexes}')">&#129330; Pick Up</button>
+                
+                        <div class = "resultButtons">
+                
+                            <div style = "display:flex;gap:10px;flex-direction:column;">
+                                <button class = "entryButton" id = "flyerButton" onclick="openDoc('${product.source}')">&#128240; Open Ad</button>
+                                <button class = "entryButton" id = "productBlockButton" onclick="openProductBlock('${product.source}','${product.indexes}')">&#129330; Pick Up</button>
+                            </div>
+                        
+                            <button class = "entryButton" id = "assetButton" title = "Save Images" onclick="downloadAssets('${links}')"></button>
                         </div>
                     
-                        <button class = "entryButton" id = "assetButton" title = "Save Images" onclick="downloadAssets('${links}')"></button>
                     </div>
+                </div>`;
                 
-                </div>
-                </div>
-                `);
+                $(`.resultBox`).append(data);
             }
 
             if(results.length == 1) {
