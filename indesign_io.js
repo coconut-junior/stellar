@@ -36,8 +36,13 @@ function downloadDependencies() {
                     let html = `
                     <div class="result" style = "padding:10px;">
                         <h2 class = "productTitle">${scriptName}</h2>
-                        <p class = "resultEntry">Version: ${version}</p>
-                        <button onclick = "runJSX('${fileName}',null)">&#9889; Launch</button>
+                        <p class = "resultEntry" style = "text-align:center;">Version: ${version}</p>
+                        <div style = "display:flex;flex-direction:row;gap:10px;">
+                            <button onclick = "runJSX('${fileName}',null)">&#9889; Launch</button>
+                            <button></button>
+                            <button></button>
+
+                        </div>
                     </div>
                     `;
                     $(`#automationTasks`).append(html);

@@ -144,7 +144,7 @@ button:active {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow-y: hidden;
+    
 }
 
 .file-selectors {
@@ -191,20 +191,17 @@ button:active {
     background-color: var(--primary1);
 }
 
-input[type="search"], input[type="text"] {
+input[type="search"] {
     outline: 0;
     height: 60px;
-    width: 50%;
+    width: 512px;
     text-align: center;
-    background: var(--white);
+    background: var(--secondary1);
     border: 2px solid var(--gray);
     border-radius: 20px;
     font-size: 18px;
     transition: 0.6s;
-}
 
-input[type="search"] {
-    width: 640px;
     background-image: url('images/search_black.svg');
     background-size: 20px;
     background-position: left;
@@ -220,24 +217,12 @@ input[type="search"]:active, input[type="text"]:active {
     border-color: var(--primary3);
 }
 
-#searchButton {
-    height: 62px;
-}
 
 #timestamp {
     text-align: center;
-    padding: 10px;
+    padding: 20px;
 }
 
-.controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100vw;
-    flex-direction: row;
-    padding: 30px 10px 10px 10px;
-    gap: 10px;
-}
 
 .navigation {
     height: auto;
@@ -253,7 +238,6 @@ input[type="search"]:active, input[type="text"]:active {
     border-radius: 20px;
     box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.25);
     transition: 0.3s;
-
     position: absolute;
     top: 50%;
     left: 30px;
@@ -276,19 +260,22 @@ input[type="search"]:active, input[type="text"]:active {
 }
 
 .toolbar {
+    display: flex;
     height: auto;
     width: 1024px;
     overflow: hidden;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    position:absolute;
-    top: 10px;
+    justify-content:space-between;
+    position: absolute;
+    top: 20px;
 }
 
 .workingArea {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
     width: 1024px;
     height: auto;
     align-items: center;
@@ -300,11 +287,13 @@ input[type="search"]:active, input[type="text"]:active {
 }
 
 .resultBox {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    width: auto;
     display: grid;
     grid-gap: 10px;
     overflow-x:hidden;
     height: calc(100vh - 270px);
-    width: 540px;
     padding: 20px;
     border-radius: 20px;
     background-image: url('images/loading.gif');
@@ -375,12 +364,12 @@ h2 {
 
 .viewToggle {
     cursor: pointer;
-    height: 40px;
-    width: 80px;
+    height: 50px;
+    width: 100px;
     background-color: var(--white);
     border: 3px solid var(--white);
     align-items: center;
-    border-radius: 10px;
+    border-radius: 15px;
     background-image: url('images/viewtoggle.svg');
     background-size: contain;
     background-repeat: no-repeat;
@@ -390,15 +379,20 @@ h2 {
     flex-shrink: 0;
 }
 
+#licenseButton {
+    align-self: flex-end;
+}
+
 .toggleSwitch {
     position: relative;
     pointer-events: none;
     background-color: var(--primary3);
-    height: 100%;
-    width: 50%;
-    left: 40px;
+    height: 80%;
+    width: 40%;
+    left: 55px;
+    top: 5px;
     display: flex;
-    border-radius: 8px;
+    border-radius: 10px;
     background-image: url('images/normalview_icon.svg');
     background-size: 20px;
     background-repeat: no-repeat;
@@ -421,8 +415,6 @@ h2 {
 
 .adBuilder {
     background-color: var(--white);
-    width: 20vw;
-    max-width: 300px;
     height: calc(100vh - 270px);
     border-radius: 20px;
     display: flex;
@@ -433,12 +425,15 @@ h2 {
 }
 
 .result {
+    width: 480px;
+    height: 160px;
     background-color: var(--white);
     display:flex;
     flex-direction: column;
     padding: 20px 20px 20px 20px;
     cursor: grab;
     border-radius: 20px;
+    margin: auto;
     gap: 10px;
     border: 2px solid var(--gray);
     transition: 0.3s;
@@ -519,6 +514,10 @@ h2 {
     .workingArea,.toolbar {
         width: 100%
     }
+    .workingArea {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+    }
     .viewOptions {
         left: -226px;
     }
@@ -526,15 +525,12 @@ h2 {
         flex-direction: row;
         width: auto;
         bottom: 30px;
-        top:0;
+        top: 0;
         left: 50%;
         height: 20px;
         transform: translateX(-50%);
         margin-bottom:0;
         padding: 20px 10px 20px 10px;
-    }
-    .adBuilder {
-        display: none;
     }
     input[type="search"] {
         width: 512px;

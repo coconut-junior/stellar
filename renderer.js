@@ -134,7 +134,7 @@ function viewCompact() {
     $(`.productInfo`).css('flex-direction','row');
     $(`.productInfo`).css('gap','10px');
     $(`.resultButtons`).css('display','none');
-    $(`.toggleSwitch`).css('left',"0px");
+    $(`.toggleSwitch`).css('left',"5px");
     $(`.toggleSwitch`).css('background-image',"url('images/compactview_icon.svg')");
     $(`hr`).css('border','0');
     $(`hr`).css('border-right','2px dotted lightgray');
@@ -145,7 +145,7 @@ function viewNormal() {
     $(`.productInfo`).css('flex-direction','column');
     $(`.productInfo`).css('gap','0');
     $(`.resultButtons`).css('display','flex');
-    $(`.toggleSwitch`).css('left',"40px");
+    $(`.toggleSwitch`).css('left',"55px");
     $(`.toggleSwitch`).css('background-image',"url('images/normalview_icon.svg')");
     $(`hr`).css('border','0');
     $(`hr`).css('border-top','2px dotted lightgray');
