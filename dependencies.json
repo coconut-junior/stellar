@@ -39,6 +39,22 @@
             "hidden":false,
             "version": 1.2,
             "description": ""
+        },
+        {
+            "name": "Badger to Email",
+            "filename":"badger_to_email_blocks.jsx",
+            "url":"https://www.dropbox.com/s/q253x07id5f45m4/badger_to_email_blocks.jsx?dl=1",
+            "hidden":false,
+            "version": 1.2,
+            "description": "Takes the feature view exported from Badger and turns it into email product blocks."
+        },
+        {
+            "name": "Generate Alt Tags",
+            "filename":"index.html",
+            "url":"https://jbx.design/archive/autotagger/index.html",
+            "hidden":false,
+            "version": 1.2,
+            "description": "Takes the feature view exported from Badger and turns it into email product blocks."
         }
     ]
 }

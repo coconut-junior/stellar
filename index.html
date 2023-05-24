@@ -17,10 +17,11 @@
 
 
             <a id = "downloadLink" style = "display: none;">download</a>
-            <div class = "active wrapper" id = "searchPage" data-tab-page>
+            <div class = "wrapper" id = "searchPage" data-tab-page>
 
                 <div class = "toolbar">
                     <div style = "display: flex;flex-direction: row;gap: 10px;width:100%;align-items: left;">
+                        <h1 style = "padding:0;margin:auto;margin-left:40px;margin-right:40px;">Product Search</h1>
                         <input id = "searchBox" type="search" placeholder = "Search" oninput = "search()">
                         <!-- <button id = "searchButton" onclick="search()">Search</button> -->
                         <div class = "viewToggle" onclick = "toggleView()">
@@ -29,10 +30,7 @@
                         
                     </div>
 
-                    <button id = "licenseButton"></button>
-
-              
-
+                    
                 </div>
 
                 <div class = "workingArea">
@@ -48,21 +46,11 @@
                 </div>
             </div>
 
-            <div class = "wrapper" id = "automationPage" data-tab-page>
-                <div class = "cardGroup">
-                    <h1>Automated Tasks</h1>
-                    <div id = "automationTasks">
-                        
-                        <div class="result">
-                            <h2 class = "productTitle">${product.title}</h2>
-                        </div>
-                        <div class="result">
-                            <h2 class = "productTitle">${product.title}</h2>
-                        </div>
-                        <div class="result">
-                            <h2 class = "productTitle">${product.title}</h2>
-                        </div>
-                    </div>
+            <div class = "active wrapper" id = "automationPage" data-tab-page>
+                <h1>Automated Tasks</h1>
+
+                    <div class = "cardGroup" id = "automationTasks">
+
                 </div>
             </div>
 
@@ -74,8 +62,8 @@
             <div id = "betaIcon"></div>
 
             <ul class = "navigation">
-                <li class = "navButton" id = "navSearch" title = "Product Search" data-tab-target = "#searchPage" style = "background-color: var(--primary3)"></li>
-                <li class = "navButton" id = "navAutomation" title = "Automation Dashboard" data-tab-target = "#automationPage"></li>
+                <li class = "navButton" id = "navSearch" title = "Product Search" onclick = "alert('This feature is under construction!')" data-tab-target = "#searchPage"></li>
+                <li class = "navButton" id = "navAutomation" title = "Automation Dashboard" data-tab-target = "#automationPage" style = "background-color: var(--primary3)"></li>
                 <li class = "navButton" id = "navSettings" title = "Settings" data-tab-target = "#settingsPage"></li>
                 <li class = "navButton" id = "navInfo" title = "About" onclick="showAbout()"></li>
             </ul>

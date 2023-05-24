@@ -25,22 +25,30 @@ function downloadDependencies() {
         let scriptName = dependency['name'];
         let version = dependency['version'];
         let hidden = dependency['hidden'];
+        let url = dependency['url'];
         let filePath = `${scriptPath}/${fileName}`;
+        let description = dependency['description'];
         let homePath = getHomePath();
         
         $.ajax({
             url: dependency['url'],
             success: function(data) {
-                fs.writeFileSync(`${getScriptPath()}/${fileName}`, data);
+                
+                if(!fileName.match('html')) {
+                    fs.writeFileSync(`${getScriptPath()}/${fileName}`, data);
+                }
+
                 if(!hidden) {
                     let html = `
-                    <div class="result" style = "padding:10px;">
-                        <h2 class = "productTitle">${scriptName}</h2>
+                    <div class="result" style = "padding:10px;width:auto;position:relative;height:100px;margin:0;">
+                        <button onclick = "alert('${description}')" class = "navButton" id = "navInfo" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:10px;right:10px;"></button>
+
+                        <h2 style = "padding:5px;" class = "productTitle">${scriptName}</h2>
                         <p class = "resultEntry" style = "text-align:center;">Version: ${version}</p>
-                        <div style = "display:flex;flex-direction:row;gap:10px;">
-                            <button onclick = "runJSX('${fileName}',null)">&#9889; Launch</button>
-                            <button></button>
-                            <button></button>
+                        <div style = "display:flex;flex-direction:row;gap:10px;justify-content:center;">
+                            <button class = "primary" onclick = "runTool('${fileName}','${url}',null)">&#9889;<br>Launch</button>
+                            <button>&#x23F0;<br>Schedule</button>
+                            <button onclick = "shell.openPath('${filePath}')">&#x1F4DD;<br>Modify</button>
 
                         </div>
                     </div>
@@ -142,7 +150,7 @@ function runJSX(scriptName, args) {
     minimizeApp();
 }
 
-function runTool(fileName, args) {
+function runTool(fileName, url, args) {
     console.log(`starting tool ${fileName}...`);
     let extension = fileName.split('.')[1];
 
@@ -153,7 +161,7 @@ function runTool(fileName, args) {
             break;
         case 'html':
             console.log('this is a webpage');
-            window.open(`pages/${fileName}`,'_blank','width=1080px');
+            window.open(url,'_blank','width=1080px');
             break;
         default:
             console.log('unknown tool type');

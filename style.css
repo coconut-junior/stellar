@@ -1,18 +1,28 @@
-/*mint blue*/
 :root {
-    --white: white;
-    --primary0: #EBFAFF;
-    --primary1: #EBFAFF;
-    --primary2: #D1EFFF;
+    --bright: white;
+    --white: #212836;
+    --black: #A3A8B2;
+    --gray: #2C3340;
+    --primary0: #384357;
+    --primary1: #2C3340;
+    --primary2: #212836;
     --primary3: #4B73FF;
-
-    --secondary1: #FBFEFF;
-    --secondary2: #e4f6ff;
-
-    --black: #262121;
-    --gray : #ECF6FA;
+    --secondary1: #0D1520;
+    --secondary2: #121927;
+    --waveFill: #0D1520;
 }
-/**/
+.resultIcon {
+    filter: invert();
+}
+#searchBox {
+    background-image: url('images/search_default.svg');
+}
+.resultBox {
+    background-image: url('images/loading_dark.gif');
+}
+.removeButton {
+    filter:invert();
+}
 
 ::selection {
     background-color: var(--primary1);
@@ -59,14 +69,18 @@ li {
 
 #automationTasks {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-row-gap: 40px;
+    grid-column-gap: 10px;
+    width: calc(100vw - 240px);
+    padding: 20px;
+    align-content: start;
 }
 
 .cardGroup {
     padding: 0px 20px 20px 20px;
     background-color: var(--secondary2);
-    height: 80vh;
+    height: calc(100vh - 200px);
     border-radius: 20px;
 }
 
@@ -103,23 +117,24 @@ button {
     font-family: 'Arial';
     cursor: pointer;
     height: 60px;
+    width: auto;
     font-size: 16px;
-    font-weight: bold;
-    background-color: var(--primary1);
-    color: var(--primary3);
+    font-weight:normal;
+    color:var(--black);
     border-radius: 10px;
-    border: 0;
     padding: 10px;
-    min-width: 120px;
-    border: 4px solid var(--primary1);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     background-repeat: no-repeat;
     background-position: center;
     background-size: 36px;
     transition: 0.2s;
+
+    border: 1px solid var(--primary0);
+    background-color: var(--primary1);
+    backdrop-filter: blur(30px);
 }
 
 button p {
@@ -128,7 +143,9 @@ button p {
 }
 
 button:hover {
-    border-color: var(--primary0);
+    color: var(--bright);
+    filter: drop-shadow(0px 0px 20px var(--primary3));
+    background-color: rgba(255,255,255,0.2);
 }
 
 button:active {
@@ -197,7 +214,7 @@ input[type="search"] {
     width: 512px;
     text-align: center;
     background: var(--secondary1);
-    border: 2px solid var(--gray);
+    border: 1px solid var(--gray);
     border-radius: 20px;
     font-size: 18px;
     transition: 0.6s;
@@ -223,13 +240,11 @@ input[type="search"]:active, input[type="text"]:active {
     padding: 20px;
 }
 
-
 .navigation {
     height: auto;
     width: 20px;
     margin: auto;
     padding: 10px 20px 10px 20px;
-    background-color: #121927;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -240,8 +255,21 @@ input[type="search"]:active, input[type="text"]:active {
     transition: 0.3s;
     position: absolute;
     top: 50%;
-    left: 30px;
+    left: 20px;
     transform: translateY( -50%);
+
+    border: 1px solid var(--primary0);
+    background-color: var(--primary1);
+    backdrop-filter: blur(30px);
+}
+
+.primary {
+    color:white;
+    background-color: var(--primary3);
+}
+
+.primary:hover {
+    background-color: var(--primary3);
 }
 
 .navButton {
@@ -261,7 +289,7 @@ input[type="search"]:active, input[type="text"]:active {
 
 .toolbar {
     display: flex;
-    height: auto;
+    height: 60px;
     width: 1024px;
     overflow: hidden;
     display: flex;
@@ -269,7 +297,7 @@ input[type="search"]:active, input[type="text"]:active {
     align-items: center;
     justify-content:space-between;
     position: absolute;
-    top: 20px;
+    top: 40px;
 }
 
 .workingArea {
@@ -377,10 +405,7 @@ h2 {
     transition: 0.3s;
     position: relative;
     flex-shrink: 0;
-}
-
-#licenseButton {
-    align-self: flex-end;
+    top:2px;
 }
 
 .toggleSwitch {
@@ -426,7 +451,7 @@ h2 {
 
 .result {
     width: 480px;
-    height: 160px;
+    height: auto;
     background-color: var(--white);
     display:flex;
     flex-direction: column;
@@ -441,7 +466,7 @@ h2 {
 
 .result:hover {
     background-color: var(--white);
-    scale: 1.05;
+    scale: 0.95;
     transform: perspective(50em) rotateX(5deg);
 }
 
@@ -507,7 +532,14 @@ h2 {
     scale: 0.9;
 }
 
-@media(max-width: 1024px) {
+
+@media (max-width: 1280px) {
+    #automationTasks {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+@media (max-width: 1080px) {
     .wrapper {
         width: 100%;
     }
@@ -518,8 +550,9 @@ h2 {
         grid-template-columns: 1fr;
         grid-template-rows: 1fr 1fr;
     }
-    .viewOptions {
-        left: -226px;
+    #automationTasks {
+        grid-template-columns: 1fr 1fr;
+        width: calc(100vw - 40px);
     }
     .navigation {
         flex-direction: row;
@@ -537,6 +570,13 @@ h2 {
     }
 }
 
+@media(max-width: 640px) {
+    #automationTasks {
+        grid-template-columns: 1fr;
+        
+    }
+}
+
 [data-tab-page] {
     display:none;
 }
@@ -545,38 +585,21 @@ h2 {
     display:flex;
 }
 
-@media (max-width: 480px) {
-    #automationTasks {
-        grid-template-columns: 1fr;
-    }
-}
 
-@media(prefers-color-scheme: dark) {
-    /*dark mode*/
+/* @media(prefers-color-scheme: light) {
     :root {
-        --white: #212836;
-        --black: #A3A8B2;
-        --gray: #2C3340;
-        --primary0: #384357;
-        --primary1: #2C3340;
-        --primary2: #212836;
+        --bright: black;
+        --white: white;
+        --primary0: #EBFAFF;
+        --primary1: #EBFAFF;
+        --primary2: #D1EFFF;
         --primary3: #4B73FF;
-        --secondary1: #0D1520;
-        --secondary2: #121927;
-        --waveFill: #0D1520;
+
+        --secondary1: #FBFEFF;
+        --secondary2: #e4f6ff;
+
+        --black: #262121;
+        --gray : #ECF6FA;
     }
-    .resultIcon {
-        filter: invert();
-    }
-    #searchBox {
-        background-image: url('images/search_default.svg');
-    }
-    .resultBox {
-        background-image: url('images/loading_dark.gif');
-    }
-    .removeButton {
-        filter:invert();
-    }
-    /*dark mode*/
-}
+} */
 
