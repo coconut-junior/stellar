@@ -11,7 +11,7 @@
         <script src = "renderer.js" defer></script>
         <script src = "indesign_io.js" defer></script>
         <script src = "lytho.js" defer></script>
-        
+        <script src = "resource_monitoring.js" defer></script>
     </head>
     <body>
 
@@ -47,7 +47,27 @@
             </div>
 
             <div class = "active wrapper" id = "automationPage" data-tab-page>
-                <h1>Automated Tasks</h1>
+                    <div id = "automationStatus">
+                        <h1>Automation</h1>
+                        <div id = "resourceMonitor">
+                            <h2 style = "writing-mode:vertical-lr;text-orientation:sideways;padding: 5px;">CPU</h2>
+                            <div class = "resourceMeter" style = "width: 45px;border-radius: 0px 0px 15px 0px;left:1px;">
+                                <div class = "meterFill" id = "cpuMeter"></div>
+                            </div>
+                            <div class = "resourceMeter">
+                                <p id = "cpuPercent" class = "segmentedText"></p>
+                            </div>
+
+                            <h2 style = "writing-mode:vertical-lr;text-orientation:sideways;padding: 5px;">RAM</h2>
+
+                            <div class = "resourceMeter" style = "width: 45px;border-radius: 0px 0px 15px 0px;">
+                                <div class = "meterFill" id = "ramMeter"></div>
+                            </div>
+                            <div class = "resourceMeter">
+                                <p id = "memUsage" class = "segmentedText"></p>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class = "cardGroup" id = "automationTasks">
 

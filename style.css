@@ -1,5 +1,6 @@
 :root {
     --bright: white;
+    --dark: black;
     --white: #212836;
     --black: #A3A8B2;
     --gray: #2C3340;
@@ -11,6 +12,18 @@
     --secondary2: #121927;
     --waveFill: #0D1520;
 }
+
+@font-face {
+    font-family: "DSEG14 Classic";
+    src: url("fonts/DSEG14Classic-Regular.woff") format("woff");
+}
+
+@font-face {
+    font-family: "DSEG14 Modern";
+    src: url("fonts/DSEG14Modern-Regular.woff") format("woff");
+}
+
+
 .resultIcon {
     filter: invert();
 }
@@ -60,7 +73,7 @@ p, h1, input {
 h1 {
     font-size: 24px;
     text-align: center;
-    padding: 40px;
+    margin: auto;
 }
 
 li {
@@ -75,6 +88,46 @@ li {
     width: calc(100vw - 240px);
     padding: 20px;
     align-content: start;
+}
+
+#automationStatus {
+    background-color: var(--dark);
+    border: 1px solid var(--primary1);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 60px;
+    width: calc(100vw - 230px);
+    padding: 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+#resourceMonitor {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.meterFill {
+    background-image: url('images/led_dots.webp');
+    background-size: 50px;
+    height: 100%;
+    width: auto;
+    border-radius: 5px 5px 10px 0px;
+}
+
+.resourceMeter {
+    box-sizing: border-box;
+    border-width: 0px 2px 2px 2px;
+    border-style: solid; 
+    border-color: var(--black);
+    border-radius: 0px 0px 15px 15px;
+    width: 90px;
+    height: auto;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 .cardGroup {
@@ -530,6 +583,10 @@ h2 {
 
 .removeButton:active {
     scale: 0.9;
+}
+
+.segmentedText {
+    font-family: 'DSEG14 Classic';font-size: 18px;color:var(--black);text-align: center;margin:auto;
 }
 
 
