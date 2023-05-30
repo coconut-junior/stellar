@@ -2,7 +2,7 @@
 <html>
     <head>
         <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self';"> -->
-        <title>Pasteboard</title>
+        
         <link rel = "stylesheet" href = "fonts/cabinet-grotesk.css">
         <link rel = "stylesheet" href = "style.css">
         <link rel = "icon" type = "image/x-icon" href = "images/favicon.ico">
@@ -15,78 +15,78 @@
     </head>
     <body>
 
+        <a id = "downloadLink" style = "display: none;">download</a>
+        <div class = "wrapper" id = "searchPage" data-tab-page>
 
-            <a id = "downloadLink" style = "display: none;">download</a>
-            <div class = "wrapper" id = "searchPage" data-tab-page>
-
-                <div class = "toolbar">
-                    <div style = "display: flex;flex-direction: row;gap: 10px;width:100%;align-items: left;">
-                        <h1 style = "padding:0;margin:auto;margin-left:40px;margin-right:40px;">Product Search</h1>
-                        <input id = "searchBox" type="search" placeholder = "Search" oninput = "search()">
-                        <!-- <button id = "searchButton" onclick="search()">Search</button> -->
-                        <div class = "viewToggle" onclick = "toggleView()">
-                            <div class = "toggleSwitch"></div>
-                        </div>
-                        
+            <div class = "toolbar">
+                <div style = "display: flex;flex-direction: row;gap: 10px;width:100%;align-items: left;">
+                    <h1 style = "padding:0;margin:auto;margin-left:40px;margin-right:40px;">Product Search</h1>
+                    <input id = "searchBox" type="search" placeholder = "Search" oninput = "search()">
+                    <!-- <button id = "searchButton" onclick="search()">Search</button> -->
+                    <div class = "viewToggle" onclick = "toggleView()">
+                        <div class = "toggleSwitch"></div>
                     </div>
-
                     
                 </div>
 
-                <div class = "workingArea">
-                    <div class = "resultBox"></div>
-                    <div class = "adBuilder">
-                        <h1>Ad Builder</h1>
-                        <ul id = "adList"></ul>
-                        <div id="drop_zone" ondragstart = "dragStart(event)" ondragend = "dragEnd(event)" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)" ondragleave="dragLeave()">
-                            <p style = "text-align: center;padding: 10px;">Drop products here to start a list ...</p>
-                        </div>
-                        <button onclick = "buildAd()">&#9889; Create Document</button>
+                
+            </div>
+
+            <div class = "workingArea">
+                <div class = "resultBox"></div>
+                <div class = "adBuilder">
+                    <h1>Ad Builder</h1>
+                    <ul id = "adList"></ul>
+                    <div id="drop_zone" ondragstart = "dragStart(event)" ondragend = "dragEnd(event)" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)" ondragleave="dragLeave()">
+                        <p style = "text-align: center;padding: 10px;">Drop products here to start a list ...</p>
                     </div>
+                    <button onclick = "buildAd()">&#9889; Create Document</button>
                 </div>
             </div>
+        </div>
 
-            <div class = "active wrapper" id = "automationPage" data-tab-page>
-                    <div id = "automationStatus">
-                        <h1>Automation</h1>
-                        <div id = "resourceMonitor">
-                            <h2 style = "writing-mode:vertical-lr;text-orientation:sideways;padding: 5px;">CPU</h2>
-                            <div class = "resourceMeter" style = "width: 45px;border-radius: 0px 0px 15px 0px;left:1px;">
-                                <div class = "meterFill" id = "cpuMeter"></div>
-                            </div>
-                            <div class = "resourceMeter">
-                                <p id = "cpuPercent" class = "segmentedText"></p>
-                            </div>
+        <div class = "active wrapper" id = "automationPage" data-tab-page>
+                <div id = "automationStatus">
+                    <h1>Automation</h1>
+                    <div id = "resourceMonitor">
+                        <h2 style = "writing-mode:vertical-lr;text-orientation:sideways;padding: 5px;">CPU</h2>
+                        <div class = "resourceMeter" style = "width: 45px;border-radius: 0px 0px 15px 0px;left:1px;">
+                            <div class = "meterFill" id = "cpuMeter"></div>
+                        </div>
+                        <div class = "resourceMeter">
+                            <p id = "cpuPercent" class = "segmentedText"></p>
+                        </div>
 
-                            <h2 style = "writing-mode:vertical-lr;text-orientation:sideways;padding: 5px;">RAM</h2>
+                        <h2 style = "writing-mode:vertical-lr;text-orientation:sideways;padding: 5px;">RAM</h2>
 
-                            <div class = "resourceMeter" style = "width: 45px;border-radius: 0px 0px 15px 0px;">
-                                <div class = "meterFill" id = "ramMeter"></div>
-                            </div>
-                            <div class = "resourceMeter">
-                                <p id = "memUsage" class = "segmentedText"></p>
-                            </div>
+                        <div class = "resourceMeter" style = "width: 45px;border-radius: 0px 0px 15px 0px;">
+                            <div class = "meterFill" id = "ramMeter"></div>
+                        </div>
+                        <div class = "resourceMeter">
+                            <p id = "memUsage" class = "segmentedText"></p>
                         </div>
                     </div>
-
-                    <div class = "cardGroup" id = "automationTasks">
-
                 </div>
+
+                <div class = "cardGroup" id = "automationTasks">
+
             </div>
+        </div>
 
-            <div class = "wrapper" id = "settingsPage" data-tab-page>
-                <h1>Settings</h1>
-            </div>
+        <div class = "wrapper" id = "settingsPage" data-tab-page>
+            <h1>Settings</h1>
+        </div>
 
-            
-            <div id = "betaIcon"></div>
+        
+        <div id = "betaIcon"></div>
 
-            <ul class = "navigation">
-                <li class = "navButton" id = "navSearch" title = "Product Search" onclick = "alert('This feature is under construction!')" data-tab-target = "#searchPage"></li>
-                <li class = "navButton" id = "navAutomation" title = "Automation Dashboard" data-tab-target = "#automationPage" style = "background-color: var(--primary3)"></li>
-                <li class = "navButton" id = "navSettings" title = "Settings" data-tab-target = "#settingsPage"></li>
-                <li class = "navButton" id = "navInfo" title = "About" onclick="showAbout()"></li>
-            </ul>
+        <ul class = "navigation">
+            <li class = "navButton" id = "navSearch" title = "Product Search" onclick = "alert('This feature is under construction!')" data-tab-target = "#searchPage"></li>
+            <li class = "navButton" id = "navAutomation" title = "Automation Dashboard" data-tab-target = "#automationPage" style = "background-color: var(--primary3)"></li>
+            <li class = "navButton" id = "navSettings" title = "Settings" data-tab-target = "#settingsPage"></li>
+            <li class = "navButton" id = "navInfo" title = "About" onclick="showAbout()"></li>
+            <li id = "navLogo" title = "Stellar" onclick="showAbout()"></li>
+        </ul>
             
     </body>
 </html>

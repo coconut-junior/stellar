@@ -64,6 +64,7 @@
 
 body {
     background-color: var(--secondary1);
+    overflow-x: hidden;
 }
 
 p, h1, input {
@@ -80,6 +81,16 @@ li {
     list-style: none;
 }
 
+#navLogo {
+    background-image: url('images/stellar_logo_vert.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height:100px;
+    width: 30px;
+    margin: 20px 0px 20px 0px;
+}
+
 #automationTasks {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -88,6 +99,11 @@ li {
     width: calc(100vw - 240px);
     padding: 20px;
     align-content: start;
+    
+    background-image: url('images/loading_dark.gif');
+    background-size: 50px;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 #automationStatus {
@@ -173,6 +189,7 @@ button {
     width: auto;
     font-size: 16px;
     font-weight:normal;
+    font-family: 'CabinetGrotesk-Medium', 'Apple Color Emoji';
     color:var(--black);
     border-radius: 10px;
     padding: 10px;
@@ -509,7 +526,6 @@ h2 {
     display:flex;
     flex-direction: column;
     padding: 20px 20px 20px 20px;
-    cursor: grab;
     border-radius: 20px;
     margin: auto;
     gap: 10px;
@@ -519,8 +535,6 @@ h2 {
 
 .result:hover {
     background-color: var(--white);
-    scale: 0.95;
-    transform: perspective(50em) rotateX(5deg);
 }
 
 .resultGroup {
@@ -600,7 +614,7 @@ h2 {
     .wrapper {
         width: 100%;
     }
-    .workingArea,.toolbar {
+    .workingArea,.toolbar,#automationStatus {
         width: 100%
     }
     .workingArea {
@@ -624,6 +638,12 @@ h2 {
     }
     input[type="search"] {
         width: 512px;
+    }
+    #navLogo {
+        width:100px;
+        height: 30px;
+        background-image: url('images/stellar_logo_horz.svg');
+        margin: 0px 20px 0px 20px; 
     }
 }
 

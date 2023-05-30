@@ -3,6 +3,7 @@ const dependencyURL = "https://www.dropbox.com/s/0t7yxgxf3msoll5/dependencies.js
 var dependencies = [];
 var scriptPath = getScriptPath();
 const { exec } = require("child_process");
+const { gsap } = require("gsap/dist/gsap");
 
 $.ajax({
     url: dependencyURL,
@@ -20,6 +21,8 @@ $.ajax({
 function downloadDependencies() {
     console.log('Downloading dependencies...')
     console.log(dependencies);
+    var i = 0;
+
     dependencies['scripts'].forEach(function(dependency) {
         let fileName = dependency['filename'];
         let scriptName = dependency['name'];
@@ -40,7 +43,7 @@ function downloadDependencies() {
 
                 if(!hidden) {
                     let html = `
-                    <div class="result" style = "padding:10px;width:auto;position:relative;height:100px;margin:0;">
+                    <div class="result" id = "idScript${i}" style = "padding:10px;width:auto;position:relative;height:100px;margin:0;">
                         <button onclick = "alert('${description}')" class = "navButton" id = "navInfo" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:10px;right:10px;"></button>
 
                         <h2 style = "padding:5px;" class = "productTitle">${scriptName}</h2>
@@ -48,15 +51,30 @@ function downloadDependencies() {
                         <div style = "display:flex;flex-direction:row;gap:10px;justify-content:center;">
                             <button class = "primary" onclick = "runTool('${fileName}','${url}',null)">&#9889;<br>Launch</button>
                             <button>&#x23F0;<br>Schedule</button>
-                            <button onclick = "shell.openPath('${filePath}')">&#x1F4DD;<br>Modify</button>
+                            <button class = "modifyButton" onclick = "shell.openPath('${filePath}')">&#x270f;</span><br> Modify</button>
 
                         </div>
                     </div>
                     `;
                     $(`#automationTasks`).append(html);
+
+                    let id = i;
+                    gsap.from(`#idScript${id}`, {duration: 2, ease: "elastic.out(1, 0.4)",y:-100,opacity:0,lazy:true});
+                    
+                    $(`#idScript${id}`).on('mouseenter', function(event) {
+                        gsap.to(`#idScript${id}`,{duration:0.01,rotationX:20,transformOrigin:"center",ease:"circ.out",scale:0.95});
+                    });
+                    $(`#idScript${id}`).on('mouseleave', function(event) {
+                        gsap.to(`#idScript${id}`,{duration:0.01,rotationX: 0,transformOrigin:"center",ease:"circ.out",scale:1});
+                    });
+
+                    $(`#automationTasks`).css('background-image','none');
+                    ++i;
                 }
             }
         });
+
+        i = 0;
         
     });
 }

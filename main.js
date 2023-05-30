@@ -29,7 +29,7 @@ function about() {
   const { dialog } = require('electron');
   const options = {
     type: 'info',
-    message: 'Pasteboard ' + app.getVersion(),
+    message: 'Stellar ' + app.getVersion(),
     detail:'Developed and maintained by Jimmy Blanck www.jbx.design\n\nCopyright © 2023 Jimmy Blanck',
     title:'About',
     icon:'icon.png'
@@ -42,7 +42,7 @@ function createWindow () {
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 768,
-    title: 'Layout Engine',
+    title: 'Stellar',
     icon: path.join(__dirname, 'icon.icns'),
     webPreferences: {
       nodeIntegration: true,
@@ -66,7 +66,7 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  var folders = ['Pasteboard','Pasteboard/temp','Pasteboard/scripts'];
+  var folders = ['Stellar'];
   for(var f = 0;f<folders.length;++f){
     if(!fs.existsSync(homePath + '/' + folders[f])){
       fs.mkdirSync(homePath + '/' + folders[f]);

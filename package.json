@@ -1,6 +1,6 @@
 {
-  "name": "pasteboard",
-  "productName": "Pasteboard",
+  "name": "stellar",
+  "productName": "Stellar",
   "version": "1.0.2",
   "description": "Quickly access creative assets and find product info.",
   "main": "main.js",
@@ -12,7 +12,7 @@
     "release": "electron-builder -mw --x64 --arm64"
   },
   "build": {
-    "appId": "design.jbx.pasteboard",
+    "appId": "design.jbx.stellar",
     "win": {
       "target": [
         "nsis"
@@ -45,6 +45,7 @@
     "@electron/notarize": "^1.2.3",
     "electron-notarize": "^1.2.2",
     "electron-updater": "^5.3.0",
+    "gsap": "^3.11.5",
     "jquery": "^3.6.3",
     "mysql": "^2.18.1"
   },
