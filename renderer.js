@@ -46,7 +46,7 @@ function minimizeApp() {
 function createTitleBar() {
     var windowTopBar = document.createElement('div')
     windowTopBar.style.width = "100%"
-    windowTopBar.style.height = "32px"
+    windowTopBar.style.height = "96px"
     windowTopBar.style.backgroundColor = "transparent"
     windowTopBar.style.position = "absolute"
     windowTopBar.style.top = windowTopBar.style.left = 0

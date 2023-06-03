@@ -2,7 +2,6 @@
 <html>
     <head>
         <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self';"> -->
-        
         <link rel = "stylesheet" href = "fonts/cabinet-grotesk.css">
         <link rel = "stylesheet" href = "style.css">
         <link rel = "icon" type = "image/x-icon" href = "images/favicon.ico">
@@ -47,10 +46,10 @@
 
         <div class = "active wrapper" id = "automationPage" data-tab-page>
                 <div id = "automationStatus">
-                    <h1>Automation</h1>
+                    <h1>Automations</h1>
                     <div id = "resourceMonitor">
                         <h2 style = "writing-mode:vertical-lr;text-orientation:sideways;padding: 5px;">CPU</h2>
-                        <div class = "resourceMeter" style = "width: 45px;border-radius: 0px 0px 15px 0px;left:1px;">
+                        <div class = "resourceMeter" style = "width: 45px;border-radius: 0px 0px 15px 0px;left:2px;">
                             <div class = "meterFill" id = "cpuMeter"></div>
                         </div>
                         <div class = "resourceMeter">
@@ -59,18 +58,24 @@
 
                         <h2 style = "writing-mode:vertical-lr;text-orientation:sideways;padding: 5px;">RAM</h2>
 
-                        <div class = "resourceMeter" style = "width: 45px;border-radius: 0px 0px 15px 0px;">
+                        <div class = "resourceMeter" style = "width: 45px;border-radius: 0px 0px 15px 0px;left:2px;">
                             <div class = "meterFill" id = "ramMeter"></div>
                         </div>
                         <div class = "resourceMeter">
                             <p id = "memUsage" class = "segmentedText"></p>
                         </div>
+                        
                     </div>
+
+                    <span style="--i: 0"></span>
                 </div>
 
                 <div class = "cardGroup" id = "automationTasks">
 
             </div>
+            
+            <div class = "statusBar">Updating automations...</div>
+
         </div>
 
         <div class = "wrapper" id = "settingsPage" data-tab-page>
@@ -81,11 +86,12 @@
         <div id = "betaIcon"></div>
 
         <ul class = "navigation">
+            <li id = "navLogo" title = "Stellar" onclick="showAbout()"></li>
             <li class = "navButton" id = "navSearch" title = "Product Search" onclick = "alert('This feature is under construction!')" data-tab-target = "#searchPage"></li>
             <li class = "navButton" id = "navAutomation" title = "Automation Dashboard" data-tab-target = "#automationPage" style = "background-color: var(--primary3)"></li>
             <li class = "navButton" id = "navSettings" title = "Settings" data-tab-target = "#settingsPage"></li>
             <li class = "navButton" id = "navInfo" title = "About" onclick="showAbout()"></li>
-            <li id = "navLogo" title = "Stellar" onclick="showAbout()"></li>
+            
         </ul>
             
     </body>

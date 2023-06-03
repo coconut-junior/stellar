@@ -1,3 +1,10 @@
+/*what needs to be figured out on per-user basis:
+  where scripts are hosted
+  licensing information
+
+
+*/
+
 // Modules to control application life and create native browser window
 const {app, BrowserWindow, shell} = require('electron');
 const path = require('path');
@@ -66,20 +73,14 @@ function createWindow () {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  var folders = ['Stellar'];
+  var folders = ['Stellar','Stellar/scripts'];
   for(var f = 0;f<folders.length;++f){
     if(!fs.existsSync(homePath + '/' + folders[f])){
       fs.mkdirSync(homePath + '/' + folders[f]);
     }
   }
 
-  createWindow() 
-
-  app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
+  createWindow();
 
   console.log("Checking for updates...");
   autoUpdater.checkForUpdatesAndNotify()

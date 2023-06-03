@@ -19,7 +19,8 @@ $.ajax({
 });
 
 function downloadDependencies() {
-    console.log('Downloading dependencies...')
+    $(`.statusBar`).html('Updating automations...');
+    console.log('Downloading dependencies...');
     console.log(dependencies);
     var i = 0;
 
@@ -62,7 +63,7 @@ function downloadDependencies() {
                     gsap.from(`#idScript${id}`, {duration: 2, ease: "elastic.out(1, 0.4)",y:-100,opacity:0,lazy:true});
                     
                     $(`#idScript${id}`).on('mouseenter', function(event) {
-                        gsap.to(`#idScript${id}`,{duration:0.01,rotationX:20,transformOrigin:"center",ease:"circ.out",scale:0.95});
+                        gsap.to(`#idScript${id}`,{duration:0.01,transformOrigin:"center",ease:"circ.out",scale:0.95,perspective:'500px'});
                     });
                     $(`#idScript${id}`).on('mouseleave', function(event) {
                         gsap.to(`#idScript${id}`,{duration:0.01,rotationX: 0,transformOrigin:"center",ease:"circ.out",scale:1});
@@ -77,6 +78,8 @@ function downloadDependencies() {
         i = 0;
         
     });
+
+    $(`.statusBar`).html('Automations are up to date.');
 }
 
 function openDoc(fileName) {
@@ -148,8 +151,8 @@ function runJSX(scriptName, args) {
     let homePath = getHomePath();
     let bashScript = `osascript -e 'tell application id "com.adobe.indesign"\nset args to ${args}\ndo script "${scriptPath}/${scriptName}" language javascript with arguments args\nend tell'`;
     console.log(bashScript);
-    fs.writeFileSync(`${homePath}/Pasteboard/scripts/shell.sh`, bashScript);
-    let script = `${homePath}/Pasteboard/scripts/shell.sh`;
+    fs.writeFileSync(`${homePath}/Stellar/scripts/shell.sh`, bashScript);
+    let script = `${homePath}/Stellar/scripts/shell.sh`;
 
     //run bash script
 
