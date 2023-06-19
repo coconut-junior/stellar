@@ -13,24 +13,6 @@ var results = [];
 var products = [];
 var adBuilderList = [];
 
-//assign tab click events
-$(`[data-tab-target]`).each(function(index,value) {
-    $(this).on('click', function(event) {
-        $(`[data-tab-target]`).each(function(index,value) {
-            $(this).css('background-color','transparent');
-        });
-
-        $(this).css('background-color','var(--primary3)');
-
-        $(`[data-tab-page]`).each(function() {
-            $(this).removeClass('active');
-        });
-
-        let target = $(this).attr('data-tab-target');
-        $(`${target}`).addClass('active');
-    });
-});
-
 function showAbout() {
     ipcRenderer.invoke('showAbout');
 }
@@ -43,16 +25,17 @@ function minimizeApp() {
     ipcRenderer.invoke('minimize');
 }
 
-function createTitleBar() {
-    var windowTopBar = document.createElement('div')
-    windowTopBar.style.width = "100%"
-    windowTopBar.style.height = "96px"
-    windowTopBar.style.backgroundColor = "transparent"
-    windowTopBar.style.position = "absolute"
-    windowTopBar.style.top = windowTopBar.style.left = 0
-    windowTopBar.style.webkitAppRegion = "drag"
-    document.body.appendChild(windowTopBar)
+function setWindowOnTop() {
+    ipcRenderer.invoke('setWindowOnTop');
 }
+function setWindowOnBottom() {
+    ipcRenderer.invoke('setWindowOnBottom');
+}
+function compactMode() {
+    ipcRenderer.send('resize-window', 400, 800);
+}
+setWindowOnTop();
+compactMode();
 
 function drag(event) {
     event.dataTransfer.setData('text',event.target.id);
@@ -262,11 +245,6 @@ function readDatabase(jsonText) {
     // }
     
     return results;
-}
-
-function openWebsite() {
-    console.log('opening website');
-    window.open('https://jbx.design/','_blank','width=1280px,height=720px');
 }
 
 createTitleBar();

@@ -7,10 +7,13 @@
         <link rel = "icon" type = "image/x-icon" href = "images/favicon.ico">
 
         <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+        <script src = "titlebar.js"></script>
         <script src = "renderer.js" defer></script>
         <script src = "indesign_io.js" defer></script>
         <script src = "lytho.js" defer></script>
         <script src = "resource_monitoring.js" defer></script>
+        <script src = "navigation.js" defer></script>
+        <script src = "fingerprinting.js" defer></script>
     </head>
     <body>
 
@@ -67,19 +70,21 @@
                         
                     </div>
 
-                    <span style="--i: 0"></span>
+                    
                 </div>
 
-                <div class = "cardGroup" id = "automationTasks">
+                <div class = "cardGroup" id = "automationTasks"></div>
 
-            </div>
-            
             <div class = "statusBar">Updating automations...</div>
 
         </div>
 
         <div class = "wrapper" id = "settingsPage" data-tab-page>
-            <h1>Settings</h1>
+            <div>
+                <h1 style = "margin:auto;text-align: center;">Settings</h1>
+                <br>
+                <p id = "fingerprint">Device Fingerprint:</p>
+            </div>
         </div>
 
         
@@ -87,10 +92,10 @@
 
         <ul class = "navigation">
             <li id = "navLogo" title = "Stellar" onclick="showAbout()"></li>
-            <li class = "navButton" id = "navSearch" title = "Product Search" onclick = "alert('This feature is under construction!')" data-tab-target = "#searchPage"></li>
-            <li class = "navButton" id = "navAutomation" title = "Automation Dashboard" data-tab-target = "#automationPage" style = "background-color: var(--primary3)"></li>
-            <li class = "navButton" id = "navSettings" title = "Settings" data-tab-target = "#settingsPage"></li>
-            <li class = "navButton" id = "navInfo" title = "About" onclick="showAbout()"></li>
+            <li class = "navButton navSearch" active = "false" id = "" title = "Product Search" onclick = "alert('This feature is under construction!')" data-tab-target = "#searchPage"></li>
+            <li class = "navButton navAutomation" active = "true" id = "" title = "Automation Dashboard" data-tab-target = "#automationPage"></li>
+            <li class = "navButton navSettings" active = "false" id = "" title = "Settings" data-tab-target = "#settingsPage"></li>
+            <li class = "navButton navInfo" active = "false" id = "" title = "About" onclick="showAbout()"></li>
             
         </ul>
             

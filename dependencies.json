@@ -55,6 +55,30 @@
             "hidden":false,
             "version": 1.2,
             "description": "Takes the feature view exported from Badger and turns it into email product blocks."
+        },
+        {
+            "name": "Clean Pasteboard",
+            "filename":"clean_pasteboard.jsx",
+            "url":"https://www.dropbox.com/s/ltqk787wazu1kxl/clean_pasteboard.jsx?dl=1",
+            "hidden":false,
+            "version": 1.0,
+            "description": "Removes all items from pasteboard."
+        },
+        {
+            "name": "Convert Quotes to Foot & Inch Marks",
+            "filename":"format_quotes.jsx",
+            "url":"https://www.dropbox.com/s/paevq7hjnm6ihxh/format_quotes.jsx?dl=1",
+            "hidden":false,
+            "version": 1.0,
+            "description": "Converts double quotes to inch marks and single quotes to foot mark characters."
+        },
+        {
+            "name": "Proper Fractions",
+            "filename":"proper_fraction.jsx",
+            "url":"https://www.dropbox.com/s/e83n6qun2u7e6z4/proper_fraction.jsx?dl=1",
+            "hidden":false,
+            "version": 2.01,
+            "description": "Just select a fraction, like 1/8, run the automation and you get a properly styled fraction."
         }
     ]
 }

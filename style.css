@@ -10,6 +10,7 @@
     --secondary1: #0D1520;
     --secondary2: #121927;
     --waveFill: #0D1520;
+
 }
 
 @font-face {
@@ -94,8 +95,10 @@ li {
 }
 
 #automationTasks {
+    height: 100%;
     width: calc(100vw - 150px);
     margin-left: 90px;
+    overflow-y: scroll;overflow-x: hidden;
 
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -112,28 +115,18 @@ li {
 
 #automationStatus {
     margin-top:10px;
-    background-color: transparent;
-    border: 1px solid var(--primary1);
     display: grid;
     grid-template-columns: 1fr 1fr;
     height: 60px;
     padding: 10px;
     border-radius: 20px;
     margin-bottom: 10px;
-
     width: calc(100vw - 130px);
     margin-left: 90px;
-
+    
+    background-color: transparent;
+    border: 1px solid var(--primary0);
     pointer-events: none;
-}
-
-#automationStatus span {
-    position: absolute;
-    top:0;left:0;
-    height: 60px;
-    width: 50vw;
-    filter: blur(80px);
-    background: #01b2fe;
 }
 
 #resourceMonitor {
@@ -180,28 +173,28 @@ li {
     font-weight: bold;
 }
 
-#navSearch {
+.navSearch {
     background-image: url('images/search_default.svg');
 }
-#navSearch:hover {
+.navSearch[active="true"],.navSearch:hover {
     background-image: url('images/search_hover.svg');
 }
-#navAutomation {
+.navAutomation {
     background-image: url('images/automation_default.svg');
 }
-#navAutomation:hover {
+.navAutomation[active="true"], .navAutomation:hover {
     background-image: url('images/automation_hover.svg');
 }
-#navSettings {
+.navSettings {
     background-image: url('images/settings_default.svg');
 }
-#navSettings:hover {
+.navSettings[active="true"], .navSettings:hover {
     background-image: url('images/settings_hover.svg');
 }
-#navInfo {
+.navInfo {
     background-image: url('images/info_default.svg');
 }
-#navInfo:hover {
+.navInfo[active="true"], .navInfo:hover {
     background-image: url('images/info_hover.svg');
 }
 
@@ -355,7 +348,7 @@ input[type="search"]:active, input[type="text"]:active {
     transform: translateY( -50%);
 
     border: 1px solid var(--primary0);
-    background-color: var(--primary1);
+    background-color: var(--secondary2);
     backdrop-filter: blur(30px);
 }
 
@@ -381,6 +374,12 @@ input[type="search"]:active, input[type="text"]:active {
 }
 .navButton:active {
     scale: 0.9;
+}
+.navButton[active = "true"] {
+    background-color: var(--primary3);
+}
+.navButton[active = "false"] {
+    background-color: transparent;
 }
 
 .toolbar {
@@ -678,7 +677,7 @@ h2 {
         left: 50%;
         height: 20px;
         transform: translateX(-50%);
-        margin-bottom: 35px;
+        margin-bottom: 10px;
         padding: 20px 10px 20px 10px;
     }
     input[type="search"] {
@@ -692,11 +691,29 @@ h2 {
     }
 }
 
+/* compact view */
 @media(max-width: 640px) {
     #automationTasks {
         grid-template-columns: 1fr;
-        
     }
+    #automationStatus {
+        grid-template-columns: 1fr;
+        height:auto;
+        border:none;
+        margin-top: 0;
+        /* margin-top:40px; */
+        /* border-top:0; border-radius: 0px 0px 20px 20px; */
+    }
+    #resourceMonitor {
+        justify-content: center;
+    }
+    h1 {
+        text-align: center;
+        margin:auto;margin:20px;
+    }
+    .wrapper {height:calc(100vh - 100px);}
+    .navigation {bottom:10px;width:calc(100vw - 60px);}
+    .statusBar{padding-bottom:0px;padding-top:20px;}
 }
 
 [data-tab-page] {
@@ -716,8 +733,8 @@ h2 {
         --primary2: white;
         --primary3: #4B73FF;
 
-        --secondary1: #FBFEFF; /*window bg*/
-        --secondary2: #f3fbff; /*card group bg*/
+        --secondary1: #fdffff; /*window bg*/
+        --secondary2: #F9FBFC; /*card group bg*/
 
         --black: #262121; /*h2 text*/
         --gray : #ECF6FA;
@@ -728,10 +745,36 @@ h2 {
         filter: drop-shadow(0px 0px 20px var(--primary3));
         background-color: rgba(255,255,255,0.2);
     }
-    #automationStatus span {
-        background-color: transparent;
-    }
 
     #navLogo {background-image: url('images/stellar_logo_vert_light.svg');}
+    .navSearch {
+        background-image: url('images/search_black.svg');
+    }
+    .navSearch[active="false"]:hover {
+        background-image: url('images/search_black_hover.svg');
+    }
+    .navAutomation {
+        background-image: url('images/automation_black.svg');
+    }
+    .navAutomation[active="false"]:hover {
+        background-image: url('images/automation_black_hover.svg');
+    }
+    .navSettings {
+        background-image: url('images/settings_black.svg');
+    }
+    .navSettings[active="false"]:hover {
+        background-image: url('images/settings_black_hover.svg');
+    }
+    .navInfo {
+        background-image: url('images/info_black.svg');
+    }
+    .navInfo[active="false"]:hover {
+        background-image: url('images/info_black_hover.svg');
+    }
 }
 
+@media (max-width: 1080px) and (prefers-color-scheme: light) {
+    #navLogo {
+        background-image: url('images/stellar_logo_horz_light.svg');
+    }
+}

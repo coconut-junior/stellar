@@ -1,9 +1,11 @@
 const { run } = require("node:test");
-const dependencyURL = "https://www.dropbox.com/s/0t7yxgxf3msoll5/dependencies.json?dl=1";
-var dependencies = [];
-var scriptPath = getScriptPath();
 const { exec } = require("child_process");
 const { gsap } = require("gsap/dist/gsap");
+const dependencyURL = "https://www.dropbox.com/s/0t7yxgxf3msoll5/dependencies.json?dl=1";
+
+var dependencies = [];
+var scriptPath = getScriptPath();
+var minimizeOnLaunch = false;
 
 $.ajax({
     url: dependencyURL,
@@ -27,12 +29,17 @@ function downloadDependencies() {
     dependencies['scripts'].forEach(function(dependency) {
         let fileName = dependency['filename'];
         let scriptName = dependency['name'];
+        let fullScriptName = scriptName;
         let version = dependency['version'];
         let hidden = dependency['hidden'];
         let url = dependency['url'];
         let filePath = `${scriptPath}/${fileName}`;
         let description = dependency['description'];
         let homePath = getHomePath();
+
+        if(scriptName.length > 24) {
+            scriptName = scriptName.slice(0,24) + "...";
+        }
         
         $.ajax({
             url: dependency['url'],
@@ -45,7 +52,7 @@ function downloadDependencies() {
                 if(!hidden) {
                     let html = `
                     <div class="result" id = "idScript${i}" style = "padding:10px;width:auto;position:relative;height:100px;margin:0;">
-                        <button onclick = "alert('${description}')" class = "navButton" id = "navInfo" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:10px;right:10px;"></button>
+                        <button onclick = "alert('${fullScriptName} \\n\\n ${description}')" class = "navButton navInfo" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:10px;right:10px;"></button>
 
                         <h2 style = "padding:5px;" class = "productTitle">${scriptName}</h2>
                         <p class = "resultEntry" style = "text-align:center;">Version: ${version}</p>
@@ -53,14 +60,13 @@ function downloadDependencies() {
                             <button class = "primary" onclick = "runTool('${fileName}','${url}',null)">&#9889;<br>Launch</button>
                             <button>&#x23F0;<br>Schedule</button>
                             <button class = "modifyButton" onclick = "shell.openPath('${filePath}')">&#x270f;</span><br> Modify</button>
-
                         </div>
                     </div>
                     `;
                     $(`#automationTasks`).append(html);
 
                     let id = i;
-                    gsap.from(`#idScript${id}`, {duration: 2, ease: "elastic.out(1, 0.4)",y:-100,opacity:0,lazy:true});
+                    gsap.from(`#idScript${id}`, {duration: 2, ease: "elastic.out(1, 0.4)",y:-100,opacity:0});
                     
                     $(`#idScript${id}`).on('mouseenter', function(event) {
                         gsap.to(`#idScript${id}`,{duration:0.01,transformOrigin:"center",ease:"circ.out",scale:0.95,perspective:'500px'});
@@ -168,7 +174,9 @@ function runJSX(scriptName, args) {
         console.log(`stdout: ${stdout}`);
     });
 
-    minimizeApp();
+    if(minimizeOnLaunch) {
+        minimizeApp();
+    }
 }
 
 function runTool(fileName, url, args) {

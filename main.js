@@ -3,9 +3,10 @@
   licensing information
 
 
+  create option to pin scripts to nav bar
+
 */
 
-// Modules to control application life and create native browser window
 const {app, BrowserWindow, shell} = require('electron');
 const path = require('path');
 const {dialog} = require('electron');
@@ -14,6 +15,7 @@ const fs = require('fs');
 const {ipcMain} = require('electron');
 const {autoUpdater} = require('electron-updater');
 const {globalShortcut} = require('electron');
+var mainWindow;
 
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
@@ -32,6 +34,19 @@ ipcMain.on('getHome', function(event) {
     event.returnValue = homePath;
 });
 
+ipcMain.handle('setWindowOnTop', function(event) {
+  mainWindow.setAlwaysOnTop("true"); 
+});
+
+ipcMain.handle('setWindowOnBottom', function(event) {
+  mainWindow.setAlwaysOnTop("false"); 
+});
+
+ipcMain.on('resize-window', (event, width, height) => {
+  let browserWindow = BrowserWindow.fromWebContents(event.sender)
+  browserWindow.setSize(width,height)
+})
+
 function about() {
   const { dialog } = require('electron');
   const options = {
@@ -46,9 +61,11 @@ function about() {
 
 function createWindow () {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1280,
     height: 768,
+    minWidth: 400,
+    minHeight: 800,
     title: 'Stellar',
     icon: path.join(__dirname, 'icon.icns'),
     webPreferences: {
