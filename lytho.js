@@ -1,9 +1,16 @@
-const apiKey = "vBxSlMvKR562lGpWlrU5J5UwqR2UX84V5bsmD3kW";
-const host = "https://openapi.us-1.lytho.us"
+const http = require('https');
+const { url } = require('inspector');
+const xlsx = require('xlsx');
+
+const apiKey = "vceurIcnyp6RJqyg0j87l8Phcya5Upzk9SswSuMy";
+const host = "https://openapi.us-1.lytho.us";
 const headers = {
-    'Accept': 'application/json',
     'x-api-key': apiKey
 };
+
+function openFile() {
+    return ipcRenderer.sendSync('openFile');
+}
 
 function getAssetLink(assetID) {
     var url = host + "/v1/assets/" + assetID + "/embeddedlink-original";
@@ -24,8 +31,7 @@ function getAssetLink(assetID) {
 function searchAssets(query) {
     var url = host + `/v1/assets/search?searchQuery=${query}`;
     var assets;
-    //get
-    //data.content[i].id;
+    
     $.ajax({
         async: false,
         url: url,
@@ -33,12 +39,62 @@ function searchAssets(query) {
         headers: headers,
         success: function(data) {
             assets = data.content;
+            if(assets.length == 0) {console.log(`Could not find ${query}`)}
+        },
+        error: function(err) {
+            //assets = err.content;
+            console.log(err.status);
+            console.log(err.message);
+            console.log(err.traceId);
         }
     });
 
     return assets;
 }
 
-//console.log(getAssetLink('6458fdcd5af84826f6fa6b1b'));
+function findMatch(brand) {
+    let assets = searchAssets(brand);
 
-//https://openapi.us-1.lytho.us/v1/assets/search?searchQuery=mothers
+    if(assets.length > 0) {
+        let match = assets[0].id;
+        let link = getAssetLink(match);
+        return link;
+    }
+}
+
+var download = function(url, dest, cb) {
+    var file = fs.createWriteStream(dest);
+    http.get(url, function(response) {
+      response.pipe(file);
+      file.on('finish', function() {
+        file.close(cb);
+      });
+    });
+}
+
+function downloadLogos(brands,logoPath) {
+    $.each(brands, function(i, brand) {
+        let match = findMatch(brand);
+        download(match, `${logoPath}/${brand}.ai`);
+    });
+}
+
+function buildFlyer() {
+    let fileName = openFile();
+    let logoPath = path.dirname(fileName) + '/logos';
+    if(!fs.existsSync(logoPath)) {fs.mkdirSync(logoPath);}
+
+    let workbook = xlsx.readFile(fileName);
+    let sheetNames = workbook.SheetNames;
+    let rows = xlsx.utils.sheet_to_json(workbook.Sheets[sheetNames[0]]);
+
+    //brands on col 4
+    $.each(rows, (i, row) => {
+        let progress = i/rows.length;
+        ipcRenderer.send('setProgress', progress);
+        let logos = row['Logo'];
+        downloadLogos([logos],logoPath);
+    });
+
+    ipcRenderer.send('setProgress', -1);
+}

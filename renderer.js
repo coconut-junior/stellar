@@ -34,7 +34,7 @@ function setWindowOnBottom() {
 function compactMode() {
     ipcRenderer.send('resize-window', 400, 800);
 }
-setWindowOnTop();
+//setWindowOnTop();
 compactMode();
 
 function drag(event) {

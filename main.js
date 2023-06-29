@@ -17,10 +17,17 @@ const {autoUpdater} = require('electron-updater');
 const {globalShortcut} = require('electron');
 var mainWindow;
 
+app.commandLine.appendSwitch('ignore-certificate-errors');
+
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
 
 var homePath = require('os').homedir();
+
+app.on('window-all-closed', function(){
+  if(process.platform == 'darwin')
+      app.quit();
+});
 
 ipcMain.handle('showAbout',(event) => {
   about();
@@ -58,6 +65,20 @@ function about() {
   };
   dialog.showMessageBox(options).then(box => {});
 }
+
+ipcMain.on('setProgress', (event, progress) => {
+  mainWindow.setProgressBar(progress);
+});
+
+ipcMain.on('openFile', function(event){
+  let types = [
+    {name: 'Spreadsheets', extensions: ['xls', 'xlsx']}
+  ];
+  let options = {filters:types, properties:['openFile']};
+  dialog.showOpenDialog(options).then(result => {
+    event.returnValue = result.filePaths[0];
+  });
+});
 
 function createWindow () {
   // Create the browser window.

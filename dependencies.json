@@ -79,6 +79,33 @@
             "hidden":false,
             "version": 2.01,
             "description": "Just select a fraction, like 1/8, run the automation and you get a properly styled fraction."
+        },
+        {
+            "name": "Create Stitcher Ads",
+            "filename":"stitcher_stellar.jsx",
+            "url":"https://www.dropbox.com/s/a9orzrjvc27t20g/stitcher_stellar.jsx?dl=1",
+            "hidden":false,
+            "version": 1.7,
+            "description": "Creates ads for stitcher and sorts them into folders by DC."
         }
+        ,
+        {
+            "name": "Group Product Blocks",
+            "filename":"group_blocks.jsx",
+            "url":"https://www.dropbox.com/s/2mj4o22yv8z2r96/group_blocks.jsx?dl=1",
+            "hidden":false,
+            "version": 1.0,
+            "description": "Anything inside a product block (white rectangle) will be grouped. To ensure this works properly, first check that elements are not hanging off the edge of the block too much."
+        },
+        {
+            "name": "Export Groups",
+            "filename":"export_groups.jsx",
+            "url":"https://www.dropbox.com/s/beynn792t91lkwv/export_groups.jsx?dl=1",
+            "hidden":false,
+            "version": 1.0,
+            "description": "Automatically exports groups as PNGs into a folder named 'images'. The filename is determined by the text inside each group."
+        }
+
+        
     ]
 }

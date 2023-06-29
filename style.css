@@ -354,6 +354,8 @@ input[type="search"]:active, input[type="text"]:active {
 
 .primary {
     color:white;
+    padding-left: 20px;
+    padding-right: 20px;
     background-color: var(--primary3);
 }
 
@@ -742,8 +744,14 @@ h2 {
 
     button:hover {
         color: var(--bright);
-        filter: drop-shadow(0px 0px 20px var(--primary3));
+        filter: drop-shadow(0px 0px 20px var(--primary0));
         background-color: rgba(255,255,255,0.2);
+    }
+
+    .primary:hover {
+        color: var(--dark);
+        filter: drop-shadow(0px 0px 20px var(--primary3));
+        background-color: var(--primary3);
     }
 
     #navLogo {background-image: url('images/stellar_logo_vert_light.svg');}

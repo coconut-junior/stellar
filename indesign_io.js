@@ -57,9 +57,9 @@ function downloadDependencies() {
                         <h2 style = "padding:5px;" class = "productTitle">${scriptName}</h2>
                         <p class = "resultEntry" style = "text-align:center;">Version: ${version}</p>
                         <div style = "display:flex;flex-direction:row;gap:10px;justify-content:center;">
-                            <button class = "primary" onclick = "runTool('${fileName}','${url}',null)">&#9889;<br>Launch</button>
-                            <button>&#x23F0;<br>Schedule</button>
-                            <button class = "modifyButton" onclick = "shell.openPath('${filePath}')">&#x270f;</span><br> Modify</button>
+                            <button class = "primary" onclick = "runTool('${fileName}','${url}',null)">&#9889; Launch</button>
+                            <!--<button onclick = "alert('This feature is coming soon!')">&#x23F0;<br>Schedule</button>-->
+                            <button class = "modifyButton" style = "width:64px;" onclick = "shell.openPath('${filePath}')">&#x270f;<br>Modify</span></button>
                         </div>
                     </div>
                     `;
