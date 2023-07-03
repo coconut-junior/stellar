@@ -13,14 +13,11 @@ const {dialog} = require('electron');
 const { fstat } = require('fs');
 const fs = require('fs');
 const {ipcMain} = require('electron');
-const {autoUpdater} = require('electron-updater');
 const {globalShortcut} = require('electron');
+const http = require('https');
 var mainWindow;
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
-
-autoUpdater.autoDownload = true;
-autoUpdater.autoInstallOnAppQuit = true;
 
 var homePath = require('os').homedir();
 
@@ -119,10 +116,6 @@ app.whenReady().then(() => {
   }
 
   createWindow();
-
-  console.log("Checking for updates...");
-  autoUpdater.checkForUpdatesAndNotify()
-  //autoUpdater.checkForUpdates();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -132,6 +125,3 @@ app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
 });
 
-autoUpdater.on('update-downloaded', (info) => {
-  console.log('Update downloaded');
-});

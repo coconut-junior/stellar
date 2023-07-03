@@ -62,7 +62,7 @@ function findMatch(brand) {
     }
 }
 
-var download = function(url, dest, cb) {
+function download (url, dest, cb) {
     var file = fs.createWriteStream(dest);
     http.get(url, function(response) {
       response.pipe(file);
@@ -75,6 +75,7 @@ var download = function(url, dest, cb) {
 function downloadLogos(brands,logoPath) {
     $.each(brands, function(i, brand) {
         let match = findMatch(brand);
+        brand = brand.replaceAll('\',').replaceAll(/\//g, " ");
         download(match, `${logoPath}/${brand}.ai`);
     });
 }
@@ -97,4 +98,7 @@ function buildFlyer() {
     });
 
     ipcRenderer.send('setProgress', -1);
+
+    //launch script
+    runJSX('build_flyer_stellar.jsx',`{"${fileName}","stellar"}`);
 }

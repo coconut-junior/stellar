@@ -1,7 +1,10 @@
 const { run } = require("node:test");
 const { exec } = require("child_process");
 const { gsap } = require("gsap/dist/gsap");
-const dependencyURL = "https://www.dropbox.com/s/0t7yxgxf3msoll5/dependencies.json?dl=1";
+const dependencyURL = "https://public.bn.files.1drv.com/y4mFg1x8p0USS4-uzuILtcZNwPIheOYizbJV3d0-6t0PjbyIOYkLT48iITLVYCYHu3A6V7T3xU5XcrHRACahLk02jCAnRcDlXsss770b-CIc1ocwgQ2-9xzsyHOoAPhEJ3KouncVHgvbWZALCP_gK8TRy1bvFPZY0j7ppFl8CN144FsIWkwZw5hzNWj_rzz0sdBrpDfmAcCrpjAtJ2FL8PJ8XyBqP-ECmeUIfR315EzPdA?AVOverride=1";
+const request = require('request');
+const DecompressZip = require("decompress-zip");
+
 
 var dependencies = [];
 var scriptPath = getScriptPath();
@@ -10,7 +13,9 @@ var minimizeOnLaunch = false;
 $.ajax({
     url: dependencyURL,
     success: function(data) {
-        dependencies = JSON.parse(data);
+        console.log(data);
+        // dependencies = JSON.parse(data);
+        dependencies = data; //ondrive returns json object, otherwise parse json
         downloadDependencies();
     },
     statusCode: {
@@ -45,7 +50,7 @@ function downloadDependencies() {
             url: dependency['url'],
             success: function(data) {
                 
-                if(!fileName.match('html')) {
+                if(!fileName.match('html') && !fileName.match('zip')) {
                     fs.writeFileSync(`${getScriptPath()}/${fileName}`, data);
                 }
 
@@ -81,8 +86,38 @@ function downloadDependencies() {
             }
         });
 
+        //download and extract zip files
+
+        if(fileName.match('.zip')) {
+            $(`.statusBar`).html('Extracting assets...');
+            let out = fs.createWriteStream(`${getScriptPath()}/${fileName}`);
+            let extractPath = path.dirname(`${getScriptPath()}${fileName}`);
+
+            request(url).pipe(out).on('finish',function() { //figure out how to call this synchronously
+                console.log(extractPath);
+                let unzipper = new DecompressZip(`${getScriptPath()}/${fileName}`);
+
+                unzipper.on('error', function (err) {
+                    console.log('Caught an error', err);
+                });
+                unzipper.extract({
+                    path: extractPath
+                });
+            });
+
+        }
+
         i = 0;
         
+    });
+
+    console.log('enabling flyer script');
+    $(`#idScript999`).css('display','flex');
+    $(`#idScript999`).on('mouseenter', function(event) {
+        gsap.to(`#idScript999`,{duration:0.01,transformOrigin:"center",ease:"circ.out",scale:0.95,perspective:'500px'});
+    });
+    $(`#idScript999`).on('mouseleave', function(event) {
+        gsap.to(`#idScript999`,{duration:0.01,rotationX: 0,transformOrigin:"center",ease:"circ.out",scale:1});
     });
 
     $(`.statusBar`).html('Automations are up to date.');

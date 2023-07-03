@@ -363,6 +363,10 @@ input[type="search"]:active, input[type="text"]:active {
     background-color: var(--primary3);
 }
 
+#idScript999 {
+    display: none;
+}
+
 .navButton {
     cursor: pointer;
     height: 20px;
