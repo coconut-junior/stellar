@@ -8,5 +8,5 @@ const fpPromise = import('https://openfpcdn.io/fingerprintjs/v3')
       // This is the visitor identifier:
       const visitorId = result.visitorId
       console.log(visitorId)
-      $('#fingerprint').html(`Device Fingerprint: ${visitorId}`)
+      $('#fingerprint').html(visitorId)
     })

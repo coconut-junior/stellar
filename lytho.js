@@ -8,6 +8,8 @@ const headers = {
     'x-api-key': apiKey
 };
 
+$(`#apiKey`).html(apiKey);
+
 function openFile() {
     return ipcRenderer.sendSync('openFile');
 }
@@ -81,6 +83,8 @@ function downloadLogos(brands,logoPath) {
 }
 
 function buildFlyer() {
+    if(minimizeOnLaunch){minimizeApp();}
+    
     let fileName = openFile();
     let logoPath = path.dirname(fileName) + '/logos';
     if(!fs.existsSync(logoPath)) {fs.mkdirSync(logoPath);}
@@ -88,6 +92,8 @@ function buildFlyer() {
     let workbook = xlsx.readFile(fileName);
     let sheetNames = workbook.SheetNames;
     let rows = xlsx.utils.sheet_to_json(workbook.Sheets[sheetNames[0]]);
+
+    alert('Logos will begin downloading now. Please wait...');
 
     //brands on col 4
     $.each(rows, (i, row) => {

@@ -50,5 +50,3 @@ var monitorLoop = setInterval(function() {
     $(`#cpuMeter`).css('height',`${percentageCPU}%`);
     
 }, 250);
-
-clearInterval(monitorLoop);

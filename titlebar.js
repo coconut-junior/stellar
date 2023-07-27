@@ -6,6 +6,6 @@ function createTitleBar() {
     windowTopBar.style.position = "absolute"
     windowTopBar.style.top = windowTopBar.style.left = 0
     windowTopBar.style.webkitAppRegion = "drag"
-    windowTopBar.style.zIndex = -1;
+    windowTopBar.style.zIndex = -1
     document.body.appendChild(windowTopBar)
 }

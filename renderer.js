@@ -13,12 +13,35 @@ var results = [];
 var products = [];
 var adBuilderList = [];
 
+//remember settings
+const Store = require('electron-store');
+var store = new Store();
+$(`#appearanceDropdown`).val(store.get('appearance'));
+$(`#minimizeDropdown`).val(String(store.get('minimizeOnLaunch')));
+
+$(`#appearanceDropdown`).on('change', function(){
+    let appearance = $(`#appearanceDropdown`).val();
+    setAppearance(appearance);
+});
+
+$(`#minimizeDropdown`).on('change', function(){
+    ipcRenderer.sendSync('setMinimizeBehavior',($(`#minimizeDropdown`).val() === "true"));
+});
+
+function setAppearance(appearance) {
+    ipcRenderer.sendSync('setAppearance',appearance);
+}
+
 function showAbout() {
     ipcRenderer.invoke('showAbout');
 }
 
 function getHomePath() {
     return ipcRenderer.sendSync('getHome');
+}
+
+function showError(message) {
+    ipcRenderer.sendSync('showError',message);
 }
 
 function minimizeApp() {
@@ -34,8 +57,7 @@ function setWindowOnBottom() {
 function compactMode() {
     ipcRenderer.send('resize-window', 400, 800);
 }
-//setWindowOnTop();
-compactMode();
+setWindowOnTop();
 
 function drag(event) {
     event.dataTransfer.setData('text',event.target.id);
@@ -248,4 +270,4 @@ function readDatabase(jsonText) {
 }
 
 createTitleBar();
-search();
+// search();

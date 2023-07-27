@@ -1,34 +1,36 @@
-const { run } = require("node:test");
 const { exec } = require("child_process");
 const { gsap } = require("gsap/dist/gsap");
-const dependencyURL = "https://public.bn.files.1drv.com/y4mFg1x8p0USS4-uzuILtcZNwPIheOYizbJV3d0-6t0PjbyIOYkLT48iITLVYCYHu3A6V7T3xU5XcrHRACahLk02jCAnRcDlXsss770b-CIc1ocwgQ2-9xzsyHOoAPhEJ3KouncVHgvbWZALCP_gK8TRy1bvFPZY0j7ppFl8CN144FsIWkwZw5hzNWj_rzz0sdBrpDfmAcCrpjAtJ2FL8PJ8XyBqP-ECmeUIfR315EzPdA?AVOverride=1";
+const dependencyURL = "https://jbx.design/stellar/dependencies.json";
 const request = require('request');
 const DecompressZip = require("decompress-zip");
+const party = require('party-js');
+const { verify } = require("crypto");
 
-
-var dependencies = [];
+dependencies = [];
 var scriptPath = getScriptPath();
-var minimizeOnLaunch = false;
 
 $.ajax({
     url: dependencyURL,
-    success: function(data) {
-        console.log(data);
+    cache: false,
+    success: function(data, status) {
+        console.log('Connection succeeded.');
         // dependencies = JSON.parse(data);
-        dependencies = data; //ondrive returns json object, otherwise parse json
+        dependencies = data; //sometimes server responds with json object, otherwise parse json
         downloadDependencies();
     },
     statusCode: {
         404: function() {
-            console.log("Error 404: Couldn't reach the database.");
+            showError("Error 404: Couldn't reach the database.");
         },
     }
+}).fail(function() {
+    showError('You are offline. Please connect to the internet to access all automations.');
+    $(`.statusBar`).html('You are offline.');
+    $(`#automationTasks`).attr('status','offline');
 });
 
 function downloadDependencies() {
     $(`.statusBar`).html('Updating automations...');
-    console.log('Downloading dependencies...');
-    console.log(dependencies);
     var i = 0;
 
     dependencies['scripts'].forEach(function(dependency) {
@@ -62,9 +64,9 @@ function downloadDependencies() {
                         <h2 style = "padding:5px;" class = "productTitle">${scriptName}</h2>
                         <p class = "resultEntry" style = "text-align:center;">Version: ${version}</p>
                         <div style = "display:flex;flex-direction:row;gap:10px;justify-content:center;">
-                            <button class = "primary" onclick = "runTool('${fileName}','${url}',null)">&#9889; Launch</button>
+                            <button class = "primary" id = "launchButton${i}">&#9889; Launch</button>
                             <!--<button onclick = "alert('This feature is coming soon!')">&#x23F0;<br>Schedule</button>-->
-                            <button class = "modifyButton" style = "width:64px;" onclick = "shell.openPath('${filePath}')">&#x270f;<br>Modify</span></button>
+                            <button class = "modifyButton" title = "Modify" style = "width:60px;" onclick = "shell.openPath('${filePath}')">&#x270f;</span></button>
                         </div>
                     </div>
                     `;
@@ -74,15 +76,22 @@ function downloadDependencies() {
                     gsap.from(`#idScript${id}`, {duration: 2, ease: "elastic.out(1, 0.4)",y:-100,opacity:0});
                     
                     $(`#idScript${id}`).on('mouseenter', function(event) {
-                        gsap.to(`#idScript${id}`,{duration:0.01,transformOrigin:"center",ease:"circ.out",scale:0.95,perspective:'500px'});
+                        gsap.to(`#idScript${id}`,{duration:0.05,transformOrigin:"center",ease:"circ.out",scale:0.95,perspective:'500px'});
                     });
                     $(`#idScript${id}`).on('mouseleave', function(event) {
                         gsap.to(`#idScript${id}`,{duration:0.01,rotationX: 0,transformOrigin:"center",ease:"circ.out",scale:1});
                     });
 
-                    $(`#automationTasks`).css('background-image','none');
+                    $(`#launchButton${id}`).on('click', function(event) {
+                        launch(`#launchButton${id}`, fileName, url, null);
+                    });
+
+                    $(`#automationTasks`).attr('status','none');
                     ++i;
                 }
+            },
+            error: function(err) {
+                console.log(err.status);
             }
         });
 
@@ -95,7 +104,8 @@ function downloadDependencies() {
 
             request(url).pipe(out).on('finish',function() { //figure out how to call this synchronously
                 console.log(extractPath);
-                let unzipper = new DecompressZip(`${getScriptPath()}/${fileName}`);
+                let zipPath = `${getScriptPath()}/${fileName}`;
+                let unzipper = new DecompressZip(zipPath);
 
                 unzipper.on('error', function (err) {
                     console.log('Caught an error', err);
@@ -107,20 +117,32 @@ function downloadDependencies() {
 
         }
 
+        ipcRenderer.send('setProgress', i/dependencies['scripts'].length);
         i = 0;
         
     });
 
+    //build flyer automation
     console.log('enabling flyer script');
     $(`#idScript999`).css('display','flex');
+    gsap.from(`#idScript999`, {duration: 2, ease: "elastic.out(1, 0.4)",y:-100,opacity:0});
+
     $(`#idScript999`).on('mouseenter', function(event) {
-        gsap.to(`#idScript999`,{duration:0.01,transformOrigin:"center",ease:"circ.out",scale:0.95,perspective:'500px'});
+        gsap.to(`#idScript999`,{duration:0.05,transformOrigin:"center",ease:"circ.out",scale:0.95,perspective:'500px'});
     });
     $(`#idScript999`).on('mouseleave', function(event) {
         gsap.to(`#idScript999`,{duration:0.01,rotationX: 0,transformOrigin:"center",ease:"circ.out",scale:1});
     });
+    $(`#buildFlyerInfo`).on('click', function(event) {
+        alert(`Build Flyer \n\n When prompted, select the Feature View spreadsheet that was exported from Badger. Then, wait for the logos to finish downloading. You will be prompted again to select the flyer dimensions.`);
+    });
+    $(`#buildFlyerButton`).on('click', function(event) {
+        launch(`#buildFlyerButton`, 'buildFlyer', null, null);
+    });
+    //
 
     $(`.statusBar`).html('Automations are up to date.');
+    ipcRenderer.send('setProgress', -1);
 }
 
 function openDoc(fileName) {
@@ -131,8 +153,40 @@ function openProductBlock(fileName, indexes){
     runJSX(`isolate_items.jsx`,`{"${getRelativePath(fileName)}","${indexes}"}`);
 }
 
-//runJSX(`isolate_items.jsx`,`{"/Users/jblanck/Library/CloudStorage/OneDrive-SharedLibraries-OlliesBargainOutlet/Creative Services - Designs/emails/2023/item_emails/1_31_coffee_email/1_31_coffee_email.indd","2,7"}`);
-//runTool('autotagger/index.html');
+var launch = function(button, fileName, url, args){
+    repeatCount = 5;
+    $(button).css('transition','none');
+    gsap.from(button, {duration: 0.5, ease: "circ.in",transformOrigin:"center", scale: 0.9});
+    gsap.to(button,0.1,{backgroundColor: 'black'});
+
+    //button
+    gsap.to(button, {delay: 0.5,duration: 0.2, ease: "circ.out",transformOrigin:"center", scale: 1,
+        onComplete: function() {
+            party.resolvableShapes["star"] = `<img height = "20px" width = "20px" src="images/star.png"/>`;
+            party.sparkles(document.querySelector(button, {
+                spread: 10,
+                count: 10,
+                size: 0.2,
+                speed: 1000,
+                lifetime: party.variation.range(0.5,1),
+                rotation: 0
+            }));
+        }
+    });
+    
+    if(fileName == 'buildFlyer') {
+        gsap.to(button,1,{delay: 1,y:0, x:0,backgroundColor:'var(--primary3)',ease: "circ.in",
+            onComplete: buildFlyer
+        });
+    }
+    else {
+        gsap.to(button,1,{delay: 1,y:0, x:0,backgroundColor:'var(--primary3)',ease: "circ.in",
+        onComplete: runTool,
+        onCompleteParams: [fileName, url, args]
+    });
+    }
+
+}
 
 function buildAd() {
     let blocks = [];
@@ -152,54 +206,41 @@ function buildAd() {
 function getScriptPath() {
     let path = getHomePath() + `/Library/Preferences/Adobe InDesign`;
     let folders = fs.readdirSync(path);
-    let latestVersionInt = 0;
-    let latestVersion = '';
+    let latestVersion = 0;
+    let latestVersionString = '';
 
     folders.forEach( function(element, index) {
         if(element.toLowerCase().match('version')) {
             //get latest version
-            let version = parseInt(element.replace(/[^0-9]/g, ''));
-            if(version > latestVersionInt) {latestVersion = element;}
+            let version = parseFloat(element.replace(/[^0-9.]/g, ''));
+            if(version > latestVersion) {latestVersionString = element;latestVersion = version;}
         }
     });
 
-    return path + '/' + latestVersion + '/en_US/Scripts/Scripts Panel';
+    return path + '/' + latestVersionString + '/en_US/Scripts/Scripts Panel';
 }
 
-console.log(getScriptPath());
-
-function getInDesignPath() {
-    const fs = require("fs");
-    let folders = fs.readdirSync('/Applications');
-    let latestVersionInt = 0;
-    let latestVersion = '';
-    folders.forEach( function(element, index) {
-        if(element.toLowerCase().match('indesign')) {
-            //get latest version
-            let version = parseInt(element.replace(/[^0-9]/g, ''));
-            if(version > latestVersionInt) {latestVersion = element;}
-        }
-    });
-
-    return `/Applications/${latestVersion}`;
-}
-
-function runJSX(scriptName, args) {
+function runJSX(scriptName, arguments) {
     //save extendscript files
-
+    var args = arguments;
     //create bash script
-    if(args == null || args == ''){args = `{""}`}
+    if(args == null || args == ''){args = `{"stellar"}`;}
     let homePath = getHomePath();
     let bashScript = `osascript -e 'tell application id "com.adobe.indesign"\nset args to ${args}\ndo script "${scriptPath}/${scriptName}" language javascript with arguments args\nend tell'`;
-    console.log(bashScript);
     fs.writeFileSync(`${homePath}/Stellar/scripts/shell.sh`, bashScript);
     let script = `${homePath}/Stellar/scripts/shell.sh`;
+
+    console.log(bashScript);
 
     //run bash script
 
     exec(`bash ${script}`, (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
+            if(error.message.includes('authorize')) {
+                showError(`Looks like you're missing automation permissions. Please allow Stellar to control InDesign by granting it permission in Settings on your Mac.`);
+                window.open('https://support.apple.com/en-is/guide/mac-help/mchl07817563/mac');
+            }
             return;
         }
         if (stderr) {
@@ -209,12 +250,11 @@ function runJSX(scriptName, args) {
         console.log(`stdout: ${stdout}`);
     });
 
-    if(minimizeOnLaunch) {
-        minimizeApp();
-    }
+    minimizeApp();
 }
 
 function runTool(fileName, url, args) {
+    minimizeApp();
     console.log(`starting tool ${fileName}...`);
     let extension = fileName.split('.')[1];
 
@@ -229,25 +269,5 @@ function runTool(fileName, url, args) {
             break;
         default:
             console.log('unknown tool type');
-    }
-}
-
-function downloadAssets(assetList) {
-    let assets = assetList.split(',');
-    console.log("downloading assets...");
-    
-    for (let i in assets) {
-        let asset = assets[i];
-        if(asset.match("file:")) {
-            let link = "file://" + getRelativePath(asset.replace("file:","").replaceAll('%20',' '));
-            console.log(link);
-            if(fs.existsSync(link.replace('file://',''))) {
-                $(`#downloadLink`).attr('href',link);
-                $(`#downloadLink`)[0].click();
-            }
-            else {
-                console.log('file does not exist');
-            }
-        }
     }
 }

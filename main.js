@@ -7,7 +7,7 @@
 
 */
 
-const {app, BrowserWindow, shell} = require('electron');
+const {app, BrowserWindow, shell, nativeTheme} = require('electron');
 const path = require('path');
 const {dialog} = require('electron');
 const { fstat } = require('fs');
@@ -15,23 +15,71 @@ const fs = require('fs');
 const {ipcMain} = require('electron');
 const {globalShortcut} = require('electron');
 const http = require('https');
+const Store = require('electron-store');
+const { load } = require('@fingerprintjs/fingerprintjs');
 var mainWindow;
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
 
 var homePath = require('os').homedir();
+var store = new Store();
+var minimizeOnLaunch = true;
 
 app.on('window-all-closed', function(){
-  if(process.platform == 'darwin')
-      app.quit();
+  if(process.platform == 'darwin') {
+    app.quit();
+  }
 });
+
+function loadConfig() {
+  if(!Number.isInteger(store.get('windowWidth'))) {
+    mainWindow.setSize(400,800);
+    saveConfig();
+  }
+  else {
+    mainWindow.setSize(store.get('windowWidth'), store.get('windowHeight'));
+  }
+  nativeTheme.themeSource = store.get('appearance');
+  minimizeOnLaunch = store.get('minimizeOnLaunch');
+}
+
+function saveConfig() {
+  store.set('windowWidth', mainWindow.getContentSize()[0]);
+  store.set('windowHeight', mainWindow.getContentSize()[1]);
+}
 
 ipcMain.handle('showAbout',(event) => {
   about();
 });
 
+ipcMain.on('showError', function(event, message) {
+  let options = {
+    detail: message,
+    type: 'warning',
+    message:'Warning',
+    title:'Stellar',
+    icon:'icon.png'
+  };
+  dialog.showMessageBox(options);
+  event.returnValue = 'ok'; //always set a returnValue for ipc call, if not app may hang
+});
+
+ipcMain.on('setAppearance', function(event, appearance){
+  store.set('appearance', appearance);
+  nativeTheme.themeSource = appearance;
+  event.returnValue = 'ok';
+});
+
+ipcMain.on('setMinimizeBehavior', function(event, behavior){
+  console.log('setting min behavior')
+  console.log(behavior);
+  minimizeOnLaunch = behavior;
+  store.set('minimizeOnLaunch',behavior);
+  event.returnValue = 'ok';
+});
+
 ipcMain.handle('minimize', function(event){
-  BrowserWindow.getFocusedWindow().minimize();
+  if(minimizeOnLaunch){BrowserWindow.getFocusedWindow().minimize();}
 });
 
 ipcMain.on('getHome', function(event) {
@@ -47,12 +95,11 @@ ipcMain.handle('setWindowOnBottom', function(event) {
 });
 
 ipcMain.on('resize-window', (event, width, height) => {
-  let browserWindow = BrowserWindow.fromWebContents(event.sender)
-  browserWindow.setSize(width,height)
-})
+  let browserWindow = BrowserWindow.fromWebContents(event.sender);
+  browserWindow.setSize(width,height);
+});
 
 function about() {
-  const { dialog } = require('electron');
   const options = {
     type: 'info',
     message: 'Stellar ' + app.getVersion(),
@@ -91,7 +138,18 @@ function createWindow () {
       enableRemoteModule: true,
       contextIsolation: false
     },
-    titleBarStyle: "hiddenInset"
+    titleBarStyle: "hiddenInset",
+    transparent: true,
+    vibrancy: 'dark',
+    show: false
+  });
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
+
+  mainWindow.on("close", function () {
+    saveConfig();
   });
 
   globalShortcut.register('CommandOrControl+R', function() {
@@ -100,6 +158,7 @@ function createWindow () {
 	})
 
   mainWindow.loadFile('index.html');
+  loadConfig();
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 }

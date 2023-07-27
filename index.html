@@ -6,7 +6,6 @@
         <link rel = "stylesheet" href = "style.css">
         <link rel = "icon" type = "image/x-icon" href = "images/favicon.ico">
 
-        <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
         <script src = "titlebar.js"></script>
         <script src = "renderer.js" defer></script>
         <script src = "indesign_io.js" defer></script>
@@ -24,14 +23,10 @@
                 <div style = "display: flex;flex-direction: row;gap: 10px;width:100%;align-items: left;">
                     <h1 style = "padding:0;margin:auto;margin-left:40px;margin-right:40px;">Product Search</h1>
                     <input id = "searchBox" type="search" placeholder = "Search" oninput = "search()">
-                    <!-- <button id = "searchButton" onclick="search()">Search</button> -->
                     <div class = "viewToggle" onclick = "toggleView()">
                         <div class = "toggleSwitch"></div>
                     </div>
-                    
                 </div>
-
-                
             </div>
 
             <div class = "workingArea">
@@ -73,14 +68,16 @@
                     
                 </div>
 
-                <div class = "cardGroup" id = "automationTasks">
+                <div class = "cardGroup" status = "loading" id = "automationTasks">
+
+
                     <div class="result" id = "idScript999" style = "padding:10px;width:auto;position:relative;height:100px;margin:0;">
-                        <button onclick = "alert('Build Flyer \\n\\n ${description}')" class = "navButton navInfo" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:10px;right:10px;"></button>
+                        <button id = "buildFlyerInfo" class = "navButton navInfo" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:10px;right:10px;"></button>
 
                         <h2 style = "padding:5px;" class = "productTitle">Build Flyer</h2>
-                        <p class = "resultEntry" style = "text-align:center;">Version: 1.0</p>
+                        <p class = "resultEntry" style = "text-align:center;">Version: 2.0</p>
                         <div style = "display:flex;flex-direction:row;gap:10px;justify-content:center;">
-                            <button class = "primary" style = "width:190px;" onclick = "buildFlyer()">&#9889; Launch</button>
+                            <button class = "primary" style = "width:190px;" id = "buildFlyerButton">&#9889; Launch</button>
                             <!--<button onclick = "alert('This feature is coming soon!')">&#x23F0;<br>Schedule</button>-->
                         </div>
                     </div>
@@ -94,20 +91,46 @@
             <div style = "display: flex;flex-direction: column;align-items:center;justify-content: center;padding: 40px;">
                 <h1 style = "margin:auto;text-align: center;">Settings</h1>
                 <br>
-                <p id = "fingerprint">Device Fingerprint:</p>
+                <table>
+                    <tr>
+                        <td>Device fingerprint</td>
+                        <td id = "fingerprint">Undefined</td>
+                    </tr>
+                    <tr>
+                        <td>API key</td>
+                        <td id = "apiKey">Undefined</td>
+                    </tr>
+                    <tr>
+                        <td>Appearance</td>
+                        <td>
+                            <select name="appearance" id="appearanceDropdown">
+                                <option value="system">Auto</option>
+                                <option value="dark">Dark</option>
+                                <option value="light">Light</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Minimize after launch</td>
+                        <td>
+                            <select name="minimize" id="minimizeDropdown">
+                                <option value="true">Yes</option>
+                                <option value="false">No</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
 
-        
-        <div id = "betaIcon"></div>
+        <!-- <div id = "betaIcon"></div> -->
 
         <ul class = "navigation">
             <li id = "navLogo" title = "Stellar" onclick="showAbout()"></li>
-            <li class = "navButton navSearch" active = "false" id = "" title = "Product Search" onclick = "alert('This feature is under construction!')" data-tab-target = "#searchPage"></li>
+            <li class = "navButton navSearch" active = "false" id = "" title = "Product Search" onclick = "showError('This feature is still under construction!')"></li>
             <li class = "navButton navAutomation" active = "true" id = "" title = "Automation Dashboard" data-tab-target = "#automationPage"></li>
             <li class = "navButton navSettings" active = "false" id = "" title = "Settings" data-tab-target = "#settingsPage"></li>
             <li class = "navButton navInfo" active = "false" id = "" title = "About" onclick="showAbout()"></li>
-            
         </ul>
             
     </body>

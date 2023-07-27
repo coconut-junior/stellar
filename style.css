@@ -56,16 +56,35 @@
     border-radius: 10px;
 }
 
+:focus {outline: none;}
+
 * {
     margin: 0;
     padding: 0;
     font-family: 'CabinetGrotesk-Variable';
-    cursor:default;
+    /* cursor: url('images/pointer.svg') 4 5, pointer; */
+    cursor: default;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
     background-color: var(--secondary1);
     overflow-x: hidden;
+}
+
+table {
+    border-collapse:separate;
+    color: var(--black);
+    border-radius: 10px;
+    border: 1px solid var(--gray);padding: 10px;
+}
+td:nth-child(1) {color: var(--bright);}
+td:nth-child(2) {text-align: right;}
+tr:nth-child(1) td {padding-top: 0;}
+tr:nth-last-child(1) td {border: none;padding-bottom: 0;}
+td {
+    padding: 10px;
+    border-bottom: 1px solid var(--gray);
 }
 
 p, h1, input {
@@ -77,7 +96,7 @@ h1 {
     font-size: 24px;
     text-align: left;
     margin: auto;
-    margin-left:80px;
+    margin-left:40px;
 }
 
 li {
@@ -107,10 +126,21 @@ li {
     padding: 20px;
     align-content: start;
     
-    background-image: url('images/loading_dark.gif');
     background-size: 50px;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+#automationTasks[status=none] {
+    background-image: none;
+}
+
+#automationTasks[status=offline] {
+   background-image: url("images/offline_dark.svg");
+}
+
+#automationTasks[status=loading] {
+    background-image: url('images/loading_dark.gif');
 }
 
 #automationStatus {
@@ -198,8 +228,46 @@ li {
     background-image: url('images/info_hover.svg');
 }
 
+@keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
+}
+
+select {
+    /* Reset */
+    font-size: 12px;
+    appearance: none;
+    border: 1px solid var(--gray);
+    outline: 0;
+    font: inherit;
+    /* Personalize */
+    padding: 5px 2.5em 5px 0.5em;
+    background: url('images/dropdown_dark.svg') no-repeat right 0.8em center / 1.4em;
+    color: var(--white);
+    border-radius: 0.25em;
+    cursor: pointer;
+    transition: 0.2s;
+    /* <option> colors */
+    option {
+      color: inherit;
+      background-color: transparent;
+    }
+    /* Remove focus outline */
+    &:focus {
+      outline: none;
+    }
+    /* Remove IE arrow */
+    &::-ms-expand {
+      display: none;
+    }
+}
+
+select:hover{
+    border: 1px solid var(--bright);
+}
+
 button {
-    font-family: 'Arial';
     cursor: pointer;
     height: 60px;
     width: auto;
@@ -216,11 +284,57 @@ button {
     background-repeat: no-repeat;
     background-position: center;
     background-size: 36px;
-    transition: 0.2s;
 
     border: 1px solid var(--primary0);
     background-color: var(--primary1);
-    backdrop-filter: blur(30px);
+}
+
+.primary:hover:before {
+    opacity: 1;
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+}
+
+.primary:hover:after {
+    background: black;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.primary:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 100%;
+    background: transparent;
+    left: 0;
+    top: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    transition: 0.2s;
+    transition-timing-function: ease;
+    overflow: hidden;
+}
+
+.primary:before {
+    content: '';
+    background: linear-gradient(45deg, rgba(159,239,255,1) 0%, rgba(169,76,255,1) 35%, rgba(0,212,255,1) 68%, rgba(159,239,255,1) 100%);
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    height:0px;width:0px;
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    border-radius: 10px;
+    transition-delay: 0.2s;
+    pointer-events: none;
+    transition: opacity .3s ease-in-out;
+    overflow: hidden;
 }
 
 button p {
@@ -230,16 +344,11 @@ button p {
 
 button:hover {
     color: var(--bright);
-    filter: drop-shadow(0px 0px 20px var(--primary3));
-    background-color: rgba(255,255,255,0.2);
-}
-
-.primary:hover {
-    color: white;
+    background-color: var(--primary0);
 }
 
 button:active {
-    scale: 0.9;
+    transform: scale(0.9);
 }
 
 .wrapper {
@@ -353,14 +462,19 @@ input[type="search"]:active, input[type="text"]:active {
 }
 
 .primary {
+    border: none;
     color:white;
     padding-left: 20px;
     padding-right: 20px;
     background-color: var(--primary3);
+    transition: 0.2s;
 }
 
 .primary:hover {
+    color: white;
+    filter: drop-shadow(0px 0px 20px var(--primary3));
     background-color: var(--primary3);
+    backdrop-filter: blur(30px);
 }
 
 #idScript999 {
@@ -379,7 +493,7 @@ input[type="search"]:active, input[type="text"]:active {
     border-radius: 10px;
 }
 .navButton:active {
-    scale: 0.9;
+    transform: scale(0.9);
 }
 .navButton[active = "true"] {
     background-color: var(--primary3);
@@ -421,7 +535,7 @@ input[type="search"]:active, input[type="text"]:active {
     width: auto;
     display: grid;
     grid-gap: 10px;
-    overflow-x:hidden;
+    overflow-x: hidden;
     height: calc(100vh - 270px);
     padding: 20px;
     border-radius: 20px;
@@ -431,6 +545,7 @@ input[type="search"]:active, input[type="text"]:active {
     background-position: center;
     background-color: var(--secondary2);
     flex-shrink: 0;
+    grid-auto-flow: row dense;
 }
 
 #betaIcon {
@@ -561,11 +676,36 @@ h2 {
     margin: auto;
     gap: 10px;
     border: 2px solid var(--gray);
-    transition: 0.3s;
+    transition: 0.2s;
+}
+
+.result::after {
+    content: "";
+    border-radius: 0px 0px 15px 15px;
+    bottom: -32px;
+    position: absolute;
+    border-width: 0px 2px 2px 2px;
+    border-color: var(--gray);
+    border-style: solid;
+    background-color: var(--primary2);
+    z-index: -1;
+    width: 200px;
+    display: flex;
+    height: 30px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    transition: 0.2s;
 }
 
 .result:hover {
+    transform: scale(0.95);
     border: 2px solid var(--primary3);
+}
+
+.result:hover::after {
+    border-color:  var(--primary3);
 }
 
 .resultGroup {
@@ -595,10 +735,10 @@ h2 {
 }
 
 .statusBar {
-    background-color: var(--secondary1);
     color: var(--black);
     padding: 10px 20px 10px 20px;
     height:auto;
+    border: none;
 }
 
 #adList {
@@ -642,7 +782,7 @@ h2 {
 }
 
 /*fullscreen hd monitor*/
-@media (max-width: 1920px) {
+@media (min-width: 1400px) {
     #automationTasks {
         grid-template-columns: 1fr 1fr 1fr 1fr;
     }
@@ -655,7 +795,7 @@ h2 {
     }
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 900px) {
     .wrapper {
         width: 100%;
     }
@@ -698,7 +838,10 @@ h2 {
 }
 
 /* compact view */
-@media(max-width: 640px) {
+@media(max-width: 540px) {
+    .card {
+        height: 320px;
+    }
     #automationTasks {
         grid-template-columns: 1fr;
     }
@@ -746,10 +889,17 @@ h2 {
         --gray : #ECF6FA;
     }
 
+    select {
+        background: url('images/dropdown_light.svg') no-repeat right 0.8em center / 1.4em;
+    }
+
+    #automationTasks[status=offline] {
+        background-image: url("images/offline_light.svg");
+    }
+
     button:hover {
         color: var(--bright);
-        filter: drop-shadow(0px 0px 20px var(--primary0));
-        background-color: rgba(255,255,255,0.2);
+        background-color: var(--secondary1);
     }
 
     .primary:hover {
@@ -785,7 +935,7 @@ h2 {
     }
 }
 
-@media (max-width: 1080px) and (prefers-color-scheme: light) {
+@media (max-width: 900px) and (prefers-color-scheme: light) {
     #navLogo {
         background-image: url('images/stellar_logo_horz_light.svg');
     }
