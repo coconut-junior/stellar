@@ -83,7 +83,7 @@ function downloadLogos(brands,logoPath) {
 }
 
 function buildFlyer() {
-    if(minimizeOnLaunch){minimizeApp();}
+    minimizeApp();
     
     let fileName = openFile();
     let logoPath = path.dirname(fileName) + '/logos';
