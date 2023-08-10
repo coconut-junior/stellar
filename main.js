@@ -82,6 +82,10 @@ ipcMain.handle('minimize', function(event){
   if(minimizeOnLaunch){BrowserWindow.getFocusedWindow().minimize();}
 });
 
+ipcMain.handle('focusWindow', function(event){
+  mainWindow.focus();
+});
+
 ipcMain.on('getHome', function(event) {
     event.returnValue = homePath;
 });
@@ -142,7 +146,8 @@ function createWindow () {
     titleBarStyle: "hiddenInset",
     transparent: true,
     vibrancy: 'dark',
-    show: false
+    show: false,
+    alwaysOnTop: false
   });
 
   mainWindow.once('ready-to-show', () => {

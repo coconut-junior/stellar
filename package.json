@@ -1,7 +1,7 @@
 {
   "name": "stellar",
   "productName": "Stellar",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Quickly access creative assets and find product info.",
   "main": "main.js",
   "scripts": {

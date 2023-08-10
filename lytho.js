@@ -9,6 +9,8 @@ function openFile() {
 }
 
 function buildFlyer() {
+    $(`#buildFlyerButton`).css('background-color','black');
+    $(`#buildFlyerButton`).html('&#9889; Downloading...');
     minimizeApp();
     
     let fileName = openFile();
@@ -18,34 +20,29 @@ function buildFlyer() {
     let workbook = xlsx.readFile(fileName);
     let sheetNames = workbook.SheetNames;
     let rows = xlsx.utils.sheet_to_json(workbook.Sheets[sheetNames[0]]);
+    focusWindow();
 
     //alert('Logos will begin downloading now. Please wait...');
 
-    let logos = [];
 
-    //brands on col 4
-    $.each(rows, (i, row) => {
-        let logo = row['Logo']
-        if(logo.trim() != '') {
-            logos = logos.concat(logo);
-        }
-    });
-
-    console.log(logos);
 
     let worker = new Worker('worker.js');
-    worker.postMessage([logos,logoPath]);
+    worker.postMessage([rows,logoPath]);
 
     var finished = 0;
-    var total = logos.length;
+    var total = 0;
 
     worker.onmessage = (e) => {
         ++finished;
-        let failed = e.data;
+        let failed = e.data[0];
+        total = e.data[1];
         let progress = (finished + failed)/total;
+
+        $(`#buildFlyerButton`).css('background-size',`${Math.round(progress*190)}px 60px`);
         ipcRenderer.send('setProgress', progress);
         if(progress == 1) {
             ipcRenderer.send('setProgress', -1);
+            $(`#buildFlyerButton`).html('&#9889; Launch');
             runJSX('build_flyer_stellar.jsx',`{"${fileName}","stellar"}`);
         }
     }

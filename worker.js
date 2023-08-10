@@ -8,20 +8,20 @@ const headers = {
 };
 
 onmessage = (e) => {
-    let logos = e.data[0];
+    let rows = e.data[0];
     let logoPath = e.data[1];
-    downloadLogos(logos,logoPath);
+    downloadLogos(rows,logoPath);
 }
 
 var failed = 0;
 
-function download(url,dest,cb) {
+function download(url,dest,total,cb) {
     var file = fs.createWriteStream(dest);
     https.get(url, function(response) {
       response.pipe(file);
       file.on('finish', function() {
         file.close(cb);
-        postMessage(failed); //send response back to renderer
+        postMessage([failed, total]); //send response back to renderer
       });
 
       file.on('error',function() {
@@ -61,7 +61,6 @@ function searchAssets(query) {
 
 function findMatch(brand) {
     return new Promise((resolve,reject) => {
-        console.log('searching for ' + brand);
         searchAssets(brand).then((assets) => {
             if(assets.length != 0) {
                 let id = assets[0].id;
@@ -99,15 +98,26 @@ function getAssetLink(assetID) {
     });
 }
 
-function downloadLogos(brands,logoPath) {
+function downloadLogos(rows,logoPath) {
     // searchAssets('Ty - Squish-a-Boos (use uploaded logos)').then((r)=>{console.log(r);})
+    var logos = [];
+    var brands = [];
+
+    //parse excel sheet
+    for(let i = 0;i<rows.length;++i) {
+        var row = rows[i];
+        var logo = row['Logo']
+        if(logo.trim() != '' && logo.trim().toLowerCase() != 'none') {
+            brands = brands.concat(logo);
+        }
+    }
 
     for(let i = 0;i<brands.length;++i) {
         let brand = brands[i];
         brand = brand.replaceAll('\',').replaceAll(/\//g, " ");
 
         findMatch(brand).then((match) => {
-            download(match, `${logoPath}/${brand}.ai`);
+            download(match, `${logoPath}/${brand}.ai`,brands.length);
         });
 
     }

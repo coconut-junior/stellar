@@ -35,6 +35,9 @@ function setAppearance(appearance) {
 function showAbout() {
     ipcRenderer.invoke('showAbout');
 }
+function focusWindow() {
+    ipcRenderer.invoke('focusWindow');
+}
 
 function getHomePath() {
     return ipcRenderer.sendSync('getHome');
@@ -52,12 +55,14 @@ function setWindowOnTop() {
     ipcRenderer.invoke('setWindowOnTop');
 }
 function setWindowOnBottom() {
+    console.log('setting window on bottom');
     ipcRenderer.invoke('setWindowOnBottom');
 }
 function compactMode() {
     ipcRenderer.send('resize-window', 400, 800);
 }
-setWindowOnTop();
+
+// setWindowOnTop();
 
 function drag(event) {
     event.dataTransfer.setData('text',event.target.id);

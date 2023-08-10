@@ -175,9 +175,8 @@ var launch = function(button, fileName, url, args){
     });
     
     if(fileName == 'buildFlyer') {
-        gsap.to(button,1,{delay: 1,y:0, x:0,backgroundColor:'var(--primary3)',ease: "circ.in",
-            onComplete: buildFlyer
-        });
+        buildFlyer();
+        gsap.to(button,1,{delay: 1,y:0, x:0,backgroundColor:'var(--primary3)',ease: "circ.in",});
     }
     else {
         gsap.to(button,1,{delay: 1,y:0, x:0,backgroundColor:'var(--primary3)',ease: "circ.in",
