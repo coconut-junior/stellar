@@ -136,7 +136,8 @@ function createWindow () {
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
-      contextIsolation: false
+      contextIsolation: false,
+      nodeIntegrationInWorker: true
     },
     titleBarStyle: "hiddenInset",
     transparent: true,
