@@ -64,7 +64,7 @@ function downloadDependencies() {
 
                 if(!hidden) {
                     let html = `
-                    <div class="result" id = "idScript${i}" style = "padding:10px;width:auto;position:relative;margin:0;">
+                    <div class="result" id = "idScript${i}" name = "${scriptName}" style = "padding:10px;width:auto;position:relative;margin:0;">
                         <button onclick = "alert('${fullScriptName} \\n\\n ${description}')" class = "navButton navInfo" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:10px;right:10px;"></button>
 
                         <h2 style = "padding:5px;" class = "productTitle">${scriptName}</h2>

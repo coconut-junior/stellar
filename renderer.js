@@ -180,25 +180,24 @@ function getRelativePath(path) {
     }
 }
 
-function search() {
-    $(`.resultBox`).html('');
-    $(`.resultBox`).css("background-size","50px");
+$(`#automationSearch`).on('keyup', function(e) {
+    search(e.target.value);
+});
 
-    $.ajax({
-        url: dbURL,
-        success: function(data) {
-            readDatabase(data);
-        },
-        statusCode: {
-            404: function() {
-                alert("Error 404: Couldn't reach the database.");
-            },
-            503: function() {
-                console.log("Error 503: Service unavailable, trying again...");
-                search();
-            }
+function search(query) {
+    let results = $(`.result`);
+
+    for(let i = 0;i<results.length;++i) {
+        let element = results[i];
+        let name = element.getAttribute('name');
+
+        if(name.toLowerCase().match(query).toLowerCase()) {
+            element.style.display = "grid";
         }
-    });
+        else {
+            element.style.display = "none";
+        }
+    }
 }
 
 createTitleBar();
