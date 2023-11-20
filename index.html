@@ -44,8 +44,8 @@
 
         <div class = "active wrapper" id = "automationPage" data-tab-page>
                 <div id = "automationStatus">
-                    <h1>Automations</h1>
-                    <div id = "resourceMonitor">
+                    <h1 style = "grid-area: title;">Automations</h1>
+                    <div id = "resourceMonitor" style = "grid-area: meter;">
                         <h2 style = "writing-mode:vertical-lr;text-orientation:sideways;padding: 5px;">CPU</h2>
                         <div class = "resourceMeter" style = "width: 45px;border-radius: 0px 0px 15px 0px;left:2px;">
                             <div class = "meterFill" id = "cpuMeter"></div>
@@ -65,19 +65,20 @@
                         
                     </div>
 
+                    <input type = "search" placeholder = "Search automations..." style = "grid-area: search">
                     
                 </div>
 
                 <div class = "cardGroup" status = "loading" id = "automationTasks">
 
 
-                    <div class="result" id = "idScript999" style = "padding:10px;width:auto;position:relative;height:100px;margin:0;">
+                    <div class="result" id = "idScript999" style = "padding:10px;width:auto;position:relative;margin:0;">
                         <button id = "buildFlyerInfo" class = "navButton navInfo" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:10px;right:10px;"></button>
 
                         <h2 style = "padding:5px;" class = "productTitle">Build Flyer</h2>
                         <p class = "resultEntry" style = "text-align:center;">Version: 2.0</p>
-                        <div style = "display:flex;flex-direction:row;gap:10px;justify-content:center;">
-                            <button class = "primary" style = "width:190px;" id = "buildFlyerButton">&#9889; Launch</button>
+                        <div class="resultButtons" style = "grid-template-columns: 1fr;">
+                            <button class = "primary" id = "buildFlyerButton">&#9889; Launch</button>
                             <!--<button onclick = "alert('This feature is coming soon!')">&#x23F0;<br>Schedule</button>-->
                         </div>
                     </div>

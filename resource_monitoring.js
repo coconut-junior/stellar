@@ -12,11 +12,8 @@ function cpuAverage() {
   
     //Loop through CPU cores
     for(var i = 0, len = cpus.length; i < len; i++) {
-  
-      //Select CPU core
       var cpu = cpus[i];
   
-      //Total up the time in the cores tick
       for(type in cpu.times) {
         totalTick += cpu.times[type];
      }     

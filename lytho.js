@@ -22,10 +22,6 @@ function buildFlyer() {
     let rows = xlsx.utils.sheet_to_json(workbook.Sheets[sheetNames[0]]);
     focusWindow();
 
-    //alert('Logos will begin downloading now. Please wait...');
-
-
-
     let worker = new Worker('worker.js');
     worker.postMessage([rows,logoPath]);
 
@@ -40,6 +36,7 @@ function buildFlyer() {
 
         $(`#buildFlyerButton`).css('background-size',`${Math.round(progress*190)}px 60px`);
         ipcRenderer.send('setProgress', progress);
+
         if(progress == 1) {
             ipcRenderer.send('setProgress', -1);
             $(`#buildFlyerButton`).html('&#9889; Launch');

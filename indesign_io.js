@@ -47,6 +47,12 @@ function downloadDependencies() {
         if(scriptName.length > 24) {
             scriptName = scriptName.slice(0,24) + "...";
         }
+
+        if(fileName.match('.zip')) {
+            $(`.statusBar`).html('Creating folders...');
+            let extractPath = path.dirname(`${getScriptPath()}/${fileName}`);
+            makeDir(extractPath);
+        }
         
         $.ajax({
             url: dependency['url'],
@@ -58,15 +64,14 @@ function downloadDependencies() {
 
                 if(!hidden) {
                     let html = `
-                    <div class="result" id = "idScript${i}" style = "padding:10px;width:auto;position:relative;height:100px;margin:0;">
+                    <div class="result" id = "idScript${i}" style = "padding:10px;width:auto;position:relative;margin:0;">
                         <button onclick = "alert('${fullScriptName} \\n\\n ${description}')" class = "navButton navInfo" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:10px;right:10px;"></button>
 
                         <h2 style = "padding:5px;" class = "productTitle">${scriptName}</h2>
                         <p class = "resultEntry" style = "text-align:center;">Version: ${version}</p>
-                        <div style = "display:flex;flex-direction:row;gap:10px;justify-content:center;">
-                            <button class = "primary" id = "launchButton${i}">&#9889; Launch</button>
-                            <!--<button onclick = "alert('This feature is coming soon!')">&#x23F0;<br>Schedule</button>-->
-                            <button class = "modifyButton" title = "Modify" style = "width:60px;" onclick = "shell.openPath('${filePath}')">&#x270f;</span></button>
+                        <div class = "resultButtons">
+                            <button id = "launchButton${i}">&#9889; Launch</button>
+                            <button class = "modifyButton" title = "Modify" onclick = "shell.openPath('${filePath}')">&#x270f; Modify</span></button>
                         </div>
                     </div>
                     `;
@@ -99,8 +104,9 @@ function downloadDependencies() {
 
         if(fileName.match('.zip')) {
             $(`.statusBar`).html('Extracting assets...');
+
             let out = fs.createWriteStream(`${getScriptPath()}/${fileName}`);
-            let extractPath = path.dirname(`${getScriptPath()}${fileName}`);
+            let extractPath = path.dirname(`${getScriptPath()}/${fileName}`);
 
             request(url).pipe(out).on('finish',function() { //figure out how to call this synchronously
                 console.log(extractPath);
@@ -113,6 +119,13 @@ function downloadDependencies() {
                 unzipper.extract({
                     path: extractPath
                 });
+
+                //build flyer automation
+                console.log('enabling flyer script');
+                $(`#idScript999`).css('display','flex');
+                gsap.from(`#idScript999`, {duration: 2, ease: "elastic.out(1, 0.4)",y:-100,opacity:0});
+                $(`.statusBar`).html('Automations are up to date.');
+
             });
 
         }
@@ -121,11 +134,6 @@ function downloadDependencies() {
         i = 0;
         
     });
-
-    //build flyer automation
-    console.log('enabling flyer script');
-    $(`#idScript999`).css('display','flex');
-    gsap.from(`#idScript999`, {duration: 2, ease: "elastic.out(1, 0.4)",y:-100,opacity:0});
 
     $(`#idScript999`).on('mouseenter', function(event) {
         gsap.to(`#idScript999`,{duration:0.05,transformOrigin:"center",ease:"circ.out",scale:0.95,perspective:'500px'});
@@ -141,7 +149,6 @@ function downloadDependencies() {
     });
     //
 
-    $(`.statusBar`).html('Automations are up to date.');
     ipcRenderer.send('setProgress', -1);
 }
 
@@ -226,14 +233,12 @@ function runJSX(scriptName, arguments) {
     if(args == null || args == ''){args = `{"stellar"}`;}
     let homePath = getHomePath();
     let bashScript = `osascript -e 'tell application id "com.adobe.indesign"\nset args to ${args}\ndo script "${scriptPath}/${scriptName}" language javascript with arguments args\nend tell'`;
-    fs.writeFileSync(`${homePath}/Stellar/scripts/shell.sh`, bashScript);
-    let script = `${homePath}/Stellar/scripts/shell.sh`;
 
-    console.log(bashScript);
+    let script = bashScript;
 
     //run bash script
 
-    exec(`bash ${script}`, (error, stdout, stderr) => {
+    exec(`${script}`, (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
             if(error.message.includes('authorize')) {

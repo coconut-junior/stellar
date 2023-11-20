@@ -9,8 +9,11 @@
     --primary3: #4B73FF;
     --secondary1: #0D1520;
     --secondary2: #121927;
-    --waveFill: #0D1520;
+}
 
+::selection {
+    background-color: var(--primary2);
+    color: var(--bright);
 }
 
 @font-face {
@@ -22,7 +25,6 @@
     font-family: "DSEG14 Modern";
     src: url("fonts/DSEG14Modern-Regular.woff") format("woff");
 }
-
 
 .resultIcon {
     filter: invert();
@@ -91,6 +93,38 @@ p, h1, input {
     color: var(--black);
 }
 
+::-webkit-search-cancel-button{
+    display: none;
+}
+
+input {
+    cursor: text;
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+    border: 1px solid var(--primary1);
+    background-color: var(--primary1);
+    pointer-events: all;
+    font-size: 16px;
+    padding: 10px;
+}
+
+input:focus {
+    background-color: var(--primary2);
+}
+
+input:hover {
+    border-color: var(--primary0);
+}
+
+input[type = "search"] {
+    background-image: url(images/search.svg);
+    background-repeat: no-repeat;
+    background-size: 20px;
+    background-position: center right;
+    background-position-x: calc(100% - 20px);
+}
+
 h1 {
     color: var(--bright);
     font-size: 24px;
@@ -120,9 +154,8 @@ li {
     overflow-y: scroll;overflow-x: hidden;
 
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-row-gap: 40px;
-    grid-column-gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, auto));
+    gap: 10px;
     padding: 20px;
     align-content: start;
     
@@ -146,14 +179,14 @@ li {
 #automationStatus {
     margin-top:10px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "title meter search";
     height: 60px;
     padding: 10px;
     border-radius: 20px;
     margin-bottom: 10px;
     width: calc(100vw - 130px);
     margin-left: 90px;
-    
+    gap: 10px;
     background-color: transparent;
     border: 1px solid var(--primary0);
     pointer-events: none;
@@ -177,7 +210,7 @@ li {
     box-sizing: border-box;
     border-width: 0px 2px 2px 2px;
     border-style: solid; 
-    border-color: var(--black);
+    border-color: var(--primary1);
     border-radius: 0px 0px 15px 15px;
     width: 90px;
     height: auto;
@@ -269,7 +302,7 @@ select:hover{
 
 button {
     cursor: pointer;
-    height: 60px;
+    height: auto;
     width: auto;
     font-size: 16px;
     font-weight:normal;
@@ -406,32 +439,6 @@ button:active {
     background-color: var(--primary1);
 }
 
-input[type="search"] {
-    outline: 0;
-    height: 60px;
-    width: 512px;
-    text-align: center;
-    background: var(--secondary1);
-    border: 1px solid var(--gray);
-    border-radius: 20px;
-    font-size: 18px;
-    transition: 0.6s;
-
-    background-image: url('images/search_black.svg');
-    background-size: 20px;
-    background-position: left;
-    background-position-x: 20px;
-    background-repeat: no-repeat;
-}
-
-input[type="search"]:hover, input[type="text"]:hover, .viewToggle:hover {
-    border-color: var(--primary1);
-}
-
-input[type="search"]:active, input[type="text"]:active {
-    border-color: var(--primary3);
-}
-
 
 #timestamp {
     text-align: center;
@@ -461,7 +468,16 @@ input[type="search"]:active, input[type="text"]:active {
     backdrop-filter: blur(30px);
 }
 
+.resultButtons {
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap:10px;
+    height: 50px;
+}
+
 .primary {
+    width: 100%;
     border: none;
     color:white;
     padding-left: 20px;
@@ -649,15 +665,6 @@ h2 {
     scale: 0.9;
 }
 
-.resultButtons {
-    display: flex;
-    flex-direction: row;
-    position: relative;
-    right: 0;
-    height: 120px;
-    gap: 10px;
-}
-
 .adBuilder {
     background-color: var(--white);
     height: calc(100vh - 270px);
@@ -670,7 +677,6 @@ h2 {
 }
 
 .result {
-    width: 480px;
     height: auto;
     background-color: var(--primary2);
     display:flex;
@@ -683,10 +689,10 @@ h2 {
     transition: 0.2s;
 }
 
-.result::after {
+/* .result::after {
     content: "";
     border-radius: 0px 0px 15px 15px;
-    bottom: -32px;
+    bottom: -20px;
     position: absolute;
     border-width: 0px 2px 2px 2px;
     border-color: var(--gray);
@@ -695,13 +701,13 @@ h2 {
     z-index: -1;
     width: 200px;
     display: flex;
-    height: 30px;
+    height: 18px;
     left: 0;
     right: 0;
     margin-left: auto;
     margin-right: auto;
     transition: 0.2s;
-}
+} */
 
 .result:hover {
     transform: scale(0.95);
@@ -787,20 +793,22 @@ h2 {
 
 /*fullscreen hd monitor*/
 @media (min-width: 1400px) {
-    #automationTasks {
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-    }
+
 }
 
 /*laptop*/
 @media (max-width: 1280px) {
-    #automationTasks {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
+
 }
 
 @media (max-width: 900px) {
-
+    #automationStatus {
+        width: calc(100vw - 40px);
+        margin-left: 0px;
+        grid-template-areas: "title meter" "search search";
+        height:auto;
+        margin-top: 0;
+    }
     .wrapper {
         width: 100%;
     }
@@ -812,12 +820,12 @@ h2 {
         grid-template-rows: 1fr 1fr;
     }
     #automationTasks {
-        grid-template-columns: 1fr 1fr;
         width: calc(100vw - 60px);
         margin-left: 0px;
     }
     #automationStatus {
         border: none;
+        margin-top: 20px;
         margin-left: 0;
         /* margin-top:40px; */
         /* border-top:0; border-radius: 0px 0px 20px 20px; */
@@ -833,9 +841,6 @@ h2 {
         margin-bottom: 10px;
         padding: 20px 10px 20px 10px;
     }
-    input[type="search"] {
-        width: 512px;
-    }
     #navLogo {
         width:100px;
         height: 30px;
@@ -846,16 +851,12 @@ h2 {
 
 /* compact view */
 @media(max-width: 540px) {
+    #automationStatus {
+        margin-top: 10px;
+        grid-template-areas: "title" "meter" "search";
+    }
     .card {
         height: 320px;
-    }
-    #automationStatus {
-        width: calc(100vw - 40px);
-        margin-left: 0px;
-        grid-template-columns: 1fr;
-        height:auto;
-        border:none;
-        margin-top: 0;
     }
     #automationTasks {
         grid-template-columns: 1fr;

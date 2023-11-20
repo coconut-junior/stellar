@@ -1,3 +1,4 @@
+const { resolveObjectURL } = require('buffer');
 const fs = require('fs');
 const https = require('https');
 
@@ -31,7 +32,8 @@ function download(url,dest,total,cb) {
 }
 
 function searchAssets(query) {
-    query = query.replaceAll(' ','%20'); //make path vaild without spaces
+    query = query.replaceAll(' ','%20').replaceAll('&','').replaceAll('#','');
+
     var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
     var path = '/v1/assets/search?searchQuery=' + query + '&size=' + size;
     var assets;
@@ -69,6 +71,7 @@ function findMatch(brand) {
             else {
                 ++failed;
                 console.log(brand + ' was not matched');
+                resolve(brand);
             }
         });
     });
@@ -106,7 +109,7 @@ function downloadLogos(rows,logoPath) {
     //parse excel sheet
     for(let i = 0;i<rows.length;++i) {
         var row = rows[i];
-        var logo = row['Logo']
+        var logo = row['Logo'];
         if(logo.trim() != '' && logo.trim().toLowerCase() != 'none') {
             brands = brands.concat(logo);
         }
@@ -117,7 +120,13 @@ function downloadLogos(rows,logoPath) {
         brand = brand.replaceAll('\',').replaceAll(/\//g, " ");
 
         findMatch(brand).then((match) => {
-            download(match, `${logoPath}/${brand}.ai`,brands.length);
+            try{
+                download(match, `${logoPath}/${brand}.ai`,brands.length);
+            }
+            catch(e) {
+                console.log(`failed to download ${brand}`);
+                postMessage([failed, brands.length]);
+            }
         });
 
     }

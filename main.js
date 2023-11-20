@@ -39,7 +39,10 @@ function loadConfig() {
   else {
     mainWindow.setSize(store.get('windowWidth'), store.get('windowHeight'));
   }
+
+  if(store.get('apprearance') == undefined) {store.set('appearance', 'system');}
   nativeTheme.themeSource = store.get('appearance');
+  if(store.get('minimizeOnLaunch') == undefined) {store.set('minimizeOnLaunch', 'false');}
   minimizeOnLaunch = store.get('minimizeOnLaunch');
 }
 
@@ -101,6 +104,10 @@ ipcMain.handle('setWindowOnBottom', function(event) {
 ipcMain.on('resize-window', (event, width, height) => {
   let browserWindow = BrowserWindow.fromWebContents(event.sender);
   browserWindow.setSize(width,height);
+});
+
+ipcMain.on('makeDir', (event, dir) => {
+  if(!fs.existsSync(dir)) {fs.mkdirSync(dir);}
 });
 
 function about() {

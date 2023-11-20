@@ -16,6 +16,7 @@ var adBuilderList = [];
 //remember settings
 const Store = require('electron-store');
 var store = new Store();
+
 $(`#appearanceDropdown`).val(store.get('appearance'));
 $(`#minimizeDropdown`).val(String(store.get('minimizeOnLaunch')));
 
@@ -30,6 +31,10 @@ $(`#minimizeDropdown`).on('change', function(){
 
 function setAppearance(appearance) {
     ipcRenderer.sendSync('setAppearance',appearance);
+}
+
+function makeDir(dir) {
+    ipcRenderer.sendSync('makeDir',dir);
 }
 
 function showAbout() {
@@ -194,84 +199,6 @@ function search() {
             }
         }
     });
-}
-
-function readDatabase(jsonText) {
-    results.length = 0;
-    $(`.resultBox`).html('');
-
-    let term = $(`#searchBox`).val();
-    
-    // try {
-    //     jsonData = JSON.parse(jsonText);
-    //     products= jsonData['products'];
-    //     $(`#timestamp`).html(`Last Indexed: ${jsonData['timestamp']}`);
-
-    //     for (let i in products) {
-    //         let product = products[i];
-    //         product.title = product.title.replaceAll('%20',' ');
-
-    //         if(product['title'].toLowerCase().includes(term.toLowerCase())) {
-    //             results.push(products[i]);
-
-    //             let links = product.links.join(',');
-
-    //             let data = `
-    //             <div class = "result" draggable="true" id = "result_${i}" ondragstart = "drag(event)">
-    //                 <h2 class = "resultEntry">${product.title}</h2>
-                
-    //                 <div class = "resultGroup">
-    //                     <div class = "productInfo">
-    //                         <div>
-    //                             <img class = "resultIcon" src = "images/ourprice_icon.png">
-    //                             <p class = "resultEntry"><span class = "medium">Our Price:</span> ${product.ours}</p>
-    //                         </div>
-    //                         <div>
-    //                             <img class = "resultIcon" src = "images/theirprice_icon.png">
-    //                             <p class = "resultEntry"><span class = "medium">Their Price:</span> ${product.theirs}</p>
-    //                         </div>
-    //                         <hr>
-    //                         <div>
-    //                             <img class = "resultIcon" src = "images/flyer_icon.png">
-    //                             <p class = "resultEntry"><span class = "medium">Page:</span> ${product.page}</p>
-    //                         </div>
-    //                         <div>
-    //                             <img class = "resultIcon" src = "images/layer_icon.png">
-    //                             <p class = "resultEntry"><span class = "medium">Layer:</span> ${product.layer}</p>
-    //                         </div>
-    //                     </div>
-                
-    //                     <div class = "resultButtons">
-                
-    //                         <div style = "display:flex;gap:10px;flex-direction:column;">
-    //                             <button style = "min-width:120px;" class = "entryButton" id = "flyerButton" onclick="openDoc('${product.source}')">&#128240; Open Ad</button>
-    //                             <button style = "min-width:120px;"  class = "entryButton" id = "productBlockButton" onclick="openProductBlock('${product.source}','${product.indexes}')">&#129330; Pick Up</button>
-    //                         </div>
-                        
-    //                         <button style = "min-width:120px;"  class = "entryButton" id = "assetButton" title = "Save Images" onclick="downloadAssets('${links}')"></button>
-    //                     </div>
-                    
-    //                 </div>
-    //             </div>`;
-                
-    //             $(`.resultBox`).append(data);
-    //         }
-
-    //         if(results.length == 1) {
-    //             $(`#resultCounter`).html(`${results.length} Result`);
-    //         }
-    //         else {
-    //             $(`#resultCounter`).html(`${results.length} Results`);
-    //         }
-
-    //         $(`.resultBox`).css("background-size","0");
-    //     }
-    // }
-    // catch(error) {
-    //     console.log(error);
-    // }
-    
-    return results;
 }
 
 createTitleBar();
