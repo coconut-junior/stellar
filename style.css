@@ -139,13 +139,14 @@ li {
 }
 
 #navLogo {
-    background-image: url('images/stellar_logo_vert.svg');
+    background-image: url('images/stellar_logo.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    height:100px;
-    width: 30px;
-    margin: 20px 0px 20px 0px;
+    height: 20px;
+    width: 20px;
+    margin: 0px;
+    padding: 10px;
 }
 
 #automationTasks {
@@ -301,16 +302,21 @@ select:hover{
     border: 1px solid var(--bright);
 }
 
+button:hover {
+    padding-top: 2px;
+    padding-bottom: 8px;
+}
+
 button {
     cursor: pointer;
     height: auto;
     width: auto;
-    font-size: 16px;
+    font-size: 14px;
     font-weight:normal;
     font-family: 'CabinetGrotesk-Medium', 'Apple Color Emoji';
     color:var(--black);
     border-radius: 10px;
-    padding: 10px;
+    padding: 5px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -321,6 +327,7 @@ button {
 
     border: 1px solid var(--primary0);
     background-color: var(--primary1);
+    transition: 0.3s;
 }
 
 .primary:hover:before {
@@ -448,11 +455,11 @@ button:active {
 
 .navigation {
     height: auto;
-    width: 20px;
+    width: auto;
     margin: auto;
-    padding: 10px 20px 10px 20px;
+    padding: 10px;
     display: flex;
-    align-items: center;
+    align-items: left;
     justify-content: center;
     flex-direction: column;
     gap: 5px;
@@ -463,6 +470,7 @@ button:active {
     top: 50%;
     left: 20px;
     transform: translateY( -50%);
+    transition: 0.3s;
 
     border: 1px solid var(--primary0);
     background-color: var(--secondary2);
@@ -506,21 +514,40 @@ button:active {
     cursor: pointer;
     height: 20px;
     width: 20px;
-    padding:10px;
+    padding: 10px;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: center left;
+    background-position-x: 10px;
     background-size: 20px;
     transition: 0.3s;
     border-radius: 10px;
 }
+.navigation p {
+    display: none;
+    cursor: pointer;
+    padding: 0;
+    padding-left: 30px;
+    padding-top: 2px;
+}
+
 .navButton:active {
     transform: scale(0.9);
 }
 .navButton[active = "true"] {
     background-color: var(--primary3);
 }
+.navButton[active = "true"] p {
+    color: white;
+}
 .navButton[active = "false"] {
     background-color: transparent;
+}
+.navigation:hover .navButton {
+    width: auto;
+}
+.navigation:hover p {
+    display: block;
+    width: auto;
 }
 
 .toolbar {
@@ -576,18 +603,6 @@ button:active {
     height: 72px;
     width: 72px;
     background-image: url('images/beta.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-
-#ollieLogo {
-    cursor: pointer;
-    height: 64px;
-    width: 64px;
-    position: absolute;
-    left: 30px;
-    top: 45px;
-    background-image: url('images/pasteboard_icon.png');
     background-size: contain;
     background-repeat: no-repeat;
 }
@@ -688,6 +703,7 @@ h2 {
     gap: 10px;
     border: 2px solid var(--gray);
     transition: 0.2s;
+    max-width: 500px;
 }
 
 /* .result::after {
@@ -837,16 +853,15 @@ h2 {
         bottom: 30px;
         top: 0px;
         left: 50%;
-        height: 20px;
         transform: translateX(-50%);
         margin-bottom: 10px;
-        padding: 20px 10px 20px 10px;
+        height: 40px;
     }
-    #navLogo {
-        width:100px;
-        height: 30px;
-        background-image: url('images/stellar_logo_horz.svg');
-        margin: 0px 20px 0px 20px; 
+    .navigation:hover .navButton {
+        width: 20px;
+    }
+    .navigation:hover p {
+        display: none;
     }
 }
 
@@ -917,7 +932,6 @@ h2 {
         background-color: var(--primary3);
     }
 
-    #navLogo {background-image: url('images/stellar_logo_vert_light.svg');}
     .navSearch {
         background-image: url('images/search_black.svg');
     }
@@ -941,11 +955,5 @@ h2 {
     }
     .navInfo[active="false"]:hover {
         background-image: url('images/info_black_hover.svg');
-    }
-}
-
-@media (max-width: 900px) and (prefers-color-scheme: light) {
-    #navLogo {
-        background-image: url('images/stellar_logo_horz_light.svg');
     }
 }

@@ -188,10 +188,11 @@ function search(query) {
     let results = $(`.result`);
 
     for(let i = 0;i<results.length;++i) {
+        query = query.toLowerCase();
         let element = results[i];
-        let name = element.getAttribute('name');
+        let name = element.getAttribute('name').toLowerCase();
 
-        if(name.toLowerCase().match(query).toLowerCase()) {
+        if(name.match(query)) {
             element.style.display = "grid";
         }
         else {

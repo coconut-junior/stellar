@@ -40,7 +40,7 @@ function loadConfig() {
     mainWindow.setSize(store.get('windowWidth'), store.get('windowHeight'));
   }
 
-  if(store.get('apprearance') == undefined) {store.set('appearance', 'system');}
+  if(store.get('appearance') == undefined) {store.set('appearance', 'system');}
   nativeTheme.themeSource = store.get('appearance');
   if(store.get('minimizeOnLaunch') == undefined) {store.set('minimizeOnLaunch', 'false');}
   minimizeOnLaunch = store.get('minimizeOnLaunch');

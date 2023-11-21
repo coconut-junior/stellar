@@ -164,7 +164,9 @@ var launch = function(button, fileName, url, args){
     repeatCount = 5;
     $(button).css('transition','none');
     gsap.from(button, {duration: 0.5, ease: "circ.in",transformOrigin:"center", scale: 0.9});
-    gsap.to(button,0.1,{backgroundColor: 'black'});
+    if(fileName == 'buildFlyer') {
+        gsap.to(button,0.1,{backgroundColor: 'black'});
+    }
 
     //button
     gsap.to(button, {delay: 0.5,duration: 0.2, ease: "circ.out",transformOrigin:"center", scale: 1,
@@ -186,7 +188,7 @@ var launch = function(button, fileName, url, args){
         gsap.to(button,1,{delay: 1,y:0, x:0,backgroundColor:'var(--primary3)',ease: "circ.in",});
     }
     else {
-        gsap.to(button,1,{delay: 1,y:0, x:0,backgroundColor:'var(--primary3)',ease: "circ.in",
+        gsap.to(button,1,{delay: 1,y:0, x:0,ease: "circ.in",
         onComplete: runTool,
         onCompleteParams: [fileName, url, args]
     });
