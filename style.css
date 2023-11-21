@@ -281,7 +281,6 @@ select {
     background: url('images/dropdown_dark.svg') no-repeat right 0.8em center / 1.4em;
     color: var(--white);
     border-radius: 0.25em;
-    cursor: pointer;
     transition: 0.2s;
     /* <option> colors */
     option {
@@ -308,7 +307,6 @@ button:hover {
 }
 
 button {
-    cursor: pointer;
     height: auto;
     width: auto;
     font-size: 14px;
@@ -511,7 +509,6 @@ button:active {
 }
 
 .navButton {
-    cursor: pointer;
     height: 20px;
     width: 20px;
     padding: 10px;
@@ -524,7 +521,6 @@ button:active {
 }
 .navigation p {
     display: none;
-    cursor: pointer;
     padding: 0;
     padding-left: 30px;
     padding-top: 2px;
@@ -643,7 +639,6 @@ h2 {
 }
 
 .viewToggle {
-    cursor: pointer;
     height: 50px;
     width: 100px;
     background-color: var(--white);
@@ -796,7 +791,6 @@ h2 {
     background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
-    cursor: pointer;
     flex-shrink: 0;
 }
 

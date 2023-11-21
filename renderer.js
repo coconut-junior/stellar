@@ -15,6 +15,7 @@ var adBuilderList = [];
 
 //remember settings
 const Store = require('electron-store');
+const { resolvableShapes } = require('party-js');
 var store = new Store();
 
 $(`#appearanceDropdown`).val(store.get('appearance'));
@@ -186,6 +187,7 @@ $(`#automationSearch`).on('keyup', function(e) {
 
 function search(query) {
     let results = $(`.result`);
+    let resultCount = 0;
 
     for(let i = 0;i<results.length;++i) {
         query = query.toLowerCase();
@@ -194,12 +196,20 @@ function search(query) {
 
         if(name.match(query)) {
             element.style.display = "grid";
+            ++resultCount;
         }
         else {
             element.style.display = "none";
         }
     }
+
+    if(resultCount < 3) {
+        $(`#automationTasks`).css('grid-template-columns','repeat(auto-fit, minmax(300px, 350px))');
+    }
+    else {
+        $(`#automationTasks`).css('grid-template-columns','repeat(auto-fit, minmax(300px, auto))');
+    }
+
 }
 
 createTitleBar();
-// search();
