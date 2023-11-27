@@ -480,7 +480,7 @@ button:active {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
     gap:10px;
-    height: 50px;
+    height: 40px;
 }
 
 .primary {
