@@ -162,7 +162,6 @@ function openProductBlock(fileName, indexes){
 
 var launch = function(button, fileName, url, args){
     repeatCount = 5;
-    $(button).css('transition','none');
     gsap.from(button, {duration: 0.5, ease: "circ.in",transformOrigin:"center", scale: 0.9});
     if(fileName == 'buildFlyer') {
         gsap.to(button,0.1,{backgroundColor: 'black'});
