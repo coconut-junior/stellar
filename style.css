@@ -453,7 +453,7 @@ button:active {
 
 .navigation {
     height: auto;
-    width: auto;
+    width: 40px;
     margin: auto;
     padding: 10px;
     display: flex;
@@ -463,12 +463,11 @@ button:active {
     gap: 5px;
     border-radius: 20px;
     box-shadow: 0px 4px 100px rgba(0, 0, 0, 0.1);
-    transition: 0.3s;
     position: absolute;
     top: 50%;
     left: 20px;
     transform: translateY( -50%);
-    transition: 0.3s;
+    transition: 0.2s;
 
     border: 1px solid var(--primary0);
     background-color: var(--secondary2);
@@ -520,9 +519,9 @@ button:active {
     border-radius: 10px;
 }
 .navigation p {
-    display: none;
+    opacity: 0;
     padding: 0;
-    padding-left: 30px;
+    padding-left: 0px;
     padding-top: 2px;
 }
 
@@ -538,12 +537,15 @@ button:active {
 .navButton[active = "false"] {
     background-color: transparent;
 }
-.navigation:hover .navButton {
-    width: auto;
+.navigation:hover {
+    width: 150px;
 }
-.navigation:hover p {
-    display: block;
+/* .navigation:hover .navButton {
     width: auto;
+} */
+.navigation:hover p {
+    opacity: 1;
+    padding-left: 40px;
 }
 
 .toolbar {
