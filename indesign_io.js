@@ -7,27 +7,39 @@ const party = require('party-js');
 const { verify } = require("crypto");
 
 dependencies = [];
-var scriptPath = getScriptPath();
+var scriptPath = undefined;
 
-$.ajax({
-    url: dependencyURL,
-    cache: false,
-    success: function(data, status) {
-        console.log('Connection succeeded.');
-        // dependencies = JSON.parse(data);
-        dependencies = data; //sometimes server responds with json object, otherwise parse json
-        downloadDependencies();
-    },
-    statusCode: {
-        404: function() {
-            showError("Error 404: Couldn't reach the database.");
-        },
+getScriptPath();
+setTimeout(function repeatTimeout() {
+    if(scriptPath !== undefined){
+        $.ajax({
+            url: dependencyURL,
+            cache: false,
+            success: function(data, status) {
+                console.log('Connection succeeded.');
+                // dependencies = JSON.parse(data);
+                dependencies = data; //sometimes server responds with json object, otherwise parse json
+                downloadDependencies();
+            },
+            statusCode: {
+                403: function() {
+                    showError("Error 403: Tried to reach the database, but the request was blocked.");
+                },
+                404: function() {
+                    showError("Error 404: Couldn't reach the database.");
+                },
+            }
+        }).fail(function() {
+            showError('You are offline. Please connect to the internet to access all automations.');
+            $(`.statusBar`).html('You are offline.');
+            $(`#automationTasks`).attr('status','offline');
+        });
+    } else {
+        setTimeout(repeatTimeout, 6000);
     }
-}).fail(function() {
-    showError('You are offline. Please connect to the internet to access all automations.');
-    $(`.statusBar`).html('You are offline.');
-    $(`#automationTasks`).attr('status','offline');
-});
+}, 6000);
+
+
 
 function downloadDependencies() {
     $(`.statusBar`).html('Updating automations...');
@@ -44,13 +56,15 @@ function downloadDependencies() {
         let description = dependency['description'];
         let homePath = getHomePath();
 
+        $(`.statusBar`).html(`Downloading ${fileName}...`);
+
         if(scriptName.length > 24) {
             scriptName = scriptName.slice(0,24) + "...";
         }
 
         if(fileName.match('.zip')) {
             $(`.statusBar`).html('Creating folders...');
-            let extractPath = path.dirname(`${getScriptPath()}/${fileName}`);
+            let extractPath = path.dirname(`${scriptPath}/${fileName}`);
             makeDir(extractPath);
         }
         
@@ -59,7 +73,7 @@ function downloadDependencies() {
             success: function(data) {
                 
                 if(!fileName.match('html') && !fileName.match('zip')) {
-                    fs.writeFileSync(`${getScriptPath()}/${fileName}`, data);
+                    fs.writeFileSync(`${scriptPath}/${fileName}`, data);
                 }
 
                 if(!hidden) {
@@ -105,12 +119,12 @@ function downloadDependencies() {
         if(fileName.match('.zip')) {
             $(`.statusBar`).html('Extracting assets...');
 
-            let out = fs.createWriteStream(`${getScriptPath()}/${fileName}`);
-            let extractPath = path.dirname(`${getScriptPath()}/${fileName}`);
+            let out = fs.createWriteStream(`${scriptPath}/${fileName}`);
+            let extractPath = path.dirname(`${scriptPath}${fileName}`);
 
             request(url).pipe(out).on('finish',function() { //figure out how to call this synchronously
                 console.log(extractPath);
-                let zipPath = `${getScriptPath()}/${fileName}`;
+                let zipPath = `${scriptPath}/${fileName}`;
                 let unzipper = new DecompressZip(zipPath);
 
                 unzipper.on('error', function (err) {
@@ -211,20 +225,34 @@ function buildAd() {
 }
 
 function getScriptPath() {
-    let path = getHomePath() + `/Library/Preferences/Adobe InDesign`;
-    let folders = fs.readdirSync(path);
-    let latestVersion = 0;
-    let latestVersionString = '';
+    let versionCmd = 'system_profiler SPApplicationsDataType | grep InDesign | grep -v .app';
+    
+    exec(versionCmd, (error, stdout, stderr) => {
+        var path = getHomePath() + `/Library/Preferences/Adobe InDesign`;
 
-    folders.forEach( function(element, index) {
-        if(element.toLowerCase().match('version')) {
-            //get latest version
-            let version = parseFloat(element.replace(/[^0-9.]/g, ''));
-            if(version > latestVersion) {latestVersionString = element;latestVersion = version;}
+        if (error) {
+            console.log(`error: ${error.message}`);
+            showError(`Couldn't retrieve latest InDesign version. Please reinstall InDesign and try running the software again.`);
+            return;
         }
-    });
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            return;
+        }
 
-    return path + '/' + latestVersionString + '/en_US/Scripts/Scripts Panel';
+        let versions = stdout.split('\n');
+        versions = versions.filter(function(entry) { return /\S/.test(entry); });
+        for(let i = 0;i<versions.length;++i) {
+            versions[i] = parseInt(versions[i].replace(/^\D+/g, '').replaceAll(':',''));
+        }
+        
+        const max = versions.reduce((a, b) => Math.max(a, b), -Infinity);
+        let versionNumber = max - 2005;
+        $(`#indVersion`).html(versionNumber);
+        versionNumber = 'Version ' + versionNumber + '.0';
+
+        scriptPath = path + '/' + versionNumber + '/en_US/Scripts/Scripts Panel';
+    });
 }
 
 function runJSX(scriptName, arguments) {
@@ -236,6 +264,7 @@ function runJSX(scriptName, arguments) {
     let bashScript = `osascript -e 'tell application id "com.adobe.indesign"\nset args to ${args}\ndo script "${scriptPath}/${scriptName}" language javascript with arguments args\nend tell'`;
 
     let script = bashScript;
+
 
     //run bash script
 

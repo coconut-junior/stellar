@@ -17,29 +17,10 @@
     <body>
 
         <a id = "downloadLink" style = "display: none;">download</a>
-        <div class = "wrapper" id = "searchPage" data-tab-page>
+        
 
-            <div class = "toolbar">
-                <div style = "display: flex;flex-direction: row;gap: 10px;width:100%;align-items: left;">
-                    <h1 style = "padding:0;margin:auto;margin-left:40px;margin-right:40px;">Product Search</h1>
-                    <input id = "searchBox" type="search" placeholder = "Search" oninput = "search()">
-                    <div class = "viewToggle" onclick = "toggleView()">
-                        <div class = "toggleSwitch"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class = "workingArea">
-                <div class = "resultBox"></div>
-                <div class = "adBuilder">
-                    <h1>Ad Builder</h1>
-                    <ul id = "adList"></ul>
-                    <div id="drop_zone" ondragstart = "dragStart(event)" ondragend = "dragEnd(event)" ondrop="dropHandler(event)" ondragover="dragOverHandler(event)" ondragleave="dragLeave()">
-                        <p style = "text-align: center;padding: 10px;">Drop products here to start a list ...</p>
-                    </div>
-                    <button onclick = "buildAd()">&#9889; Create Document</button>
-                </div>
-            </div>
+        <div class = "wrapper" id = "damPage" data-tab-page>
+            <webview src="https://ollies.us-1.lytho.us/dam/assets/search" style = "width:100vw;height:calc(100vh - 80px);"></webview>        
         </div>
 
         <div class = "active wrapper" id = "automationPage" data-tab-page>
@@ -102,6 +83,10 @@
                         <td id = "apiKey">Undefined</td>
                     </tr>
                     <tr>
+                        <td>InDesign Version</td>
+                        <td id = "indVersion">Undefined</td>
+                    </tr>
+                    <tr>
                         <td>Appearance</td>
                         <td>
                             <select name="appearance" id="appearanceDropdown">
@@ -128,12 +113,14 @@
 
         <ul class = "navigation">
             <li id = "navLogo" title = "Stellar" onclick="showAbout()"></li>
-            <li class = "navButton navSearch" active = "false" id = "" title = "Product Search" onclick = "showError('This feature is still under construction!')">
-                <p>Search</p>
-            </li>
+            <break></break>
             <li class = "navButton navAutomation" active = "true" id = "" title = "Automation Dashboard" data-tab-target = "#automationPage">
                 <p>Automation</p>
             </li>
+            <li class = "navButton navSearch" active = "false" id = "" title = "Lytho DAM" data-tab-target = "#damPage">
+                <p>DAM</p>
+            </li>
+
             <li class = "navButton navSettings" active = "false" id = "" title = "Settings" data-tab-target = "#settingsPage">
                 <p>Settings</p>
             </li>

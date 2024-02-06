@@ -1,7 +1,7 @@
 {
   "name": "stellar",
   "productName": "Stellar",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "description": "Quickly access creative assets and find product info.",
   "main": "main.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "pack": "electron-builder --dir",
     "lint": "echo \"No linting configured\"",
     "postinstall": "electron-builder install-app-deps",
-    "release": "electron-builder -mw --x64 --arm64"
+    "release": "electron-builder -mw --arm64"
   },
   "build": {
     "appId": "design.jbx.stellar",
@@ -38,6 +38,7 @@
     "@fingerprintjs/fingerprintjs": "^3.4.1",
     "decompress-zip": "^0.3.3",
     "dialog-node": "^0.2.1",
+    "electron-forge": "^5.2.4",
     "electron-notarize": "^1.2.2",
     "electron-store": "^8.1.0",
     "electron-updater": "^5.3.0",
@@ -52,8 +53,9 @@
     "xlsx": "^0.19.3"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^7.2.0",
     "electron": "^14.2.9",
-    "electron-builder": "^23.4.0",
+    "electron-builder": "^23.6.0",
     "node": "^20.3.1"
   }
 }

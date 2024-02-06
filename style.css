@@ -519,10 +519,17 @@ button:active {
     border-radius: 10px;
 }
 .navigation p {
+    transition: 0.3s;
     opacity: 0;
     padding: 0;
     padding-left: 0px;
     padding-top: 2px;
+}
+
+break {
+    border-top: 1px solid var(--primary0);
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .navButton:active {
@@ -532,7 +539,7 @@ button:active {
     background-color: var(--primary3);
 }
 .navButton[active = "true"] p {
-    color: white;
+    color: var(--bright);
 }
 .navButton[active = "false"] {
     background-color: transparent;
@@ -840,8 +847,6 @@ h2 {
         border: none;
         margin-top: 20px;
         margin-left: 0;
-        /* margin-top:40px; */
-        /* border-top:0; border-radius: 0px 0px 20px 20px; */
     }
     .navigation {
         flex-direction: row;
@@ -852,6 +857,9 @@ h2 {
         transform: translateX(-50%);
         margin-bottom: 10px;
         height: 40px;
+    }
+    .navigation:hover {
+        width: auto;
     }
     .navigation:hover .navButton {
         width: 20px;
@@ -880,9 +888,8 @@ h2 {
         text-align: center;
         margin:auto;margin:20px;
     }
-    .wrapper {height:calc(100vh - 100px);}
-    .navigation {bottom:10px;width:calc(100vw - 60px);}
-    .statusBar{padding-bottom:0px;padding-top:20px;}
+    .wrapper {height:calc(100vh - 80px);}
+    .navigation {bottom:10px;}
 }
 
 [data-tab-page] {

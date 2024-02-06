@@ -13,6 +13,9 @@ var results = [];
 var products = [];
 var adBuilderList = [];
 
+const { webFrame } = require('electron');
+webFrame.setZoomFactor(0.9);
+
 //remember settings
 const Store = require('electron-store');
 const { resolvableShapes } = require('party-js');
@@ -168,8 +171,6 @@ function viewNormal() {
     $(`hr`).css('margin','10px 0px 10px 0px');
 }
 
-
-
 function getRelativePath(path) {
     if(path.match('Users')) {
         var newPath = path.split('/');
@@ -182,7 +183,10 @@ function getRelativePath(path) {
 }
 
 $(`#automationSearch`).on('keyup', function(e) {
-    search(e.target.value);
+    try{
+        search(e.target.value);
+    }
+    catch(e) {console.log('Could not search');}
 });
 
 function search(query) {

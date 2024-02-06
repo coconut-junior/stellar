@@ -23,7 +23,7 @@ app.commandLine.appendSwitch('ignore-certificate-errors');
 
 var homePath = require('os').homedir();
 var store = new Store();
-var minimizeOnLaunch = true;
+var minimizeOnLaunch = false;
 
 app.on('window-all-closed', function(){
   if(process.platform == 'darwin') {
@@ -42,7 +42,7 @@ function loadConfig() {
 
   if(store.get('appearance') == undefined) {store.set('appearance', 'system');}
   nativeTheme.themeSource = store.get('appearance');
-  if(store.get('minimizeOnLaunch') == undefined) {store.set('minimizeOnLaunch', 'false');}
+  if(store.get('minimizeOnLaunch') == undefined) {store.set('minimizeOnLaunch', minimizeOnLaunch);}
   minimizeOnLaunch = store.get('minimizeOnLaunch');
 }
 
@@ -148,32 +148,37 @@ function createWindow () {
       nodeIntegration: true,
       enableRemoteModule: true,
       contextIsolation: false,
-      nodeIntegrationInWorker: true
+      nodeIntegrationInWorker: true,
+      webviewTag: true
     },
     titleBarStyle: "hiddenInset",
-    transparent: true,
-    vibrancy: 'dark',
     show: false,
     alwaysOnTop: false
   });
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools();
   });
 
   mainWindow.on("close", function () {
     saveConfig();
   });
 
+  mainWindow.webContents.on('did-fail-load', async (err) => {
+    app.relaunch();
+    app.exit();
+  });
+
   globalShortcut.register('CommandOrControl+R', function() {
 		console.log('CommandOrControl+R is pressed')
-		mainWindow.reload()
+		app.relaunch();
+    app.exit();
 	})
 
-  mainWindow.loadFile('index.html');
+  mainWindow.loadFile(path.join(__dirname, 'index.html'));
   loadConfig();
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
