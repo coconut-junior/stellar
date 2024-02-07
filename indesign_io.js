@@ -35,9 +35,9 @@ setTimeout(function repeatTimeout() {
             $(`#automationTasks`).attr('status','offline');
         });
     } else {
-        setTimeout(repeatTimeout, 6000);
+        setTimeout(repeatTimeout, 500);
     }
-}, 6000);
+}, 500);
 
 
 
@@ -92,10 +92,10 @@ function downloadDependencies() {
                     $(`#automationTasks`).append(html);
 
                     let id = i;
-                    gsap.from(`#idScript${id}`, {duration: 2, ease: "elastic.out(1, 0.4)",y:-100,opacity:0});
+                    gsap.from(`#idScript${id}`, {duration: 2, ease: "elastic.out(1, 0.2)",y:-100,opacity:0});
                     
                     $(`#idScript${id}`).on('mouseenter', function(event) {
-                        gsap.to(`#idScript${id}`,{duration:0.05,transformOrigin:"center",ease:"circ.out",scale:0.95,perspective:'500px'});
+                        gsap.to(`#idScript${id}`,{duration:0.02,transformOrigin:"center",ease:"circ.out",scale:0.95,perspective:'500px'});
                     });
                     $(`#idScript${id}`).on('mouseleave', function(event) {
                         gsap.to(`#idScript${id}`,{duration:0.01,rotationX: 0,transformOrigin:"center",ease:"circ.out",scale:1});
@@ -122,7 +122,7 @@ function downloadDependencies() {
             let out = fs.createWriteStream(`${scriptPath}/${fileName}`);
             let extractPath = path.dirname(`${scriptPath}${fileName}`);
 
-            request(url).pipe(out).on('finish',function() { //figure out how to call this synchronously
+            request(url).pipe(out).on('finish',function() {
                 console.log(extractPath);
                 let zipPath = `${scriptPath}/${fileName}`;
                 let unzipper = new DecompressZip(zipPath);
@@ -137,7 +137,7 @@ function downloadDependencies() {
                 //build flyer automation
                 console.log('enabling flyer script');
                 $(`#idScript999`).css('display','flex');
-                gsap.from(`#idScript999`, {duration: 2, ease: "elastic.out(1, 0.4)",y:-100,opacity:0});
+                gsap.from(`#idScript999`, {duration: 2, ease: "elastic.out(1, 0.2)",y:-100,opacity:0});
                 $(`.statusBar`).html('Automations are up to date.');
 
             });
@@ -150,7 +150,7 @@ function downloadDependencies() {
     });
 
     $(`#idScript999`).on('mouseenter', function(event) {
-        gsap.to(`#idScript999`,{duration:0.05,transformOrigin:"center",ease:"circ.out",scale:0.95,perspective:'500px'});
+        gsap.to(`#idScript999`,{duration:0.02,transformOrigin:"center",ease:"circ.out",scale:0.95,perspective:'500px'});
     });
     $(`#idScript999`).on('mouseleave', function(event) {
         gsap.to(`#idScript999`,{duration:0.01,rotationX: 0,transformOrigin:"center",ease:"circ.out",scale:1});
@@ -236,7 +236,7 @@ function getScriptPath() {
             return;
         }
         if (stderr) {
-            console.log(`stderr: ${stderr}`);
+            showError(`stderr: ${stderr}`);
             return;
         }
 
