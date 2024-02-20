@@ -11,9 +11,6 @@ var scriptPath = undefined;
 
 getScriptPath();
 
-
-
-
 function downloadDependencies() {
     $(`.statusBar`).html('Updating automations...');
     var i = 0;

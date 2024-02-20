@@ -125,7 +125,7 @@ function about() {
   const options = {
     type: 'info',
     message: 'Stellar ' + app.getVersion(),
-    detail:'Developed and maintained by Jimmy Blanck www.jbx.design\n\nCopyright © 2023 Jimmy Blanck',
+    detail:'Developed and maintained by Jimmy Blanck www.jbx.design\n\nCopyright © ' + new Date().getFullYear() + ' Jimmy Blanck',
     title:'About',
     icon:'icon.png'
   };
