@@ -7,7 +7,6 @@ const ViewModes = {normal: 0, compact: 1};
 window.$ = window.jQuery = require('jquery');
 
 var jsonData = null;
-var dbURL = "https://www.dropbox.com/s/iy2ykin3udwdbb4/product_db.json?dl=1";
 var viewMode = ViewModes.normal;
 var results = [];
 var products = [];
@@ -24,9 +23,22 @@ var store = new Store();
 $(`#appearanceDropdown`).val(store.get('appearance'));
 $(`#minimizeDropdown`).val(String(store.get('minimizeOnLaunch')));
 
-$(`#appearanceDropdown`).on('change', function(){
+updateAppearance();
+
+function updateAppearance() {
     let appearance = $(`#appearanceDropdown`).val();
+    if(appearance == "gundam") {
+        console.log('gundam mode!');
+        $(`:root`).attr('theme', 'gundam');
+    }
+    else {
+        $(`:root`).attr('theme', appearance);
+    }
     setAppearance(appearance);
+}
+
+$(`#appearanceDropdown`).on('change', function(){
+    updateAppearance();
 });
 
 $(`#minimizeDropdown`).on('change', function(){

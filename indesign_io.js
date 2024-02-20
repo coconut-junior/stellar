@@ -10,34 +10,7 @@ dependencies = [];
 var scriptPath = undefined;
 
 getScriptPath();
-setTimeout(function repeatTimeout() {
-    if(scriptPath !== undefined){
-        $.ajax({
-            url: dependencyURL,
-            cache: false,
-            success: function(data, status) {
-                console.log('Connection succeeded.');
-                // dependencies = JSON.parse(data);
-                dependencies = data; //sometimes server responds with json object, otherwise parse json
-                downloadDependencies();
-            },
-            statusCode: {
-                403: function() {
-                    showError("Error 403: Tried to reach the database, but the request was blocked.");
-                },
-                404: function() {
-                    showError("Error 404: Couldn't reach the database.");
-                },
-            }
-        }).fail(function() {
-            showError('You are offline. Please connect to the internet to access all automations.');
-            $(`.statusBar`).html('You are offline.');
-            $(`#automationTasks`).attr('status','offline');
-        });
-    } else {
-        setTimeout(repeatTimeout, 500);
-    }
-}, 500);
+
 
 
 
@@ -79,7 +52,9 @@ function downloadDependencies() {
                 if(!hidden) {
                     let html = `
                     <div class="result" id = "idScript${i}" name = "${scriptName}" style = "padding:10px;width:auto;position:relative;margin:0;">
-                        <button onclick = "alert('${fullScriptName} \\n\\n ${description}')" class = "navButton navInfo" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:10px;right:10px;background-position:center;"></button>
+                        <button onclick = "alert('${fullScriptName} \\n\\n ${description}')" class = "navButton navInfo tooltip" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:10px;right:10px;background-position:center;">
+                            <span class="tooltiptext">Info</span>
+                        </button>
 
                         <h2 style = "padding:5px;" class = "productTitle">${scriptName}</h2>
                         <p class = "resultEntry" style = "text-align:center;">Version: ${version}</p>
@@ -224,7 +199,33 @@ function buildAd() {
     $(`#adList`).css('display','none');
 }
 
+function getDependencies() {
+    $.ajax({
+        url: dependencyURL,
+        cache: false,
+        success: function(data, status) {
+            console.log('Connection succeeded.');
+            // dependencies = JSON.parse(data);
+            dependencies = data; //sometimes server responds with json object, otherwise parse json
+            downloadDependencies();
+        },
+        statusCode: {
+            403: function() {
+                showError("Error 403: Tried to reach the database, but the request was blocked.");
+            },
+            404: function() {
+                showError("Error 404: Couldn't reach the database.");
+            },
+        }
+    }).fail(function() {
+        showError('You are offline. Please connect to the internet to access all automations.');
+        $(`.statusBar`).html('You are offline.');
+        $(`#automationTasks`).attr('status','offline');
+    });
+}
+
 function getScriptPath() {
+    $(`.statusBar`).html('Checking InDesign configuration...');
     let versionCmd = 'system_profiler SPApplicationsDataType | grep InDesign | grep -v .app';
     
     exec(versionCmd, (error, stdout, stderr) => {
@@ -252,6 +253,7 @@ function getScriptPath() {
         versionNumber = 'Version ' + versionNumber + '.0';
 
         scriptPath = path + '/' + versionNumber + '/en_US/Scripts/Scripts Panel';
+        getDependencies();
     });
 }
 

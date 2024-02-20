@@ -67,6 +67,12 @@
     /* cursor: url('images/pointer.svg') 4 5, pointer; */
     cursor: default;
     -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 body {
@@ -201,6 +207,8 @@ li {
 }
 
 .meterFill {
+    background-color: var(--secondary1);
+    background-blend-mode: screen;
     background-image: url('images/led_dots.webp');
     background-size: 70px;
     height: 100%;
@@ -212,7 +220,7 @@ li {
     box-sizing: border-box;
     border-width: 0px 2px 2px 2px;
     border-style: solid; 
-    border-color: var(--primary1);
+    border-color: var(--gray);
     border-radius: 0px 0px 15px 15px;
     width: 90px;
     height: auto;
@@ -811,6 +819,31 @@ h2 {
     font-family: 'DSEG14 Classic';font-size: 18px;color:var(--black);text-align: center;margin:auto;
 }
 
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    background-color: var(--dark);
+    color: var(--bright);
+    text-align: center;
+    padding: 10px;
+    border: 1px solid var(--gray);
+    border-radius: 20px 20px 0px 20px;
+    position: absolute;
+    top: 100%;
+    right: 100%;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
 /*fullscreen hd monitor*/
 @media (min-width: 1400px) {
 
@@ -900,7 +933,20 @@ h2 {
     display:flex;
 }
 
-@media(prefers-color-scheme: light) {
+:root[theme=gundam] {
+    --bright: white;
+    --dark: #290c0c;
+    --black: #e9a751;
+    --gray: #8C1818;
+    --primary0: #a96b1a;
+    --primary1: #521c1c;
+    --primary2: #8C1818;
+    --primary3: #691717;
+    --secondary1: #400808;
+    --secondary2: #330606;
+}
+
+@media(prefers-color-scheme: light){
     :root {
         --dark: white;
         --bright: black;
@@ -914,6 +960,11 @@ h2 {
 
         --black: #262121; /*h2 text*/
         --gray : #ECF6FA;
+    }
+
+    .meterFill {
+        background-blend-mode: multiply;
+        background-image: url('images/led_dots_dark.webp');
     }
 
     select {

@@ -17,7 +17,7 @@ const {globalShortcut} = require('electron');
 const http = require('https');
 const Store = require('electron-store');
 const { load } = require('@fingerprintjs/fingerprintjs');
-var mainWindow;
+let mainWindow;
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
 
@@ -41,7 +41,11 @@ function loadConfig() {
   }
 
   if(store.get('appearance') == undefined) {store.set('appearance', 'system');}
-  nativeTheme.themeSource = store.get('appearance');
+  if(store.get('appearance') != "gundam") {
+    nativeTheme.themeSource = store.get('appearance');
+  }
+
+
   if(store.get('minimizeOnLaunch') == undefined) {store.set('minimizeOnLaunch', minimizeOnLaunch);}
   minimizeOnLaunch = store.get('minimizeOnLaunch');
 }
@@ -69,7 +73,14 @@ ipcMain.on('showError', function(event, message) {
 
 ipcMain.on('setAppearance', function(event, appearance){
   store.set('appearance', appearance);
-  nativeTheme.themeSource = appearance;
+  
+  if(appearance != "gundam") {
+    nativeTheme.themeSource = appearance;
+  }
+  //gundam theme needs dark variant of icons & graphics
+  else {
+    nativeTheme.themeSource = 'dark';
+  }
   event.returnValue = 'ok';
 });
 
@@ -137,7 +148,7 @@ ipcMain.on('openFile', function(event){
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({
+  const mainWindow = new BrowserWindow({
     width: 1280,
     height: 768,
     minWidth: 400,
@@ -178,21 +189,16 @@ function createWindow () {
 	})
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
-  loadConfig();
+
+  return mainWindow;
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  var folders = ['Stellar','Stellar/scripts'];
-  for(var f = 0;f<folders.length;++f){
-    if(!fs.existsSync(homePath + '/' + folders[f])){
-      fs.mkdirSync(homePath + '/' + folders[f]);
-    }
-  }
-
-  createWindow();
+  mainWindow = createWindow();
+  loadConfig();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

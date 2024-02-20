@@ -54,7 +54,9 @@
 
 
                     <div class="result" id = "idScript999" name = "Build Flyer" style = "padding:10px;width:auto;position:relative;margin:0;">
-                        <button id = "buildFlyerInfo" class = "navButton navInfo" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:10px;right:10px;background-position: center;"></button>
+                        <button id = "buildFlyerInfo" class = "navButton navInfo tooltip" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:10px;right:10px;background-position: center;">
+                            <span class="tooltiptext">Info</span>
+                        </button>
 
                         <h2 style = "padding:5px;" class = "productTitle">Build Flyer</h2>
                         <p class = "resultEntry" style = "text-align:center;">Version: 2.0</p>
@@ -93,6 +95,7 @@
                                 <option value="system">Auto</option>
                                 <option value="dark">Dark</option>
                                 <option value="light">Light</option>
+                                <option value="gundam">Gundam</option>
                             </select>
                         </td>
                     </tr>
@@ -112,19 +115,19 @@
         <!-- <div id = "betaIcon"></div> -->
 
         <ul class = "navigation">
-            <li id = "navLogo" title = "Stellar" onclick="showAbout()"></li>
+            <li id = "navLogo" onclick="showAbout()"></li>
             <break></break>
-            <li class = "navButton navAutomation" active = "true" id = "" title = "Automation Dashboard" data-tab-target = "#automationPage">
+            <li class = "navButton navAutomation" active = "true" id = "" data-tab-target = "#automationPage">
                 <p>Automation</p>
             </li>
-            <li class = "navButton navSearch" active = "false" id = "" title = "Lytho DAM" data-tab-target = "#damPage">
+            <li class = "navButton navSearch" active = "false" id = "" data-tab-target = "#damPage">
                 <p>DAM</p>
             </li>
 
-            <li class = "navButton navSettings" active = "false" id = "" title = "Settings" data-tab-target = "#settingsPage">
+            <li class = "navButton navSettings" active = "false" id = "" data-tab-target = "#settingsPage">
                 <p>Settings</p>
             </li>
-            <li class = "navButton navInfo" active = "false" id = "" title = "About" onclick="showAbout()">
+            <li class = "navButton navInfo" active = "false" id = "" onclick="showAbout()">
                 <p>About</p>
             </li>
         </ul>
