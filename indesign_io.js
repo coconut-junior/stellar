@@ -108,8 +108,8 @@ function downloadDependencies() {
 
                 //build flyer automation
                 console.log('enabling flyer script');
-                $(`#idScript999`).css('display','flex');
-                gsap.from(`#idScript999`, {duration: 2, ease: "elastic.out(1, 0.2)",y:-100,opacity:0});
+                $(`#idScript999`).css('content-visibility','visible');
+                $(`#idScript999`).css('background-image', 'none');
                 $(`.statusBar`).html('Automations are up to date.');
 
             });

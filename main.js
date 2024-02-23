@@ -94,6 +94,7 @@ ipcMain.on('setMinimizeBehavior', function(event, behavior){
 
 ipcMain.handle('minimize', function(event){
   if(minimizeOnLaunch){BrowserWindow.getFocusedWindow().minimize();}
+  
 });
 
 ipcMain.handle('focusWindow', function(event){
