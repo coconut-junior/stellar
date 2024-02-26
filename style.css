@@ -7,6 +7,7 @@
     --primary1: #2C3340;
     --primary2: #212836;
     --primary3: #4B73FF;
+    --primary4: #4b72ff21;
     --secondary1: #0D1520;
     --secondary2: #121927;
 }
@@ -29,9 +30,7 @@
 .resultIcon {
     filter: invert();
 }
-#searchBox {
-    background-image: url('images/search_default.svg');
-}
+
 .resultBox {
     background-image: url('images/loading_dark.gif');
 }
@@ -162,7 +161,7 @@ li {
     overflow-y: scroll;overflow-x: hidden;
 
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, auto));
+    grid-template-columns: repeat(auto-fit, minmax(250px, auto));
     gap: 10px;
     padding: 20px;
     align-content: start;
@@ -286,8 +285,8 @@ select {
     font: inherit;
     /* Personalize */
     padding: 5px 2.5em 5px 0.5em;
-    background: url('images/dropdown_dark.svg') no-repeat right 0.8em center / 1.4em;
-    color: var(--white);
+    background: url('images/dropdown_dark.svg') no-repeat right 0.8em center / 1em;
+    color: var(--black);
     border-radius: 0.25em;
     transition: 0.2s;
     /* <option> colors */
@@ -306,10 +305,13 @@ select {
 }
 
 select:hover{
-    border: 1px solid var(--bright);
+    background-color: var(--gray);
+    border: 1px solid var(--black);
 }
 
 button:hover {
+    color: var(--bright);
+    background-color: var(--primary0);
     padding-top: 2px;
     padding-bottom: 8px;
 }
@@ -333,7 +335,7 @@ button {
 
     border: 1px solid var(--primary0);
     background-color: var(--primary1);
-    transition: 0.3s;
+    transition: 0.2s;
 }
 
 .primary:hover:before {
@@ -387,11 +389,6 @@ button {
 button p {
     box-shadow: none;
     border: none;
-}
-
-button:hover {
-    color: var(--bright);
-    background-color: var(--primary0);
 }
 
 button:active {
@@ -453,6 +450,10 @@ button:active {
     background-color: var(--primary1);
 }
 
+.productTitle {
+    text-align: left;
+}
+
 
 #timestamp {
     text-align: center;
@@ -493,10 +494,10 @@ button:active {
 .primary {
     width: 100%;
     border: none;
-    color:white;
+    color:var(--bright);
     padding-left: 20px;
     padding-right: 20px;
-    background-color: var(--primary3);
+    background-color: var(--primary4);
     background-repeat: no-repeat;
     background-position: left;
     background-image: url('images/progress.png');
@@ -721,13 +722,13 @@ h2 {
     background-color: var(--primary2);
     display:flex;
     flex-direction: column;
-    padding: 20px 20px 20px 20px;
+    padding: 20px;
     border-radius: 20px;
     margin: auto;
     gap: 10px;
     border: 2px solid var(--gray);
     transition: 0.2s;
-    max-width: 500px;
+    max-width: 400px;
 }
 
 /* .result::after {
@@ -751,7 +752,7 @@ h2 {
 } */
 
 .result:hover {
-    transform: scale(0.95);
+    transform: scale(0.98);
     border: 2px solid var(--primary3);
 }
 
@@ -768,6 +769,11 @@ h2 {
 .resultIcon {
     width: 15px;
     margin-right:5px;
+}
+
+.resultEntry {
+    text-align: left;
+    width: 100%;
 }
 
 .resultEntry, .resultIcon {
@@ -838,6 +844,7 @@ h2 {
 }
 
 .tooltip .tooltiptext {
+    font-size: 16px;
     visibility: hidden;
     width: auto;
     background-color: var(--dark);
@@ -954,6 +961,7 @@ h2 {
     --primary1: #521c1c;
     --primary2: #8C1818;
     --primary3: #691717;
+    --primary4: var(--primary3);
     --secondary1: #400808;
     --secondary2: #330606;
 }

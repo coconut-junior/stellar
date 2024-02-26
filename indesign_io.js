@@ -4,7 +4,6 @@ const dependencyURL = "https://jbx.design/stellar/dependencies.json";
 const request = require('request');
 const DecompressZip = require("decompress-zip");
 const party = require('party-js');
-const { verify } = require("crypto");
 
 dependencies = [];
 var scriptPath = undefined;
@@ -29,7 +28,7 @@ function downloadDependencies() {
         $(`.statusBar`).html(`Downloading ${fileName}...`);
 
         if(scriptName.length > 24) {
-            scriptName = scriptName.slice(0,24) + "...";
+            scriptName = scriptName.slice(0,20) + "...";
         }
 
         if(fileName.match('.zip')) {
@@ -41,6 +40,10 @@ function downloadDependencies() {
         $.ajax({
             url: dependency['url'],
             success: function(data) {
+
+                if (fs.existsSync(`${scriptPath}/${fileName}`)) {
+                    fs.unlinkSync(`${scriptPath}/${fileName}`);
+                }
                 
                 if(!fileName.match('html') && !fileName.match('zip')) {
                     fs.writeFileSync(`${scriptPath}/${fileName}`, data);
@@ -48,13 +51,13 @@ function downloadDependencies() {
 
                 if(!hidden) {
                     let html = `
-                    <div class="result" id = "idScript${i}" name = "${scriptName}" style = "padding:10px;width:auto;position:relative;margin:0;">
-                        <button onclick = "alert('${fullScriptName} \\n\\n ${description}')" class = "navButton navInfo tooltip" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:10px;right:10px;background-position:center;">
+                    <div class="result" id = "idScript${i}" name = "${scriptName}" style = "width:auto;position:relative;margin:0;">
+                        <button onclick = "alert('${fullScriptName} \\n\\n ${description}')" class = "navButton navInfo tooltip" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:20px;right:20px;background-position:center;">
                             <span class="tooltiptext">Info</span>
                         </button>
 
-                        <h2 style = "padding:5px;" class = "productTitle">${scriptName}</h2>
-                        <p class = "resultEntry" style = "text-align:center;">Version: ${version}</p>
+                        <h2 class = "productTitle">${scriptName}</h2>
+                        <p class = "resultEntry">Version: ${version}</p>
                         <div class = "resultButtons">
                             <button id = "launchButton${i}">&#9889; Launch</button>
                             <button class = "modifyButton" title = "Modify" onclick = "shell.openPath('${filePath}')">&#x270f; Modify</span></button>
@@ -67,7 +70,7 @@ function downloadDependencies() {
                     gsap.from(`#idScript${id}`, {duration: 2, ease: "elastic.out(1, 0.2)",y:-100,opacity:0});
                     
                     $(`#idScript${id}`).on('mouseenter', function(event) {
-                        gsap.to(`#idScript${id}`,{duration:0.02,transformOrigin:"center",ease:"circ.out",scale:0.95,perspective:'500px'});
+                        gsap.to(`#idScript${id}`,{duration:0.02,transformOrigin:"center",ease:"circ.out",scale:0.98,perspective:'500px'});
                     });
                     $(`#idScript${id}`).on('mouseleave', function(event) {
                         gsap.to(`#idScript${id}`,{duration:0.01,rotationX: 0,transformOrigin:"center",ease:"circ.out",scale:1});
@@ -122,7 +125,7 @@ function downloadDependencies() {
     });
 
     $(`#idScript999`).on('mouseenter', function(event) {
-        gsap.to(`#idScript999`,{duration:0.02,transformOrigin:"center",ease:"circ.out",scale:0.95,perspective:'500px'});
+        gsap.to(`#idScript999`,{duration:0.02,transformOrigin:"center",ease:"circ.out",scale:0.98,perspective:'500px'});
     });
     $(`#idScript999`).on('mouseleave', function(event) {
         gsap.to(`#idScript999`,{duration:0.01,rotationX: 0,transformOrigin:"center",ease:"circ.out",scale:1});

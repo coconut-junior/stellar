@@ -19,8 +19,6 @@ const Store = require('electron-store');
 const { load } = require('@fingerprintjs/fingerprintjs');
 let mainWindow;
 
-app.commandLine.appendSwitch('ignore-certificate-errors');
-
 var homePath = require('os').homedir();
 var store = new Store();
 var minimizeOnLaunch = false;
@@ -152,8 +150,8 @@ function createWindow () {
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 768,
-    minWidth: 400,
-    minHeight: 800,
+    minWidth: 350,
+    minHeight: 600,
     title: 'Stellar',
     icon: path.join(__dirname, 'icon.icns'),
     webPreferences: {
