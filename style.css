@@ -719,37 +719,19 @@ h2 {
 
 .result {
     height: auto;
+    width:auto;
+    position:relative;
+    margin:0;
     background-color: var(--primary2);
     display:flex;
     flex-direction: column;
     padding: 20px;
     border-radius: 20px;
-    margin: auto;
     gap: 10px;
     border: 2px solid var(--gray);
     transition: 0.2s;
     max-width: 400px;
 }
-
-/* .result::after {
-    content: "";
-    border-radius: 0px 0px 15px 15px;
-    bottom: -20px;
-    position: absolute;
-    border-width: 0px 2px 2px 2px;
-    border-color: var(--gray);
-    border-style: solid;
-    background-color: var(--primary2);
-    z-index: -1;
-    width: 200px;
-    display: flex;
-    height: 18px;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    transition: 0.2s;
-} */
 
 .result:hover {
     transform: scale(0.98);

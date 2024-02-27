@@ -33,12 +33,16 @@ function buildFlyer() {
         let failed = e.data[0];
         total = e.data[1];
         let progress = (finished + failed)/total;
-
-        $(`#buildFlyerButton`).css('background-size',`${Math.round(progress*190)}px 60px`);
-        ipcRenderer.send('setProgress', progress);
-
-        if(progress == 1) {
+        
+        if (progress < 1) {
+            $(`#buildFlyerButton`).css('background-size',`${Math.round(progress*190)}px 60px`);
+            ipcRenderer.send('setProgress', progress);
+        }
+        else if (progress == 1) {
+            console.log('setting progress to complete');
             ipcRenderer.send('setProgress', -1);
+            $(`#buildFlyerButton`).css('background-color','var(--primary4)');
+            $(`#buildFlyerButton`).css('background-size',`0px 60px`);
             $(`#buildFlyerButton`).html('&#9889; Launch');
             runJSX('build_flyer_stellar.jsx',`{"${fileName}","stellar"}`);
         }

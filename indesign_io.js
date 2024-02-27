@@ -41,13 +41,9 @@ function downloadDependencies() {
             url: dependency['url'],
             success: function(data) {
 
-                if (fs.existsSync(`${scriptPath}/${fileName}`)) {
-                    fs.unlinkSync(`${scriptPath}/${fileName}`);
-                }
+                if (fs.existsSync(`${scriptPath}/${fileName}`)) fs.unlinkSync(`${scriptPath}/${fileName}`);
                 
-                if(!fileName.match('html') && !fileName.match('zip')) {
-                    fs.writeFileSync(`${scriptPath}/${fileName}`, data);
-                }
+                if(!fileName.match('html') && !fileName.match('zip')) fs.writeFileSync(`${scriptPath}/${fileName}`, data);
 
                 if(!hidden) {
                     let html = `
@@ -173,7 +169,7 @@ var launch = function(button, fileName, url, args){
     
     if(fileName == 'buildFlyer') {
         buildFlyer();
-        gsap.to(button,1,{delay: 1,y:0, x:0,backgroundColor:'var(--primary3)',ease: "circ.in",});
+        gsap.to(button,1,{delay: 1,y:0, x:0,backgroundColor:'var(--primary4)',ease: "circ.in",});
     }
     else {
         gsap.to(button,1,{delay: 1,y:0, x:0,ease: "circ.in",

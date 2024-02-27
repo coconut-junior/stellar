@@ -117,7 +117,7 @@ ipcMain.on('resize-window', (event, width, height) => {
 });
 
 ipcMain.on('makeDir', (event, dir) => {
-  if(!fs.existsSync(dir)) {fs.mkdirSync(dir);}
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 });
 
 function about() {
@@ -133,6 +133,7 @@ function about() {
 
 ipcMain.on('setProgress', (event, progress) => {
   mainWindow.setProgressBar(progress);
+  event.returnValue = 'ok';
 });
 
 ipcMain.on('openFile', function(event){
