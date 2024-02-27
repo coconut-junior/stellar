@@ -193,9 +193,7 @@ function getRelativePath(path) {
 }
 
 $(`#automationSearch`).on('keyup', function(e) {
-    try{
-        search(e.target.value);
-    }
+    try{search(e.target.value);}
     catch(e) {console.log('Could not search');}
 });
 

@@ -26,7 +26,7 @@
         <div class = "active wrapper" id = "automationPage" data-tab-page>
                 <div id = "automationStatus" status = "loading">
                     <h1 style = "grid-area: title;">Automation</h1>
-                    <div id = "resourceMonitor" style = "grid-area: meter;">
+                    <div id = "resourceMonitor" class = "tooltip" style = "grid-area: meter;">
                         <h2 style = "writing-mode:vertical-lr;text-orientation:sideways;padding: 5px;">CPU</h2>
                         <div class = "resourceMeter" style = "width: 45px;border-radius: 0px 0px 15px 0px;left:2px;">
                             <div class = "meterFill" id = "cpuMeter"></div>
@@ -43,6 +43,8 @@
                         <div class = "resourceMeter">
                             <p id = "memUsage" class = "segmentedText"></p>
                         </div>
+
+                        <span class="tooltiptext" style = "width:200px;left:0;border-radius: 0px 10px 10px 10px;">Your PC's resource usage:<br>Keeping fewer documents open will use less system resources and help your automations run faster!</span>
                         
                     </div>
 

@@ -123,6 +123,7 @@ input:hover {
 }
 
 input[type = "search"] {
+    min-width: 300px;
     background-image: url(images/search.svg);
     background-repeat: no-repeat;
     background-size: 20px;
@@ -185,7 +186,7 @@ li {
 
 #automationStatus {
     margin-top: 10px;
-    display: grid;
+    display: flex;
     grid-template-areas: "title meter search";
     height: 60px;
     padding: 10px;
@@ -196,7 +197,6 @@ li {
     gap: 10px;
     background-color: transparent;
     border: 1px solid var(--primary0);
-    pointer-events: none;
 }
 
 #resourceMonitor {
@@ -857,6 +857,7 @@ h2 {
 
 @media (max-width: 900px) {
     #automationStatus {
+        display: grid;
         width: calc(100vw - 40px);
         margin-left: 0px;
         grid-template-areas: "title meter" "search search";
