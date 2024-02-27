@@ -41,13 +41,12 @@ function downloadDependencies() {
             url: dependency['url'],
             success: function(data) {
 
-                if (fs.existsSync(`${scriptPath}/${fileName}`)) fs.unlinkSync(`${scriptPath}/${fileName}`);
-                
+                if (fs.existsSync(`${scriptPath}/${fileName}`) && !fileName.match('zip')) fs.unlinkSync(`${scriptPath}/${fileName}`);
                 if(!fileName.match('html') && !fileName.match('zip')) fs.writeFileSync(`${scriptPath}/${fileName}`, data);
 
                 if(!hidden) {
                     let html = `
-                    <div class="result" id = "idScript${i}" name = "${scriptName}" style = "width:auto;position:relative;margin:0;">
+                    <div class="result" id = "idScript${i}" name = "${scriptName}">
                         <button onclick = "alert('${fullScriptName} \\n\\n ${description}')" class = "navButton navInfo tooltip" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:20px;right:20px;background-position:center;">
                             <span class="tooltiptext">Info</span>
                         </button>
@@ -180,21 +179,6 @@ var launch = function(button, fileName, url, args){
 
 }
 
-function buildAd() {
-    let blocks = [];
-    adBuilderList.forEach(function(product, index) {
-        let elements = product.indexes;
-        let url = getRelativePath(product.source);
-        blocks.push(url + ':' + elements);
-    });
-    let blockList = blocks.join(';');
-    runJSX(`build_ad.jsx`,`{"${blockList}"}`);
-
-    adBuilderList = [];
-    $(`#adList`).html('');
-    $(`#adList`).css('display','none');
-}
-
 function getDependencies() {
     $.ajax({
         url: dependencyURL,
@@ -255,17 +239,12 @@ function getScriptPath() {
 
 function runJSX(scriptName, arguments) {
     //save extendscript files
-    var args = arguments;
-    //create bash script
-    if(args == null || args == ''){args = `{"stellar"}`;}
+    var args = arguments ?? `{"stellar"}`;
     let homePath = getHomePath();
     let bashScript = `osascript -e 'tell application id "com.adobe.indesign"\nset args to ${args}\ndo script "${scriptPath}/${scriptName}" language javascript with arguments args\nend tell'`;
-
     let script = bashScript;
 
-
     //run bash script
-
     exec(`${script}`, (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);

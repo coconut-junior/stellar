@@ -1,9 +1,10 @@
-const { shell } = require('electron');
+const { shell, ipcRenderer, webFrame } = require('electron');
 const fs = require("fs");
-const {ipcRenderer} = require('electron');
 const path = require('path');
 const { addListener } = require('process');
 const ViewModes = {normal: 0, compact: 1};
+const { resolvableShapes } = require('party-js');
+const Store = require('electron-store');
 window.$ = window.jQuery = require('jquery');
 
 var jsonData = null;
@@ -12,14 +13,11 @@ var results = [];
 var products = [];
 var adBuilderList = [];
 
-const { webFrame } = require('electron');
 webFrame.setZoomFactor(0.9);
 
 //remember settings
-const Store = require('electron-store');
-const { resolvableShapes } = require('party-js');
-var store = new Store();
 
+var store = new Store();
 $(`#appearanceDropdown`).val(store.get('appearance'));
 $(`#minimizeDropdown`).val(String(store.get('minimizeOnLaunch')));
 
