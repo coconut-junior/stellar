@@ -1,17 +1,10 @@
-const { shell, ipcRenderer, webFrame } = require('electron');
-const fs = require("fs");
-const path = require('path');
-const { addListener } = require('process');
+const {ipcRenderer, webFrame } = require('electron');
 const ViewModes = {normal: 0, compact: 1};
-const { resolvableShapes } = require('party-js');
 const Store = require('electron-store');
-window.$ = window.jQuery = require('jquery');
+let $ = window.$ = window.jQuery = require('jquery');
 
-var jsonData = null;
 var viewMode = ViewModes.normal;
 var results = [];
-var products = [];
-var adBuilderList = [];
 
 webFrame.setZoomFactor(0.9);
 
@@ -43,12 +36,19 @@ $(`#minimizeDropdown`).on('change', function(){
     ipcRenderer.sendSync('setMinimizeBehavior',($(`#minimizeDropdown`).val() === "true"));
 });
 
-function setAppearance(appearance) {
-    ipcRenderer.sendSync('setAppearance',appearance);
+function createTitleBar() {
+    var windowTopBar = document.getElementById('titlebar')
+    windowTopBar.style.width = "100%"
+    windowTopBar.style.height = "96px"
+    windowTopBar.style.backgroundColor = "transparent"
+    windowTopBar.style.position = "absolute"
+    windowTopBar.style.top = windowTopBar.style.left = 0
+    windowTopBar.style.webkitAppRegion = "drag"
+    windowTopBar.style.zIndex = -1
 }
 
-function makeDir(dir) {
-    ipcRenderer.sendSync('makeDir',dir);
+function setAppearance(appearance) {
+    ipcRenderer.sendSync('setAppearance',appearance);
 }
 
 function showAbout() {
@@ -68,84 +68,6 @@ function showError(message) {
 
 function minimizeApp() {
     ipcRenderer.invoke('minimize');
-}
-
-function setWindowOnTop() {
-    ipcRenderer.invoke('setWindowOnTop');
-}
-function setWindowOnBottom() {
-    console.log('setting window on bottom');
-    ipcRenderer.invoke('setWindowOnBottom');
-}
-function compactMode() {
-    ipcRenderer.send('resize-window', 400, 800);
-}
-
-// setWindowOnTop();
-
-function drag(event) {
-    event.dataTransfer.setData('text',event.target.id);
-    $(`.adBuilder`).css('transition','0.3s');
-}
-
-function dragLeave(event) {
-    $(`#drop_zone`).css('border-color','var(--primary1)');
-    $(`#drop_zone`).css('background-color','transparent');
-    $(`.adBuilder`).css('transform','perspective(50em) rotateX(0deg)');
-    $(`.adBuilder`).css('scale','1');
-}
-
-function dragStart(event) {
-    
-}
-
-function dragEnd(event) {
-    event.preventDefault();
-    $(`.adBuilder`).css('transition','0s');
-}
-
-function dropHandler(event) {
-    event.preventDefault();
-    $(`.adBuilder`).css('transition','0s');
-    let id = event.dataTransfer.getData('text/plain');
-    let product = products[parseInt(id.split('_')[1])];
-    
-    if(!adBuilderList.includes(product)) {
-        adBuilderList.push(product);
-        $(`#adList`).css('display','flex');
-        $(`#adList`).append(
-            `<li class = "adItem">${product.title}
-                <div class = "removeButton"></div>
-            </li>`
-        )
-        $(`.adItem .removeButton`).on('click',(event)=>{
-            $.each(adBuilderList, function(index, value) {
-                if(value.title == event.target.parentElement.innerText) {
-                    adBuilderList.splice(index,1);
-                    return false;
-                }
-            });
-
-            if(adBuilderList.length == 0) {
-                $(`#adList`).css('display','none');
-            }
-            event.target.parentElement.remove();
-        });
-    }
-
-    $(`#drop_zone`).css('border-color','var(--primary1)');
-    $(`#drop_zone`).css('background-color','transparent');
-    $(`.adBuilder`).css('transform','perspective(50em) rotateX(0deg)');
-    $(`.adBuilder`).css('scale','1');
-}
-
-function dragOverHandler(event) {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
-    $(`#drop_zone`).css('border-color','var(--primary3)');
-    $(`#drop_zone`).css('background-color','var(--primary1)');
-    $(`.adBuilder`).css('transform','perspective(50em) rotateX(5deg)');
-    $(`.adBuilder`).css('scale','0.9');
 }
 
 function toggleView() {
@@ -198,7 +120,6 @@ $(`#automationSearch`).on('keyup', function(e) {
 });
 
 function search(query) {
-    let results = $(`.result`);
     let resultCount = 0;
 
     for(let i = 0;i<results.length;++i) {

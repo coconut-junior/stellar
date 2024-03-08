@@ -3,12 +3,19 @@ const { gsap } = require("gsap/dist/gsap");
 const dependencyURL = "https://jbx.design/stellar/dependencies.json";
 const request = require('request');
 const DecompressZip = require("decompress-zip");
-const party = require('party-js');
+const {party, resolvableShapes} = require('party-js');
+const fs = require("fs");
+const path = require("path");
+const buildFlyer = require("./lytho.js");
 
 dependencies = [];
 var scriptPath = undefined;
 
 getScriptPath();
+
+function makeDir(dir) {
+    ipcRenderer.sendSync('makeDir',dir);
+}
 
 function downloadDependencies() {
     $(`.statusBar`).html('Updating automations...');
@@ -63,13 +70,6 @@ function downloadDependencies() {
 
                     let id = i;
                     gsap.from(`#idScript${id}`, {duration: 2, ease: "elastic.out(1, 0.2)",y:-100,opacity:0});
-                    
-                    $(`#idScript${id}`).on('mouseenter', function(event) {
-                        gsap.to(`#idScript${id}`,{duration:0.02,transformOrigin:"center",ease:"circ.out",scale:0.98,perspective:'500px'});
-                    });
-                    $(`#idScript${id}`).on('mouseleave', function(event) {
-                        gsap.to(`#idScript${id}`,{duration:0.01,rotationX: 0,transformOrigin:"center",ease:"circ.out",scale:1});
-                    });
 
                     $(`#launchButton${id}`).on('click', function(event) {
                         launch(`#launchButton${id}`, fileName, url, null);
@@ -119,12 +119,6 @@ function downloadDependencies() {
         
     });
 
-    $(`#idScript999`).on('mouseenter', function(event) {
-        gsap.to(`#idScript999`,{duration:0.02,transformOrigin:"center",ease:"circ.out",scale:0.98,perspective:'500px'});
-    });
-    $(`#idScript999`).on('mouseleave', function(event) {
-        gsap.to(`#idScript999`,{duration:0.01,rotationX: 0,transformOrigin:"center",ease:"circ.out",scale:1});
-    });
     $(`#buildFlyerInfo`).on('click', function(event) {
         alert(`Build Flyer \n\n When prompted, select the Feature View spreadsheet that was exported from Badger. Then, wait for the logos to finish downloading. You will be prompted again to select the flyer dimensions.`);
     });
@@ -204,7 +198,7 @@ function getDependencies() {
     });
 }
 
-function getScriptPath() {
+async function getScriptPath() {
     $(`.statusBar`).html('Checking InDesign configuration...');
     let versionCmd = 'system_profiler SPApplicationsDataType | grep InDesign | grep -v .app';
     

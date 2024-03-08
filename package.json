@@ -45,7 +45,7 @@
     "extract-zip": "^2.0.1",
     "gsap": "^3.12.2",
     "jquery": "^3.6.3",
-    "license": "^0.0.3",
+    "license": "^1.0.3",
     "node-stream-zip": "^1.15.0",
     "node-xlsx": "^0.23.0",
     "party-js": "^2.2.0",
@@ -54,8 +54,9 @@
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.2.0",
-    "electron": "^14.2.9",
-    "electron-builder": "^23.6.0",
+    "electron": "^29.1.0",
+    "electron-builder": "^24.13.3",
+    "eslint": "^8.57.0",
     "node": "^20.3.1"
   }
 }

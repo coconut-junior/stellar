@@ -3,7 +3,6 @@ const { url } = require('inspector');
 const { finished } = require('stream');
 const xlsx = require('xlsx');
 
-
 function openFile() {
     return ipcRenderer.sendSync('openFile');
 }
@@ -49,3 +48,5 @@ function buildFlyer() {
     }
 
 }
+
+module.exports = {buildFlyer}
