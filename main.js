@@ -1,12 +1,3 @@
-/*what needs to be figured out on per-user basis:
-  where scripts are hosted
-  licensing information
-
-
-  create option to pin scripts to nav bar
-
-*/
-
 const {app, BrowserWindow, shell, nativeTheme} = require('electron');
 const path = require('path');
 const {dialog} = require('electron');
