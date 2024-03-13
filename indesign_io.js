@@ -3,7 +3,7 @@ const { gsap } = require("gsap/dist/gsap");
 const dependencyURL = "https://jbx.design/stellar/dependencies.json";
 const request = require('request');
 const DecompressZip = require("decompress-zip");
-const {party, resolvableShapes} = require('party-js');
+const party = require('party-js');
 const fs = require("fs");
 const path = require("path");
 const buildFlyer = require(path.join(__dirname,"./lytho.js"));
@@ -200,7 +200,7 @@ function getDependencies() {
 
 async function getScriptPath() {
     $(`.statusBar`).html('Checking InDesign configuration...');
-    let versionCmd = 'system_profiler SPApplicationsDataType | grep InDesign | grep -v .app';
+    let versionCmd = 'ls -la /Applications/ | grep InDesign';
     
     exec(versionCmd, (error, stdout, stderr) => {
         var path = getHomePath() + `/Library/Preferences/Adobe InDesign`;
@@ -218,12 +218,12 @@ async function getScriptPath() {
         let versions = stdout.split('\n');
         versions = versions.filter(function(entry) { return /\S/.test(entry); });
         for(let i = 0;i<versions.length;++i) {
-            versions[i] = parseInt(versions[i].replace(/^\D+/g, '').replaceAll(':',''));
+            versions[i] = parseInt(versions[i].split('Adobe')[1].replace(/^\D+/g, '').replaceAll(':',''));
         }
         
         const max = versions.reduce((a, b) => Math.max(a, b), -Infinity);
         let versionNumber = max - 2005;
-        $(`#indVersion`).html(versionNumber);
+        $(`#indVersion`).html(`${versionNumber + 2005} (v ${versionNumber}.0)`);
         versionNumber = 'Version ' + versionNumber + '.0';
 
         scriptPath = path + '/' + versionNumber + '/en_US/Scripts/Scripts Panel';

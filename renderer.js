@@ -1,6 +1,7 @@
 const {ipcRenderer, webFrame } = require('electron');
 const ViewModes = {normal: 0, compact: 1};
 const Store = require('electron-store');
+const { shell } = require('electron');
 let $ = window.$ = window.jQuery = require('jquery');
 
 var viewMode = ViewModes.normal;
