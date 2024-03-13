@@ -6,7 +6,7 @@ const DecompressZip = require("decompress-zip");
 const {party, resolvableShapes} = require('party-js');
 const fs = require("fs");
 const path = require("path");
-const buildFlyer = require("./lytho.js");
+const buildFlyer = require(path.join(__dirname,"./lytho.js"));
 
 dependencies = [];
 var scriptPath = undefined;
@@ -18,7 +18,6 @@ function makeDir(dir) {
 }
 
 function downloadDependencies() {
-    $(`.statusBar`).html('Updating automations...');
     var i = 0;
 
     dependencies['scripts'].forEach(function(dependency) {
@@ -174,6 +173,7 @@ var launch = function(button, fileName, url, args){
 }
 
 function getDependencies() {
+    $(`.statusBar`).html('Updating automations...');
     $.ajax({
         url: dependencyURL,
         cache: false,
