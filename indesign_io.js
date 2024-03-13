@@ -6,7 +6,7 @@ const DecompressZip = require("decompress-zip");
 const party = require('party-js');
 const fs = require("fs");
 const path = require("path");
-const buildFlyer = require(path.join(__dirname,"./lytho.js"));
+const {buildFlyer} = require(path.join(__dirname,"lytho.js"));
 
 dependencies = [];
 var scriptPath = undefined;

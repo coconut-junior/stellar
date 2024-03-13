@@ -1,6 +1,3 @@
-const http = require('https');
-const { url } = require('inspector');
-const { finished } = require('stream');
 const xlsx = require('xlsx');
 
 function openFile() {
