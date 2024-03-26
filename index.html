@@ -1,138 +1,225 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self';"> -->
-        <link rel = "stylesheet" href = "fonts/cabinet-grotesk.css">
-        <link rel = "stylesheet" href = "style.css">
-        <link rel = "icon" type = "image/x-icon" href = "images/favicon.ico">
+  <head>
+    <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self';"> -->
+    <link rel="stylesheet" href="fonts/cabinet-grotesk.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
 
+    <script src="renderer.js" defer></script>
+    <script src="indesign_io.js" defer></script>
+    <script src="resource_monitoring.js" defer></script>
+    <script src="navigation.js" defer></script>
+    <script src="fingerprinting.js" defer></script>
+  </head>
+  <body>
+    <div id="titlebar"></div>
+    <a id="downloadLink" style="display: none">download</a>
 
-        <script src = "renderer.js" defer></script>
-        <script src = "indesign_io.js" defer></script>
-        <script src = "resource_monitoring.js" defer></script>
-        <script src = "navigation.js" defer></script>
-        <script src = "fingerprinting.js" defer></script>
-    </head>
-    <body>
-        <div id = "titlebar"></div>
-        <a id = "downloadLink" style = "display: none;">download</a>
+    <div class="wrapper" id="damPage" data-tab-page>
+      <webview
+        src="https://ollies.us-1.lytho.us/dam/assets/search"
+        style="width: 100vw; height: calc(100vh - 80px)"
+      ></webview>
+    </div>
 
-        <div class = "wrapper" id = "damPage" data-tab-page>
-            <webview src="https://ollies.us-1.lytho.us/dam/assets/search" style = "width:100vw;height:calc(100vh - 80px);"></webview>        
+    <div class="active wrapper" id="automationPage" data-tab-page>
+      <div id="automationStatus" status="loading">
+        <h1 style="grid-area: title">Automation</h1>
+        <div id="resourceMonitor" class="tooltip" style="grid-area: meter">
+          <h2
+            style="
+              writing-mode: vertical-lr;
+              text-orientation: sideways;
+              padding: 5px;
+            "
+          >
+            CPU
+          </h2>
+          <div
+            class="resourceMeter"
+            style="width: 45px; border-radius: 0px 0px 15px 0px; left: 2px"
+          >
+            <div class="meterFill" id="cpuMeter"></div>
+          </div>
+          <div class="resourceMeter">
+            <p id="cpuPercent" class="segmentedText"></p>
+          </div>
+
+          <h2
+            style="
+              writing-mode: vertical-lr;
+              text-orientation: sideways;
+              padding: 5px;
+            "
+          >
+            RAM
+          </h2>
+
+          <div
+            class="resourceMeter"
+            style="width: 45px; border-radius: 0px 0px 15px 0px; left: 2px"
+          >
+            <div class="meterFill" id="ramMeter"></div>
+          </div>
+          <div class="resourceMeter">
+            <p id="memUsage" class="segmentedText"></p>
+          </div>
+
+          <span
+            class="tooltiptext"
+            style="width: 200px; left: 0; border-radius: 0px 10px 10px 10px"
+            >Your PC's resource usage:<br />Keeping fewer documents open will
+            use less system resources and help your automations run
+            faster!</span
+          >
         </div>
 
-        <div class = "active wrapper" id = "automationPage" data-tab-page>
-                <div id = "automationStatus" status = "loading">
-                    <h1 style = "grid-area: title;">Automation</h1>
-                    <div id = "resourceMonitor" class = "tooltip" style = "grid-area: meter;">
-                        <h2 style = "writing-mode:vertical-lr;text-orientation:sideways;padding: 5px;">CPU</h2>
-                        <div class = "resourceMeter" style = "width: 45px;border-radius: 0px 0px 15px 0px;left:2px;">
-                            <div class = "meterFill" id = "cpuMeter"></div>
-                        </div>
-                        <div class = "resourceMeter">
-                            <p id = "cpuPercent" class = "segmentedText"></p>
-                        </div>
+        <input
+          id="automationSearch"
+          type="search"
+          placeholder="Search automations..."
+          style="grid-area: search"
+        />
+      </div>
 
-                        <h2 style = "writing-mode:vertical-lr;text-orientation:sideways;padding: 5px;">RAM</h2>
+      <div class="cardGroup" status="loading" id="automationTasks">
+        <div
+          class="result"
+          id="idScript999"
+          name="Build Flyer"
+          style="width: auto; position: relative; margin: 0"
+        >
+          <button
+            id="buildFlyerInfo"
+            class="navButton navInfo tooltip"
+            style="
+              background-color: none;
+              border: none;
+              height: 30px;
+              width: 30px;
+              position: absolute;
+              top: 20px;
+              right: 20px;
+              background-position: center;
+            "
+          >
+            <span class="tooltiptext">Info</span>
+          </button>
 
-                        <div class = "resourceMeter" style = "width: 45px;border-radius: 0px 0px 15px 0px;left:2px;">
-                            <div class = "meterFill" id = "ramMeter"></div>
-                        </div>
-                        <div class = "resourceMeter">
-                            <p id = "memUsage" class = "segmentedText"></p>
-                        </div>
-
-                        <span class="tooltiptext" style = "width:200px;left:0;border-radius: 0px 10px 10px 10px;">Your PC's resource usage:<br>Keeping fewer documents open will use less system resources and help your automations run faster!</span>
-                        
-                    </div>
-
-                    <input id = "automationSearch" type = "search" placeholder = "Search automations..." style = "grid-area: search">
-                    
-                </div>
-
-                <div class = "cardGroup" status = "loading" id = "automationTasks">
-
-
-                    <div class="result" id = "idScript999" name = "Build Flyer" style = "width:auto;position:relative;margin:0;">
-                        <button id = "buildFlyerInfo" class = "navButton navInfo tooltip" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:20px;right:20px;background-position: center;">
-                            <span class="tooltiptext">Info</span>
-                        </button> 
-
-                        <h2 class = "productTitle">Build Flyer</h2>
-                        <p class = "resultEntry">Version: 2.0</p>
-                        <div class="resultButtons" style = "grid-template-columns: 1fr;">
-                            <button class = "primary" id = "buildFlyerButton">&#9889; Launch</button>
-                            <!--<button onclick = "alert('This feature is coming soon!')">&#x23F0;<br>Schedule</button>-->
-                        </div>
-                    </div>
-
-                    
-                </div>
-
-            <div class = "statusBar">Updating automations...</div>
-
+          <h2 class="productTitle">Build Flyer</h2>
+          <p class="resultEntry">Version: 2.0</p>
+          <div class="resultButtons" style="grid-template-columns: 1fr">
+            <button class="primary" id="buildFlyerButton">
+              &#9889; Launch
+            </button>
+            <!--<button onclick = "alert('This feature is coming soon!')">&#x23F0;<br>Schedule</button>-->
+          </div>
         </div>
+      </div>
 
-        <div class = "wrapper" id = "settingsPage" data-tab-page>
-            <div style = "display: flex;flex-direction: column;align-items:center;justify-content: center;padding: 40px;">
-                <h1 style = "margin:auto;text-align: center;">Settings</h1>
-                <br>
-                <table>
-                    <tr>
-                        <td>Device fingerprint</td>
-                        <td id = "fingerprint">Undefined</td>
-                    </tr>
-                    <tr>
-                        <td>API key</td>
-                        <td id = "apiKey">Undefined</td>
-                    </tr>
-                    <tr>
-                        <td>InDesign Version</td>
-                        <td id = "indVersion">Undefined</td>
-                    </tr>
-                    <tr>
-                        <td>Appearance</td>
-                        <td>
-                            <select name="appearance" id="appearanceDropdown">
-                                <option value="system">Auto</option>
-                                <option value="dark">Dark</option>
-                                <option value="light">Light</option>
-                                <option value="gundam">Sinanju</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Minimize after launch</td>
-                        <td>
-                            <select name="minimize" id="minimizeDropdown">
-                                <option value="true">Yes</option>
-                                <option value="false">No</option>
-                            </select>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+      <div class="statusBar">Updating automations...</div>
+    </div>
 
-        <!-- <div id = "betaIcon"></div> -->
+    <div class="wrapper" id="settingsPage" data-tab-page>
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 40px;
+        "
+      >
+        <h1 style="margin: auto; text-align: center">Settings</h1>
+        <br />
+        <table>
+          <tr>
+            <td>Device fingerprint</td>
+            <td id="fingerprint">Undefined</td>
+          </tr>
+          <tr>
+            <td>API key</td>
+            <td id="apiKey">Undefined</td>
+          </tr>
+          <tr>
+            <td>InDesign Version</td>
+            <td id="indVersion">Undefined</td>
+          </tr>
+          <tr>
+            <td>Appearance</td>
+            <td>
+              <select name="appearance" id="appearanceDropdown">
+                <option value="system">Auto</option>
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+                <option value="gundam">Sinanju</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>Minimize after launch</td>
+            <td>
+              <select name="minimize" id="minimizeDropdown">
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>UI Scale</td>
+            <td>
+              <div class="tooltip" style="float: right">
+                <input
+                  id="uiScale"
+                  type="range"
+                  min="0.8"
+                  max="1.5"
+                  step="0.1"
+                  onchange="uiScaleChange()"
+                />
 
-        <ul class = "navigation">
-            <li id = "navLogo" onclick="showAbout()"></li>
-            <break></break>
-            <li class = "navButton navAutomation" active = "true" id = "" data-tab-target = "#automationPage">
-                <p>Automation</p>
-            </li>
-            <li class = "navButton navSearch" active = "false" id = "" data-tab-target = "#damPage">
-                <p>DAM</p>
-            </li>
+                <span class="tooltiptext" id="uiScaleText"></span>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
 
-            <li class = "navButton navSettings" active = "false" id = "" data-tab-target = "#settingsPage">
-                <p>Settings</p>
-            </li>
-            <li class = "navButton navInfo" active = "false" id = "" onclick="showAbout()">
-                <p>About</p>
-            </li>
-        </ul>
-            
-    </body>
+    <!-- <div id = "betaIcon"></div> -->
+
+    <ul class="navigation">
+      <li id="navLogo" onclick="showAbout()"></li>
+      <break></break>
+      <li
+        class="navButton navAutomation"
+        active="true"
+        id=""
+        data-tab-target="#automationPage"
+      >
+        <p>Automation</p>
+      </li>
+      <li
+        class="navButton navSearch"
+        active="false"
+        id=""
+        data-tab-target="#damPage"
+      >
+        <p>DAM</p>
+      </li>
+
+      <li
+        class="navButton navSettings"
+        active="false"
+        id=""
+        data-tab-target="#settingsPage"
+      >
+        <p>Settings</p>
+      </li>
+      <li class="navButton navInfo" active="false" id="" onclick="showAbout()">
+        <p>About</p>
+      </li>
+    </ul>
+  </body>
 </html>
