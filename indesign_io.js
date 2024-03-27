@@ -7,6 +7,7 @@ const party = require('party-js');
 const fs = require('fs');
 const path = require('path');
 const { buildFlyer } = require(path.join(__dirname, 'lytho.js'));
+const fetch = require('node-fetch');
 
 dependencies = [];
 var scriptPath = undefined;
@@ -29,7 +30,6 @@ function downloadDependencies() {
     let url = dependency['url'];
     let filePath = `${scriptPath}/${fileName}`;
     let description = dependency['description'];
-    let homePath = getHomePath();
 
     $(`.statusBar`).html(`Downloading ${fileName}...`);
 
@@ -70,81 +70,33 @@ function downloadDependencies() {
       $(`#automationTasks`).append(html);
     }
 
-    //animate
-    // gsap.from(`#idScript${id}`, {
-    //   duration: 2,
-    //   ease: 'elastic.out(1, 0.2)',
-    //   y: -100,
-    //   opacity: 0,
-    // });
-    //click event
+    //assign click event
     let id = i;
     $(`#launchButton${id}`).on('click', function (event) {
       launch(`#launchButton${id}`, fileName, url, null);
     });
+    //animate
+    gsap.from(`#idScript${id}`, {
+      duration: 2,
+      ease: 'elastic.out(1, 0.2)',
+      y: -100,
+      opacity: 0,
+    });
 
     $(`#automationTasks`).attr('status', 'none');
 
-    // $.ajax({
-    //   url: dependency['url'],
-    //   success: function (data) {
-    //     if (
-    //       fs.existsSync(`${scriptPath}/${fileName}`) &&
-    //       !fileName.match('zip')
-    //     )
-    //       fs.unlinkSync(`${scriptPath}/${fileName}`);
-    //     if (!fileName.match('html') && !fileName.match('zip'))
-    //       fs.writeFileSync(`${scriptPath}/${fileName}`, data);
-
-    //     if (!hidden) {
-    //       let html = `
-    //         <div class="result" id = "idScript${i}" name = "${scriptName}">
-    //             <button onclick = "alert('${fullScriptName} \\n\\n ${description}')" class = "navButton navInfo tooltip" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:20px;right:20px;background-position:center;">
-    //                 <span class="tooltiptext">Info</span>
-    //             </button>
-
-    //             <h2 class = "productTitle">${scriptName}</h2>
-    //             <p class = "resultEntry">Version: ${version}</p>
-    //             <div class = "resultButtons">
-    //                 <button id = "launchButton${i}">&#9889; Launch</button>
-    //                 <button class = "modifyButton" title = "Modify" onclick = "shell.openPath('${filePath}')">&#x270f; Modify</span></button>
-    //             </div>
-    //         </div>
-    //         `;
-    //       $(`#automationTasks`).append(html);
-
-    //       let id = i;
-    //       gsap.from(`#idScript${id}`, {
-    //         duration: 2,
-    //         ease: 'elastic.out(1, 0.2)',
-    //         y: -100,
-    //         opacity: 0,
-    //       });
-
-    //       $(`#launchButton${id}`).on('click', function (event) {
-    //         launch(`#launchButton${id}`, fileName, url, null);
-    //       });
-
-    //       $(`#automationTasks`).attr('status', 'none');
-    //       ++i;
-    //     }
-    //   },
-    //   error: function (err) {
-    //     console.log(err.status);
-    //   },
-    // });
-
     //download and extract zip files
-
     if (fileName.match('.zip')) {
       $(`.statusBar`).html('Extracting assets...');
 
-      let out = fs.createWriteStream(`${scriptPath}/${fileName}`);
+      let file = fs.createWriteStream(`${scriptPath}/${fileName}`);
       let extractPath = path.dirname(`${scriptPath}${fileName}`);
 
-      request(url)
-        .pipe(out)
-        .on('finish', function () {
+      let settings = { method: 'Get' };
+      fetch(url, settings).then((res) => {
+        res.body.pipe(file);
+        file.on('finish', function () {
+          file.close();
           console.log(extractPath);
           let zipPath = `${scriptPath}/${fileName}`;
           let unzipper = new DecompressZip(zipPath);
@@ -162,6 +114,28 @@ function downloadDependencies() {
           $(`#idScript999`).css('background-image', 'none');
           $(`.statusBar`).html('Automations are up to date.');
         });
+      });
+
+      // request(url)
+      //   .pipe(out)
+      //   .on('finish', function () {
+      //     console.log(extractPath);
+      //     let zipPath = `${scriptPath}/${fileName}`;
+      //     let unzipper = new DecompressZip(zipPath);
+
+      //     unzipper.on('error', function (err) {
+      //       console.log('Caught an error', err);
+      //     });
+      //     unzipper.extract({
+      //       path: extractPath,
+      //     });
+
+      //     //build flyer automation
+      //     console.log('enabling flyer script');
+      //     $(`#idScript999`).css('content-visibility', 'visible');
+      //     $(`#idScript999`).css('background-image', 'none');
+      //     $(`.statusBar`).html('Automations are up to date.');
+      //   });
     }
 
     ipcRenderer.send('setProgress', i / dependencies['scripts'].length);
@@ -176,7 +150,6 @@ function downloadDependencies() {
   $(`#buildFlyerButton`).on('click', function (event) {
     launch(`#buildFlyerButton`, 'buildFlyer', null, null);
   });
-  //
 
   ipcRenderer.send('setProgress', -1);
 }
@@ -248,32 +221,32 @@ var launch = function (button, fileName, url, args) {
 
 function getDependencies() {
   $(`.statusBar`).html('Updating automations...');
-  $.ajax({
-    url: dependencyURL,
-    cache: false,
-    success: function (data, status) {
-      console.log('Connection succeeded.');
-      // dependencies = JSON.parse(data);
-      dependencies = data; //sometimes server responds with json object, otherwise parse json
+
+  let settings = { method: 'Get' };
+  fetch(dependencyURL, settings)
+    .then((res) => {
+      let status = res.status;
+      switch (status) {
+        case 403:
+          showError(
+            'Error 403: Tried to reach the database, but the request was blocked.'
+          );
+        case 404:
+          showError("Error 404: Couldn't reach the database.");
+      }
+      return res.json();
+    })
+    .then((json) => {
+      dependencies = json;
       downloadDependencies();
-    },
-    statusCode: {
-      403: function () {
-        showError(
-          'Error 403: Tried to reach the database, but the request was blocked.'
-        );
-      },
-      404: function () {
-        showError("Error 404: Couldn't reach the database.");
-      },
-    },
-  }).fail(function () {
-    showError(
-      'You are offline. Please connect to the internet to access all automations.'
-    );
-    $(`.statusBar`).html('You are offline.');
-    $(`#automationTasks`).attr('status', 'offline');
-  });
+    })
+    .catch((err) => {
+      showError(
+        'You are offline. Please connect to the internet to access all automations.'
+      );
+      $(`.statusBar`).html('You are offline.');
+      $(`#automationTasks`).attr('status', 'offline');
+    });
 }
 
 async function getScriptPath() {
@@ -317,7 +290,6 @@ async function getScriptPath() {
 function runJSX(scriptName, arguments) {
   //save extendscript files
   var args = arguments ?? `{"stellar"}`;
-  let homePath = getHomePath();
   let bashScript = `osascript -e 'tell application id "com.adobe.indesign"\nset args to ${args}\ndo script "${scriptPath}/${scriptName}" language javascript with arguments args\nend tell'`;
   let script = bashScript;
 

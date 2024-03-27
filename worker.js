@@ -1,6 +1,7 @@
 const { resolveObjectURL } = require('buffer');
 const fs = require('fs');
-const https = require('https');
+const fetch = require('node-fetch');
+const { settings } = require('party-js');
 
 const apiKey = 'vceurIcnyp6RJqyg0j87l8Phcya5Upzk9SswSuMy';
 const host = 'openapi.us-1.lytho.us';
@@ -23,10 +24,11 @@ onmessage = (e) => {
 
 var failed = 0;
 
-function download(url, dest, total, cb) {
+async function download(url, dest, total, cb) {
+  let settings = { method: 'Get' };
   var file = fs.createWriteStream(dest);
-  https.get(url, function (response) {
-    response.pipe(file);
+  await fetch(url, settings).then((res) => {
+    res.body.pipe(file);
     file.on('finish', function () {
       file.close(cb);
       postMessage([failed, total]); //send response back to renderer
