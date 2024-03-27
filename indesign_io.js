@@ -1,7 +1,6 @@
 const { exec } = require('child_process');
 const { gsap } = require('gsap/dist/gsap');
 const dependencyURL = 'https://jbx.design/stellar/dependencies.json';
-const request = require('request');
 const DecompressZip = require('decompress-zip');
 const party = require('party-js');
 const fs = require('fs');
@@ -52,9 +51,11 @@ function downloadDependencies() {
       dependencies['scripts'].length,
     ]);
 
+    let id = i;
+
     if (!hidden) {
       let html = `
-        <div class="result" id = "idScript${i}" name = "${scriptName}">
+        <div class="result" id = "idScript${id}" name = "${scriptName}">
             <button onclick = "alert('${fullScriptName} \\n\\n ${description}')" class = "navButton navInfo tooltip" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:20px;right:20px;background-position:center;">
                 <span class="tooltiptext">Info</span>
             </button>
@@ -71,7 +72,6 @@ function downloadDependencies() {
     }
 
     //assign click event
-    let id = i;
     $(`#launchButton${id}`).on('click', function (event) {
       launch(`#launchButton${id}`, fileName, url, null);
     });
@@ -115,27 +115,6 @@ function downloadDependencies() {
           $(`.statusBar`).html('Automations are up to date.');
         });
       });
-
-      // request(url)
-      //   .pipe(out)
-      //   .on('finish', function () {
-      //     console.log(extractPath);
-      //     let zipPath = `${scriptPath}/${fileName}`;
-      //     let unzipper = new DecompressZip(zipPath);
-
-      //     unzipper.on('error', function (err) {
-      //       console.log('Caught an error', err);
-      //     });
-      //     unzipper.extract({
-      //       path: extractPath,
-      //     });
-
-      //     //build flyer automation
-      //     console.log('enabling flyer script');
-      //     $(`#idScript999`).css('content-visibility', 'visible');
-      //     $(`#idScript999`).css('background-image', 'none');
-      //     $(`.statusBar`).html('Automations are up to date.');
-      //   });
     }
 
     ipcRenderer.send('setProgress', i / dependencies['scripts'].length);
@@ -163,7 +142,6 @@ function openProductBlock(fileName, indexes) {
 }
 
 var launch = function (button, fileName, url, args) {
-  repeatCount = 5;
   gsap.from(button, {
     duration: 0.5,
     ease: 'circ.in',

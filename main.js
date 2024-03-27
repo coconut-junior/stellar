@@ -1,13 +1,10 @@
 const { app, BrowserWindow, shell, nativeTheme } = require('electron');
 const path = require('path');
 const { dialog } = require('electron');
-const { fstat } = require('fs');
 const fs = require('fs');
 const { ipcMain } = require('electron');
 const { globalShortcut } = require('electron');
-const http = require('https');
 const Store = require('electron-store');
-const { load } = require('@fingerprintjs/fingerprintjs');
 let mainWindow;
 
 var homePath = require('os').homedir();
