@@ -43,54 +43,96 @@ function downloadDependencies() {
       makeDir(extractPath);
     }
 
-    $.ajax({
-      url: dependency['url'],
-      success: function (data) {
-        if (
-          fs.existsSync(`${scriptPath}/${fileName}`) &&
-          !fileName.match('zip')
-        )
-          fs.unlinkSync(`${scriptPath}/${fileName}`);
-        if (!fileName.match('html') && !fileName.match('zip'))
-          fs.writeFileSync(`${scriptPath}/${fileName}`, data);
+    //new code
+    let worker = new Worker('worker.js');
+    worker.postMessage([
+      'downloadFile',
+      dependency['url'],
+      `${scriptPath}/${fileName}`,
+      dependencies['scripts'].length,
+    ]);
 
-        if (!hidden) {
-          let html = `
-                    <div class="result" id = "idScript${i}" name = "${scriptName}">
-                        <button onclick = "alert('${fullScriptName} \\n\\n ${description}')" class = "navButton navInfo tooltip" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:20px;right:20px;background-position:center;">
-                            <span class="tooltiptext">Info</span>
-                        </button>
+    if (!hidden) {
+      let html = `
+        <div class="result" id = "idScript${i}" name = "${scriptName}">
+            <button onclick = "alert('${fullScriptName} \\n\\n ${description}')" class = "navButton navInfo tooltip" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:20px;right:20px;background-position:center;">
+                <span class="tooltiptext">Info</span>
+            </button>
 
-                        <h2 class = "productTitle">${scriptName}</h2>
-                        <p class = "resultEntry">Version: ${version}</p>
-                        <div class = "resultButtons">
-                            <button id = "launchButton${i}">&#9889; Launch</button>
-                            <button class = "modifyButton" title = "Modify" onclick = "shell.openPath('${filePath}')">&#x270f; Modify</span></button>
-                        </div>
-                    </div>
-                    `;
-          $(`#automationTasks`).append(html);
+            <h2 class = "productTitle">${scriptName}</h2>
+            <p class = "resultEntry">Version: ${version}</p>
+            <div class = "resultButtons">
+                <button id = "launchButton${i}">&#9889; Launch</button>
+                <button class = "modifyButton" title = "Modify" onclick = "shell.openPath('${filePath}')">&#x270f; Modify</span></button>
+            </div>
+        </div>
+        `;
+      $(`#automationTasks`).append(html);
+    }
 
-          let id = i;
-          gsap.from(`#idScript${id}`, {
-            duration: 2,
-            ease: 'elastic.out(1, 0.2)',
-            y: -100,
-            opacity: 0,
-          });
-
-          $(`#launchButton${id}`).on('click', function (event) {
-            launch(`#launchButton${id}`, fileName, url, null);
-          });
-
-          $(`#automationTasks`).attr('status', 'none');
-          ++i;
-        }
-      },
-      error: function (err) {
-        console.log(err.status);
-      },
+    //animate
+    // gsap.from(`#idScript${id}`, {
+    //   duration: 2,
+    //   ease: 'elastic.out(1, 0.2)',
+    //   y: -100,
+    //   opacity: 0,
+    // });
+    //click event
+    let id = i;
+    $(`#launchButton${id}`).on('click', function (event) {
+      launch(`#launchButton${id}`, fileName, url, null);
     });
+
+    $(`#automationTasks`).attr('status', 'none');
+
+    // $.ajax({
+    //   url: dependency['url'],
+    //   success: function (data) {
+    //     if (
+    //       fs.existsSync(`${scriptPath}/${fileName}`) &&
+    //       !fileName.match('zip')
+    //     )
+    //       fs.unlinkSync(`${scriptPath}/${fileName}`);
+    //     if (!fileName.match('html') && !fileName.match('zip'))
+    //       fs.writeFileSync(`${scriptPath}/${fileName}`, data);
+
+    //     if (!hidden) {
+    //       let html = `
+    //         <div class="result" id = "idScript${i}" name = "${scriptName}">
+    //             <button onclick = "alert('${fullScriptName} \\n\\n ${description}')" class = "navButton navInfo tooltip" style = "background-color:none;border:none;height:30px;width:30px;position:absolute;top:20px;right:20px;background-position:center;">
+    //                 <span class="tooltiptext">Info</span>
+    //             </button>
+
+    //             <h2 class = "productTitle">${scriptName}</h2>
+    //             <p class = "resultEntry">Version: ${version}</p>
+    //             <div class = "resultButtons">
+    //                 <button id = "launchButton${i}">&#9889; Launch</button>
+    //                 <button class = "modifyButton" title = "Modify" onclick = "shell.openPath('${filePath}')">&#x270f; Modify</span></button>
+    //             </div>
+    //         </div>
+    //         `;
+    //       $(`#automationTasks`).append(html);
+
+    //       let id = i;
+    //       gsap.from(`#idScript${id}`, {
+    //         duration: 2,
+    //         ease: 'elastic.out(1, 0.2)',
+    //         y: -100,
+    //         opacity: 0,
+    //       });
+
+    //       $(`#launchButton${id}`).on('click', function (event) {
+    //         launch(`#launchButton${id}`, fileName, url, null);
+    //       });
+
+    //       $(`#automationTasks`).attr('status', 'none');
+    //       ++i;
+    //     }
+    //   },
+    //   error: function (err) {
+    //     console.log(err.status);
+    //   },
+    // });
 
     //download and extract zip files
 
@@ -123,7 +165,7 @@ function downloadDependencies() {
     }
 
     ipcRenderer.send('setProgress', i / dependencies['scripts'].length);
-    i = 0;
+    ++i;
   });
 
   $(`#buildFlyerInfo`).on('click', function (event) {
@@ -267,7 +309,6 @@ async function getScriptPath() {
     let versionNumber = max - 2005;
     $(`#indVersion`).html(`${versionNumber + 2005} (v ${versionNumber}.0)`);
     versionNumber = 'Version ' + versionNumber + '.0';
-
     scriptPath = path + '/' + versionNumber + '/en_US/Scripts/Scripts Panel';
     getDependencies();
   });
