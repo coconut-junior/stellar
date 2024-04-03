@@ -37,6 +37,11 @@ $(`#minimizeDropdown`).on('change', function () {
   );
 });
 
+function uiScaleUpdate() {
+  let zoom = parseFloat($(`#uiScale`).val());
+  $(`#uiScaleText`).html(`${parseInt(zoom * 100)}%`);
+}
+
 function uiScaleChange() {
   let zoom = parseFloat($(`#uiScale`).val());
   $(`#uiScaleText`).html(`${parseInt(zoom * 100)}%`);

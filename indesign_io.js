@@ -17,10 +17,17 @@ function makeDir(dir) {
   ipcRenderer.sendSync('makeDir', dir);
 }
 
-function downloadDependencies() {
-  var i = 0;
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-  dependencies['scripts'].forEach(function (dependency) {
+async function downloadDependencies() {
+  console.log('starting to download dependencies');
+  let scripts = dependencies['scripts'];
+  let worker = new Worker('worker.js');
+
+  for (i in scripts) {
+    let dependency = scripts[i];
     let fileName = dependency['filename'];
     let scriptName = dependency['name'];
     let fullScriptName = scriptName;
@@ -43,7 +50,9 @@ function downloadDependencies() {
     }
 
     //new code
-    let worker = new Worker('worker.js');
+    console.log(`creating worker for ${fileName}`);
+
+    await sleep(100);
     worker.postMessage([
       'downloadFile',
       dependency['url'],
@@ -69,19 +78,19 @@ function downloadDependencies() {
         </div>
         `;
       $(`#automationTasks`).append(html);
-    }
 
-    //assign click event
-    $(`#launchButton${id}`).on('click', function (event) {
-      launch(`#launchButton${id}`, fileName, url, null);
-    });
-    //animate
-    gsap.from(`#idScript${id}`, {
-      duration: 2,
-      ease: 'elastic.out(1, 0.2)',
-      y: -100,
-      opacity: 0,
-    });
+      //assign click event
+      $(`#launchButton${id}`).on('click', function (event) {
+        launch(`#launchButton${id}`, fileName, url, null);
+      });
+      //animate
+      gsap.from(`#idScript${id}`, {
+        duration: 2,
+        ease: 'elastic.out(1, 0.2)',
+        y: -100,
+        opacity: 0,
+      });
+    }
 
     $(`#automationTasks`).attr('status', 'none');
 
@@ -91,8 +100,9 @@ function downloadDependencies() {
 
       let file = fs.createWriteStream(`${scriptPath}/${fileName}`);
       let extractPath = path.dirname(`${scriptPath}${fileName}`);
+      let settings = { method: 'Get', cache: 'no-store', keepalive: false };
 
-      let settings = { method: 'Get' };
+      await sleep(100);
       fetch(url, settings).then((res) => {
         res.body.pipe(file);
         file.on('finish', function () {
@@ -118,8 +128,7 @@ function downloadDependencies() {
     }
 
     ipcRenderer.send('setProgress', i / dependencies['scripts'].length);
-    ++i;
-  });
+  }
 
   $(`#buildFlyerInfo`).on('click', function (event) {
     alert(
@@ -197,11 +206,11 @@ var launch = function (button, fileName, url, args) {
   }
 };
 
-function getDependencies() {
+async function getDependencies() {
   $(`.statusBar`).html('Updating automations...');
 
-  let settings = { method: 'Get' };
-  fetch(dependencyURL, settings)
+  let settings = { method: 'Get', cache: 'no-store', keepalive: false };
+  await fetch(dependencyURL, settings)
     .then((res) => {
       let status = res.status;
       switch (status) {
@@ -216,7 +225,7 @@ function getDependencies() {
     })
     .then((json) => {
       dependencies = json;
-      downloadDependencies();
+      return dependencies;
     })
     .catch((err) => {
       showError(
@@ -225,6 +234,7 @@ function getDependencies() {
       $(`.statusBar`).html('You are offline.');
       $(`#automationTasks`).attr('status', 'offline');
     });
+  downloadDependencies();
 }
 
 async function getScriptPath() {

@@ -167,7 +167,7 @@ function createWindow() {
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
     // Open the DevTools.
-    //mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
   });
 
   mainWindow.on('close', function () {

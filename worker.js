@@ -24,10 +24,11 @@ onmessage = (e) => {
 
 var failed = 0;
 
-async function download(url, dest, total, cb) {
-  let settings = { method: 'Get' };
-  var file = fs.createWriteStream(dest);
-  await fetch(url, settings).then((res) => {
+function download(url, dest, total, cb) {
+  let settings = { method: 'Get', cache: 'no-store', keepalive: false };
+
+  fetch(url, settings).then((res) => {
+    var file = fs.createWriteStream(dest);
     res.body.pipe(file);
     file.on('finish', function () {
       file.close(cb);
@@ -37,6 +38,7 @@ async function download(url, dest, total, cb) {
     file.on('error', function () {
       console.log('file write error');
     });
+    postMessage([failed, total]);
   });
 }
 
