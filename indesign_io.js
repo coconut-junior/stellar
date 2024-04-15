@@ -25,6 +25,11 @@ async function downloadDependencies() {
   console.log('starting to download dependencies');
   let scripts = dependencies['scripts'];
   let worker = new Worker('worker.js');
+  worker.onmessage = (e) => {
+    if (e.data && e.data.length > 2) {
+      console.log(e.data);
+    }
+  };
 
   for (i in scripts) {
     let dependency = scripts[i];
@@ -49,10 +54,9 @@ async function downloadDependencies() {
       makeDir(extractPath);
     }
 
-    //new code
-    console.log(`creating worker for ${fileName}`);
+    console.log(`requesting for ${fileName}`);
 
-    await sleep(100);
+    await sleep(100); //we must do this or github will punish us for so making req's so quickly
     worker.postMessage([
       'downloadFile',
       dependency['url'],

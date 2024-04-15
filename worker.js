@@ -3,11 +3,9 @@ const fs = require('fs');
 const fetch = require('node-fetch');
 const { settings } = require('party-js');
 
-const apiKey = 'vceurIcnyp6RJqyg0j87l8Phcya5Upzk9SswSuMy';
+let apiKey = '';
 const host = 'openapi.us-1.lytho.us';
-const headers = {
-  'x-api-key': apiKey,
-};
+let headers = '';
 
 onmessage = (e) => {
   if (e.data[0] == 'downloadFile') {
@@ -15,6 +13,11 @@ onmessage = (e) => {
     let dest = e.data[2];
     let total = e.data[3];
     download(url, dest, total);
+  } else if (e.data[0] == 'setAPIKey') {
+    apiKey = e.data[1];
+    headers = {
+      'x-api-key': apiKey,
+    };
   } else {
     let rows = e.data[0];
     let logoPath = e.data[1];
@@ -32,7 +35,7 @@ function download(url, dest, total, cb) {
     res.body.pipe(file);
     file.on('finish', function () {
       file.close(cb);
-      postMessage([failed, total]); //send response back to renderer
+      postMessage([failed, total, res.statusText]); //send response back to renderer
     });
 
     file.on('error', function () {

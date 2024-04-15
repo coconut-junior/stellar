@@ -106,7 +106,7 @@
 
 body {
   background-color: var(--secondary1);
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 table {
@@ -190,20 +190,20 @@ li {
 }
 
 #navLogo {
-  background-image: url('images/stellar_logo.png');
+  background-image: url('images/stellar_lockup.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   height: 20px;
-  width: 20px;
+  width: auto;
   margin: 0px;
   padding: 10px;
 }
 
 #automationTasks {
   height: 100%;
-  width: calc(100vw - 150px);
-  margin-left: 90px;
+  width: calc(100vw - 290px);
+  margin-left: 225px;
   overflow-y: scroll;
   overflow-x: hidden;
 
@@ -238,12 +238,13 @@ li {
   padding: 10px;
   border-radius: 20px;
   margin-bottom: 10px;
-  width: calc(100vw - 130px);
-  margin-left: 90px;
+  width: calc(100vw - 270px);
+  margin-left: 0;
   gap: 10px;
   background-color: transparent;
   border: 1px solid var(--primary0);
   app-region: drag;
+  margin-left: 220px;
 }
 
 #resourceMonitor {
@@ -526,26 +527,36 @@ button:active {
 }
 
 .navigation {
-  height: auto;
-  width: 40px;
+  height: 100vh;
+  width: 200px;
   margin: auto;
   padding: 10px;
   display: flex;
   align-items: left;
   justify-content: center;
   flex-direction: column;
-  gap: 5px;
-  border-radius: 20px;
+  gap: 10px;
+  border-radius: 0px 20px 20px 0px;
   box-shadow: 0px 4px 100px rgba(0, 0, 0, 0.1);
   position: absolute;
   top: 50%;
-  left: 20px;
+  left: 0px;
   transform: translateY(-50%);
   transition: 0.2s;
 
   border: 1px solid var(--primary0);
   background-color: var(--secondary2);
   backdrop-filter: blur(30px);
+}
+
+.navButton:hover p {
+  color: var(--bright);
+}
+
+.navigation p {
+  opacity: 1;
+  padding-left: 40px;
+  padding-top: 5px;
 }
 
 .resultButtons {
@@ -601,22 +612,15 @@ button:active {
 }
 
 .navButton {
-  height: 20px;
-  width: 20px;
+  height: 30px;
+  width: auto;
   padding: 10px;
   background-repeat: no-repeat;
   background-position: center left;
-  background-position-x: 10px;
+  background-position-x: 15px;
   background-size: 20px;
   transition: 0.3s;
   border-radius: 10px;
-}
-.navigation p {
-  transition: 0.3s;
-  opacity: 0;
-  padding: 0;
-  padding-left: 0px;
-  padding-top: 2px;
 }
 
 break {
@@ -632,20 +636,10 @@ break {
   background-color: var(--primary3);
 }
 .navButton[active='true'] p {
-  color: var(--bright);
+  color: white;
 }
 .navButton[active='false'] {
   background-color: transparent;
-}
-.navigation:hover {
-  width: 150px;
-}
-/* .navigation:hover .navButton {
-    width: auto;
-} */
-.navigation:hover p {
-  opacity: 1;
-  padding-left: 40px;
 }
 
 .toolbar {
@@ -778,17 +772,6 @@ h2 {
   scale: 0.9;
 }
 
-.adBuilder {
-  background-color: var(--white);
-  height: calc(100vh - 270px);
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 20px;
-  box-shadow: 0px 4px 100px rgba(0, 0, 0, 0.1);
-}
-
 .result {
   height: auto;
   width: auto;
@@ -851,6 +834,7 @@ h2 {
   padding: 10px 20px 10px 20px;
   height: auto;
   border: none;
+  margin-left: 225px;
 }
 
 #adList {
@@ -928,7 +912,7 @@ h2 {
 @media (max-width: 1280px) {
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1080px) {
   #automationStatus {
     display: grid;
     width: calc(100vw - 40px);
@@ -937,8 +921,8 @@ h2 {
     height: auto;
     margin-top: 0;
   }
-  .wrapper {
-    width: 100%;
+  .statusBar {
+    margin-left: 0;
   }
   .workingArea,
   .toolbar {
@@ -948,42 +932,45 @@ h2 {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
   }
-  #automationTasks {
-    width: calc(100vw - 60px);
-    margin-left: 0px;
-  }
   #automationStatus {
     border: none;
     margin-top: 20px;
     margin-left: 0;
   }
+
+  /*compact nav bar*/
+  #automationTasks,
+  #automationStatus {
+    width: calc(100vw - 150px);
+    margin-left: 90px;
+  }
   .navigation {
-    flex-direction: row;
     width: auto;
-    bottom: 30px;
-    top: 0px;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-bottom: 10px;
-    height: 40px;
+    height: auto;
+  }
+  .navigation p {
+    width: 30px;
+    transition: 0.3s;
+    opacity: 0;
+    padding-left: 0px;
   }
   .navigation:hover {
-    width: auto;
-  }
-  .navigation:hover .navButton {
-    width: 20px;
+    width: 150px;
   }
   .navigation:hover p {
-    display: none;
+    opacity: 1;
+    padding-left: 40px;
+  }
+  #navLogo {
+    background-image: url('images/stellar_logo.png');
+  }
+  .navigation:hover #navLogo {
+    background-image: url('images/stellar_lockup.png');
   }
 }
 
 /* compact view */
 @media (max-width: 540px) {
-  #automationStatus {
-    margin-top: 10px;
-    grid-template-areas: 'title' 'meter' 'search';
-  }
   .card {
     height: 320px;
   }
@@ -997,12 +984,6 @@ h2 {
     text-align: center;
     margin: auto;
     margin: 20px;
-  }
-  .wrapper {
-    height: calc(100vh - 80px);
-  }
-  .navigation {
-    bottom: 10px;
   }
 }
 
@@ -1046,6 +1027,13 @@ input {
 
     --black: #262121; /*h2 text*/
     --gray: #ecf6fa;
+  }
+
+  #navLogo {
+    background-image: url('images/stellar_lockup_light.png');
+  }
+  .navigation:hover #navLogo {
+    background-image: url('images/stellar_lockup_light.png');
   }
 
   .meterFill {
@@ -1096,5 +1084,11 @@ input {
   }
   .navInfo[active='false']:hover {
     background-image: url('images/info_black_hover.svg');
+  }
+}
+
+@media (max-width: 1080px) and (prefers-color-scheme: light) {
+  #navLogo {
+    background-image: url('images/stellar_logo.png');
   }
 }
