@@ -3,8 +3,8 @@ const { gsap } = require('gsap/dist/gsap');
 const dependencyURL = 'https://jbx.design/stellar/dependencies.json';
 const DecompressZip = require('decompress-zip');
 const party = require('party-js');
+
 const fs = require('fs');
-const path = require('path');
 const { buildFlyer } = require(path.join(__dirname, 'lytho.js'));
 const fetch = require('node-fetch');
 
@@ -246,7 +246,7 @@ async function getScriptPath() {
   let versionCmd = 'ls -la /Applications/ | grep InDesign';
 
   exec(versionCmd, (error, stdout, stderr) => {
-    var path = getHomePath() + `/Library/Preferences/Adobe InDesign`;
+    var p = getHomePath() + `/Library/Preferences/Adobe InDesign`;
 
     if (error) {
       console.log(`error: ${error.message}`);
@@ -274,7 +274,7 @@ async function getScriptPath() {
     let versionNumber = max - 2005;
     $(`#indVersion`).html(`${versionNumber + 2005} (v ${versionNumber}.0)`);
     versionNumber = 'Version ' + versionNumber + '.0';
-    scriptPath = path + '/' + versionNumber + '/en_US/Scripts/Scripts Panel';
+    scriptPath = p + '/' + versionNumber + '/en_US/Scripts/Scripts Panel';
     getDependencies();
   });
 }

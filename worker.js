@@ -2,10 +2,15 @@ const { resolveObjectURL } = require('buffer');
 const fs = require('fs');
 const fetch = require('node-fetch');
 const { settings } = require('party-js');
+const https = require('https');
+const path = require('path');
+const { hostname } = require('os');
 
-let apiKey = '';
+var apiKey = 'vceurIcnyp6RJqyg0j87l8Phcya5Upzk9SswSuMy';
 const host = 'openapi.us-1.lytho.us';
-let headers = '';
+var headers = {
+  'x-api-key': apiKey,
+};
 
 onmessage = (e) => {
   if (e.data[0] == 'downloadFile') {
@@ -13,11 +18,6 @@ onmessage = (e) => {
     let dest = e.data[2];
     let total = e.data[3];
     download(url, dest, total);
-  } else if (e.data[0] == 'setAPIKey') {
-    apiKey = e.data[1];
-    headers = {
-      'x-api-key': apiKey,
-    };
   } else {
     let rows = e.data[0];
     let logoPath = e.data[1];

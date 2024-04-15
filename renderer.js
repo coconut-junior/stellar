@@ -3,10 +3,10 @@ const ViewModes = { normal: 0, compact: 1 };
 const Store = require('electron-store');
 const { shell } = require('electron');
 let $ = (window.$ = window.jQuery = require('jquery'));
+const path = require('path');
 var viewMode = ViewModes.normal;
 var results = [];
 var store = new Store();
-let apiKey = '';
 
 webFrame.setZoomFactor(parseFloat(store.get('uiScale') ?? 0.8));
 $(`#appearanceDropdown`).val(store.get('appearance'));
@@ -15,12 +15,6 @@ $(`#uiScale`).val(store.get('uiScale') ?? 0.8);
 $(`#uiScaleText`).html(`${parseInt(parseFloat($(`#uiScale`).val()) * 100)}%`);
 
 updateAppearance();
-setAPIKey('vceurIcnyp6RJqyg0j87l8Phcya5Upzk9SswSuMy');
-
-function setAPIKey(key) {
-  new Worker('worker.js').postMessage(['setAPIKey', apiKey]);
-  $(`#apiKey`).html(key);
-}
 
 function updateAppearance() {
   let appearance = $(`#appearanceDropdown`).val();
