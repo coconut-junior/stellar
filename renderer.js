@@ -8,7 +8,7 @@ var viewMode = ViewModes.normal;
 var results = [];
 var store = new Store();
 
-webFrame.setZoomFactor(parseFloat(store.get('uiScale') ?? 0.8));
+webFrame.setZoomFactor(parseFloat(store.get('uiScale') ?? 0.9));
 $(`#appearanceDropdown`).val(store.get('appearance'));
 $(`#minimizeDropdown`).val(String(store.get('minimizeOnLaunch')));
 $(`#uiScale`).val(store.get('uiScale') ?? 0.8);
