@@ -202,17 +202,15 @@ li {
 
 #automationTasks {
   height: 100%;
-  width: calc(100vw - 290px);
-  margin-left: 225px;
+  width: calc(100% - 60px);
+  margin: 10px;
   overflow-y: scroll;
   overflow-x: hidden;
-
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, auto));
   gap: 10px;
   padding: 20px;
   align-content: start;
-
   background-size: 50px;
   background-repeat: no-repeat;
   background-position: center;
@@ -238,13 +236,12 @@ li {
   padding: 10px;
   border-radius: 20px;
   margin-bottom: 10px;
-  width: calc(100vw - 270px);
+  width: calc(100% - 40px);
   margin-left: 0;
   gap: 10px;
   background-color: transparent;
   border: 1px solid var(--primary0);
   app-region: drag;
-  margin-left: 220px;
 }
 
 #resourceMonitor {
@@ -463,13 +460,14 @@ button:active {
 
 .wrapper {
   position: absolute;
-  width: 100vw;
+  width: calc(100vw - 220px);
   height: 100vh;
   margin: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-left: 220px;
 }
 
 .file-selectors {
@@ -547,6 +545,10 @@ button:active {
   border: 1px solid var(--primary0);
   background-color: var(--secondary2);
   backdrop-filter: blur(30px);
+}
+
+.navButton[active='false']:hover {
+  background-color: var(--primary4);
 }
 
 .navButton:hover p {
@@ -831,10 +833,9 @@ h2 {
 
 .statusBar {
   color: var(--black);
-  padding: 10px 20px 10px 20px;
+  padding: 10px 20px 20px 20px;
   height: auto;
   border: none;
-  margin-left: 225px;
 }
 
 #adList {
@@ -923,6 +924,10 @@ h2 {
   }
   .statusBar {
     margin-left: 0;
+  }
+  .wrapper {
+    width: 100vw;
+    margin: 0;
   }
   .workingArea,
   .toolbar {
