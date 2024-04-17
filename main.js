@@ -6,6 +6,7 @@ const { ipcMain } = require('electron');
 const { globalShortcut } = require('electron');
 const Store = require('electron-store');
 let mainWindow;
+let updateWindow;
 
 var homePath = require('os').homedir();
 var store = new Store();
@@ -42,6 +43,27 @@ function saveConfig() {
   store.set('windowWidth', mainWindow.getContentSize()[0]);
   store.set('windowHeight', mainWindow.getContentSize()[1]);
 }
+
+ipcMain.handle('showUpdateWindow', (event) => {
+  updateWindow = new BrowserWindow({
+    width: 400,
+    height: 200,
+    closable: false,
+    resizable: false,
+    minimizable: false,
+    alwaysOnTop: true,
+  });
+
+  updateWindow.once('ready-to-show', () => {
+    updateWindow.show();
+  });
+
+  updateWindow.loadFile(path.join(__dirname, 'update.html'));
+});
+
+ipcMain.handle('closeUpdateWindow', (event) => {
+  if (updateWindow) updateWindow.destroy();
+});
 
 ipcMain.on('setZoom', function (event, zoom) {
   store.set('uiScale', zoom);
@@ -167,7 +189,7 @@ function createWindow() {
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    //mainWindow.webContents.openDevTools();
   });
 
   mainWindow.on('close', function () {

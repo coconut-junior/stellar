@@ -4,6 +4,8 @@ const Store = require('electron-store');
 const { shell } = require('electron');
 let $ = (window.$ = window.jQuery = require('jquery'));
 const path = require('path');
+const UniversalTilt = require('universal-tilt.js');
+
 var viewMode = ViewModes.normal;
 var results = [];
 var store = new Store();

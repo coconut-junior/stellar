@@ -2,7 +2,6 @@ const { exec } = require('child_process');
 const { gsap } = require('gsap/dist/gsap');
 const dependencyURL = 'https://jbx.design/stellar/dependencies.json';
 const party = require('party-js');
-
 const fs = require('fs');
 const { buildFlyer } = require(path.join(__dirname, 'lytho.js'));
 const fetch = require('node-fetch');
@@ -20,16 +19,34 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function enableFlyerScript() {
+  console.log('enabling flyer script');
+  $(`#idScript999`).css('content-visibility', 'visible');
+  $(`#idScript999`).css('background-image', 'none');
+  closeUpdateWindow();
+}
+
+function showUpdateWindow() {
+  ipcRenderer.invoke('showUpdateWindow');
+}
+
+function closeUpdateWindow() {
+  ipcRenderer.invoke('closeUpdateWindow');
+}
+
+let newAsset;
+let newVersion;
+
 async function downloadDependencies() {
-  console.log('starting to download dependencies');
   let scripts = dependencies['scripts'];
+
+  console.log('starting to download dependencies');
   let worker = new Worker('worker.js');
   worker.onmessage = (e) => {
     if (e.data == 'unzipComplete') {
-      console.log('enabling flyer script');
-      $(`#idScript999`).css('content-visibility', 'visible');
-      $(`#idScript999`).css('background-image', 'none');
-      $(`.statusBar`).html('Automations are up to date.');
+      //unzipping finished, update version & enable script
+      store.set(newAsset, newVersion);
+      enableFlyerScript();
     } else if (e.data && e.data.length > 2) {
       console.log(e.data);
     }
@@ -48,17 +65,32 @@ async function downloadDependencies() {
 
     $(`.statusBar`).html(`Downloading ${fileName}...`);
 
+    //compare versions, skip if zip is current
+    let currentVersion = store.get(fileName);
+    if (fileName.match('.zip')) {
+      if (currentVersion == version) {
+        console.log('zip version is current, skipping!');
+        enableFlyerScript();
+        continue;
+      } else {
+        //update that mf
+        newAsset = fileName;
+        newVersion = currentVersion;
+        showUpdateWindow();
+      }
+    }
+
     if (scriptName.length > 24) {
       scriptName = scriptName.slice(0, 20) + '...';
     }
 
     if (fileName.match('.zip')) {
-      $(`.statusBar`).html('Extracting zip...');
+      $(`.statusBar`).html('Extracting assets...');
       let extractPath = path.dirname(`${scriptPath}/${fileName}`);
       makeDir(extractPath);
     }
 
-    console.log(`requesting for ${fileName}`);
+    console.log(`requesting for ${fileName} ${url}`);
 
     await sleep(100); //we must do this or github will punish us for so making req's so quickly
     worker.postMessage([
@@ -100,6 +132,7 @@ async function downloadDependencies() {
       });
     }
 
+    $(`.statusBar`).html('Automations are up to date.');
     $(`#automationTasks`).attr('status', 'none');
     ipcRenderer.send('setProgress', i / dependencies['scripts'].length);
   }

@@ -794,11 +794,6 @@ h2 {
 }
 
 .result:hover {
-  transform: scale(0.98);
-  border: 2px solid var(--primary3);
-}
-
-.result:hover::after {
   border-color: var(--primary3);
 }
 

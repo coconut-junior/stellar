@@ -51,6 +51,7 @@
     "node-xlsx": "^0.23.0",
     "party-js": "^2.2.0",
     "request": "^2.88.2",
+    "universal-tilt.js": "^2.0.6",
     "xlsx": "^0.19.3"
   },
   "devDependencies": {
