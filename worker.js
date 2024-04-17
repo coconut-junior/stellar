@@ -5,6 +5,7 @@ const { settings } = require('party-js');
 const https = require('https');
 const path = require('path');
 const { hostname } = require('os');
+const DecompressZip = require('decompress-zip');
 
 var apiKey = 'vceurIcnyp6RJqyg0j87l8Phcya5Upzk9SswSuMy';
 const host = 'openapi.us-1.lytho.us';
@@ -36,6 +37,22 @@ function download(url, dest, total, cb) {
     file.on('finish', function () {
       file.close(cb);
       postMessage([failed, total, res.statusText]); //send response back to renderer
+      if (url.match('.zip')) {
+        let extractPath = path.dirname(dest).replaceAll('//', '/');
+        console.log(extractPath);
+        let unzipper = new DecompressZip(dest);
+
+        unzipper.on('error', function (err) {
+          console.log('Caught an error', err);
+        });
+        unzipper.on('extract', () => {
+          console.log('finished unzipping');
+          postMessage('unzipComplete');
+        });
+        unzipper.extract({
+          path: extractPath,
+        });
+      }
     });
 
     file.on('error', function () {

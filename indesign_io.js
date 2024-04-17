@@ -1,7 +1,6 @@
 const { exec } = require('child_process');
 const { gsap } = require('gsap/dist/gsap');
 const dependencyURL = 'https://jbx.design/stellar/dependencies.json';
-const DecompressZip = require('decompress-zip');
 const party = require('party-js');
 
 const fs = require('fs');
@@ -26,7 +25,12 @@ async function downloadDependencies() {
   let scripts = dependencies['scripts'];
   let worker = new Worker('worker.js');
   worker.onmessage = (e) => {
-    if (e.data && e.data.length > 2) {
+    if (e.data == 'unzipComplete') {
+      console.log('enabling flyer script');
+      $(`#idScript999`).css('content-visibility', 'visible');
+      $(`#idScript999`).css('background-image', 'none');
+      $(`.statusBar`).html('Automations are up to date.');
+    } else if (e.data && e.data.length > 2) {
       console.log(e.data);
     }
   };
@@ -49,7 +53,7 @@ async function downloadDependencies() {
     }
 
     if (fileName.match('.zip')) {
-      $(`.statusBar`).html('Creating folders...');
+      $(`.statusBar`).html('Extracting zip...');
       let extractPath = path.dirname(`${scriptPath}/${fileName}`);
       makeDir(extractPath);
     }
@@ -97,40 +101,6 @@ async function downloadDependencies() {
     }
 
     $(`#automationTasks`).attr('status', 'none');
-
-    //download and extract zip files
-    if (fileName.match('.zip')) {
-      $(`.statusBar`).html('Extracting assets...');
-
-      let file = fs.createWriteStream(`${scriptPath}/${fileName}`);
-      let extractPath = path.dirname(`${scriptPath}${fileName}`);
-      let settings = { method: 'Get', cache: 'no-store', keepalive: false };
-
-      await sleep(100);
-      fetch(url, settings).then((res) => {
-        res.body.pipe(file);
-        file.on('finish', function () {
-          file.close();
-          console.log(extractPath);
-          let zipPath = `${scriptPath}/${fileName}`;
-          let unzipper = new DecompressZip(zipPath);
-
-          unzipper.on('error', function (err) {
-            console.log('Caught an error', err);
-          });
-          unzipper.extract({
-            path: extractPath,
-          });
-
-          //build flyer automation
-          console.log('enabling flyer script');
-          $(`#idScript999`).css('content-visibility', 'visible');
-          $(`#idScript999`).css('background-image', 'none');
-          $(`.statusBar`).html('Automations are up to date.');
-        });
-      });
-    }
-
     ipcRenderer.send('setProgress', i / dependencies['scripts'].length);
   }
 
@@ -229,6 +199,7 @@ async function getDependencies() {
     })
     .then((json) => {
       dependencies = json;
+      console.log(dependencies);
       return dependencies;
     })
     .catch((err) => {
