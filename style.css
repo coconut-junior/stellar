@@ -548,6 +548,7 @@ button:active {
   border: 1px solid var(--primary0);
   background-color: var(--secondary2);
   backdrop-filter: blur(30px);
+  app-region: drag;
 }
 
 .navButton[active='false']:hover {
@@ -626,6 +627,7 @@ button:active {
   background-size: 20px;
   transition: 0.3s;
   border-radius: 10px;
+  app-region: none;
 }
 
 break {
