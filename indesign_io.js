@@ -66,7 +66,9 @@ async function downloadDependencies() {
     $(`.statusBar`).html(`Downloading ${fileName}...`);
 
     //compare versions, skip if zip is current
-    let currentVersion = store.get(fileName);
+    let versionIdentifier = scriptName.replaceAll(' ', '');
+
+    let currentVersion = store.get(versionIdentifier);
     if (fileName.match('.zip')) {
       if (currentVersion == version) {
         console.log('zip version is current, skipping!');
@@ -74,7 +76,7 @@ async function downloadDependencies() {
         continue;
       } else {
         //update that mf
-        newAsset = fileName;
+        newAsset = versionIdentifier;
         newVersion = currentVersion ?? version;
         showUpdateWindow();
       }

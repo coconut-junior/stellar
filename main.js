@@ -47,9 +47,9 @@ function saveConfig() {
 ipcMain.handle('showUpdateWindow', (event) => {
   updateWindow = new BrowserWindow({
     width: 400,
-    height: 200,
+    height: 180,
     closable: false,
-    resizable: true,
+    resizable: false,
     minimizable: false,
     alwaysOnTop: true,
   });
