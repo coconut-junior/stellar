@@ -75,7 +75,7 @@ async function downloadDependencies() {
       } else {
         //update that mf
         newAsset = fileName;
-        newVersion = currentVersion;
+        newVersion = currentVersion ?? version;
         showUpdateWindow();
       }
     }

@@ -49,7 +49,7 @@ ipcMain.handle('showUpdateWindow', (event) => {
     width: 400,
     height: 200,
     closable: false,
-    resizable: false,
+    resizable: true,
     minimizable: false,
     alwaysOnTop: true,
   });
