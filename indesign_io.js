@@ -75,9 +75,10 @@ async function downloadDependencies() {
         enableFlyerScript();
         continue;
       } else {
+        console.log(`${currentVersion}, ${store.get(versionIdentifier)}`);
         //update that mf
         newAsset = versionIdentifier;
-        newVersion = currentVersion ?? version;
+        newVersion = version;
         showUpdateWindow();
       }
     }
