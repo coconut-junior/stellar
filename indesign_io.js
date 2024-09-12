@@ -2,7 +2,6 @@ const { exec } = require('child_process');
 const { gsap } = require('gsap/dist/gsap');
 const dependencyURL = 'https://jbx.design/stellar/dependencies.json';
 const party = require('party-js');
-const fs = require('fs');
 const { buildFlyer } = require(path.join(__dirname, 'lytho.js'));
 const fetch = require('node-fetch');
 

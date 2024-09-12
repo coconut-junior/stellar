@@ -38,6 +38,7 @@
     "@fingerprintjs/fingerprintjs": "^3.4.1",
     "decompress-zip": "^0.3.3",
     "dialog-node": "^0.2.1",
+    "dotenv": "^16.4.5",
     "electron-forge": "^5.2.4",
     "electron-notarize": "^1.2.2",
     "electron-store": "^8.1.0",
@@ -51,6 +52,7 @@
     "node-xlsx": "^0.23.0",
     "party-js": "^2.2.0",
     "request": "^2.88.2",
+    "save": "^2.9.0",
     "universal-tilt.js": "^2.0.6",
     "xlsx": "^0.19.3"
   },

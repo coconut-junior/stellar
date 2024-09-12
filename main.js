@@ -18,6 +18,10 @@ app.on('window-all-closed', function () {
   }
 });
 
+if (app.isPackaged) {
+  $(`#betaIcon`).css('display', 'none');
+}
+
 function loadConfig() {
   if (!Number.isInteger(store.get('windowWidth'))) {
     mainWindow.setSize(400, 800);

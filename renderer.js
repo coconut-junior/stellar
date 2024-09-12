@@ -5,6 +5,7 @@ const { shell } = require('electron');
 let $ = (window.$ = window.jQuery = require('jquery'));
 const path = require('path');
 const UniversalTilt = require('universal-tilt.js');
+const fs = require('fs');
 
 var viewMode = ViewModes.normal;
 var results = [];
@@ -15,6 +16,9 @@ $(`#appearanceDropdown`).val(store.get('appearance'));
 $(`#minimizeDropdown`).val(String(store.get('minimizeOnLaunch')));
 $(`#uiScale`).val(store.get('uiScale') ?? 0.8);
 $(`#uiScaleText`).html(`${parseInt(parseFloat($(`#uiScale`).val()) * 100)}%`);
+
+var apiKey = fs.readFileSync(path.join(__dirname, 'lytho_api.key'), 'utf8');
+$(`#apiKey`).html(apiKey);
 
 updateAppearance();
 

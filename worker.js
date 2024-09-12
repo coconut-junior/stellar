@@ -7,7 +7,8 @@ const path = require('path');
 const { hostname } = require('os');
 const DecompressZip = require('decompress-zip');
 
-var apiKey = 'vceurIcnyp6RJqyg0j87l8Phcya5Upzk9SswSuMy';
+var apiKey = fs.readFileSync(path.join(__dirname, 'lytho_api.key'), 'utf8');
+
 const host = 'openapi.us-1.lytho.us';
 var headers = {
   'x-api-key': apiKey,
