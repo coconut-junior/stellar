@@ -376,8 +376,10 @@ button:hover {
 }
 
 button {
+  flex-grow: 1;
   height: auto;
   width: auto;
+  max-width: 300px;
   font-size: 14px;
   font-weight: normal;
   font-family: 'CabinetGrotesk-Medium', 'Apple Color Emoji';

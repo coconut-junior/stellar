@@ -1,4 +1,4 @@
-const { ipcRenderer, webFrame } = require('electron');
+const { ipcRenderer, webFrame, clipboard } = require('electron');
 const ViewModes = { normal: 0, compact: 1 };
 const Store = require('electron-store');
 const { shell } = require('electron');
@@ -18,7 +18,6 @@ $(`#uiScale`).val(store.get('uiScale') ?? 0.8);
 $(`#uiScaleText`).html(`${parseInt(parseFloat($(`#uiScale`).val()) * 100)}%`);
 
 var apiKey = fs.readFileSync(path.join(__dirname, 'lytho_api.key'), 'utf8');
-$(`#apiKey`).html(apiKey);
 
 updateAppearance();
 
@@ -31,6 +30,15 @@ function updateAppearance() {
     $(`:root`).attr('theme', appearance);
   }
   setAppearance(appearance);
+}
+
+function copyLythoKey() {
+  clipboard.writeText(apiKey);
+  $(`#copyKeyButton`).text('Copied!');
+
+  setTimeout(() => {
+    $(`#copyKeyButton`).text('Copy');
+  }, 2500);
 }
 
 $(`#appearanceDropdown`).on('change', function () {

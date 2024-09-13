@@ -148,7 +148,7 @@ function downloadLogos(rows, logoPath) {
     let brand = brands[i];
     brand = brand.replaceAll("',").replaceAll(/\//g, ' ');
 
-    findMatch(brand).then((match) => {
+    findMatch(brand + ' logo').then((match) => {
       try {
         download(match, `${logoPath}/${brand}.ai`, brands.length);
       } catch (e) {

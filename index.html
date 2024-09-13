@@ -129,19 +129,41 @@
           align-items: center;
           justify-content: center;
           padding: 40px;
+          width: 60%;
+          min-width: 300px;
         "
       >
         <h1 style="margin: auto; text-align: center">Settings</h1>
         <br />
 
-        <table>
+        <table style="padding-top: 0">
           <tr style="display: none">
             <td>Device fingerprint</td>
             <td id="fingerprint">Undefined</td>
           </tr>
           <tr>
             <td>Lytho API key</td>
-            <td id="apiKey">Undefined</td>
+            <td
+              style="
+                display: flex;
+                gap: 5px;
+                justify-content: right;
+                height: 30px;
+              "
+            >
+              <button class="tooltip" onclick="copyLythoKey()">
+                <span id="copyKeyButton">Copy</span>
+                <span
+                  class="tooltiptext"
+                  style="
+                    width: 200px;
+                    left: 0;
+                    border-radius: 0px 10px 10px 10px;
+                  "
+                  >API keys are sensitive information. Do not share!</span
+                >
+              </button>
+            </td>
           </tr>
           <tr>
             <td>InDesign Version</td>

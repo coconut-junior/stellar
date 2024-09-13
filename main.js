@@ -174,7 +174,7 @@ function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 768,
-    minWidth: 640,
+    minWidth: 600,
     minHeight: 600,
     title: 'Stellar',
     icon: path.join(__dirname, 'icon.icns'),
