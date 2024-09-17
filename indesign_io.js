@@ -297,7 +297,7 @@ function runJSX(scriptName, arguments) {
       console.log(`error: ${error.message}`);
       if (error.message.includes('authorize')) {
         showError(
-          `Looks like you're missing automation permissions. Please allow Stellar to control InDesign by granting it permission in Settings on your Mac.`
+          `Looks like you're missing automation permissions. Please allow Stellar to control InDesign by granting it permission in the Settings app on your Mac.`
         );
         window.open(
           'https://support.apple.com/en-is/guide/mac-help/mchl07817563/mac'

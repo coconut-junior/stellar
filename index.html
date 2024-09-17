@@ -23,6 +23,7 @@
       ></webview>
     </div>
 
+    <!-- Automations Page -->
     <div class="active wrapper" id="automationPage" data-tab-page>
       <div id="automationStatus" status="loading">
         <h1 style="grid-area: title">Automation</h1>
@@ -113,7 +114,6 @@
             <button class="primary" id="buildFlyerButton">
               &#9889; Launch
             </button>
-            <!--<button onclick = "alert('This feature is coming soon!')">&#x23F0;<br>Schedule</button>-->
           </div>
         </div>
       </div>
@@ -121,6 +121,7 @@
       <div class="statusBar">Updating automations...</div>
     </div>
 
+    <!-- Settings Page -->
     <div class="wrapper" id="settingsPage" data-tab-page>
       <div
         style="
@@ -151,7 +152,11 @@
                 height: 30px;
               "
             >
-              <button class="tooltip" onclick="copyLythoKey()">
+              <button
+                class="tooltip"
+                onclick="copyLythoKey()"
+                style="max-width: 90px"
+              >
                 <span id="copyKeyButton">Copy</span>
                 <span
                   class="tooltiptext"
@@ -216,6 +221,7 @@
 
     <div id="betaIcon"></div>
 
+    <!-- Sidebar -->
     <ul class="navigation">
       <li id="navLogo" onclick="showAbout()"></li>
       <break></break>

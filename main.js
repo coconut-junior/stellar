@@ -18,10 +18,6 @@ app.on('window-all-closed', function () {
   }
 });
 
-if (app.isPackaged) {
-  $(`#betaIcon`).css('display', 'none');
-}
-
 function loadConfig() {
   if (!Number.isInteger(store.get('windowWidth'))) {
     mainWindow.setSize(400, 800);
@@ -123,6 +119,10 @@ ipcMain.handle('focusWindow', function (event) {
 
 ipcMain.on('getHome', function (event) {
   event.returnValue = homePath;
+});
+
+ipcMain.on('isPackaged', function (event) {
+  event.returnValue = app.isPackaged;
 });
 
 ipcMain.handle('setWindowOnTop', function (event) {

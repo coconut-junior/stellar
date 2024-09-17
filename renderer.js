@@ -18,8 +18,15 @@ $(`#uiScale`).val(store.get('uiScale') ?? 0.8);
 $(`#uiScaleText`).html(`${parseInt(parseFloat($(`#uiScale`).val()) * 100)}%`);
 
 var apiKey = fs.readFileSync(path.join(__dirname, 'lytho_api.key'), 'utf8');
+if (isPackaged()) {
+  $(`#betaIcon`).css('display', 'none');
+}
 
 updateAppearance();
+
+function isPackaged() {
+  return ipcRenderer.sendSync('isPackaged');
+}
 
 function updateAppearance() {
   let appearance = $(`#appearanceDropdown`).val();
