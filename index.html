@@ -26,7 +26,16 @@
     <!-- Automations Page -->
     <div class="active wrapper" id="automationPage" data-tab-page>
       <div id="automationStatus" status="loading">
-        <h1 style="grid-area: title">Automation</h1>
+        <h1
+          style="
+            grid-area: title;
+            height: auto;
+            width: auto;
+            position: relative;
+          "
+        >
+          Automation
+        </h1>
         <div id="resourceMonitor" class="tooltip" style="grid-area: meter">
           <h2
             style="
@@ -129,7 +138,11 @@
           id="quickmarkNote"
           placeholder="Enter a quick note..."
         ></textarea>
-        <button id="quickmarkCreate" onclick="Quickmarks.create()">
+        <button
+          id="quickmarkCreate"
+          onclick="Quickmarks.create()"
+          style="height: 50px"
+        >
           Create
         </button>
       </div>

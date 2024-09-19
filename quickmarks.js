@@ -17,7 +17,7 @@ function load() {
 
       for (i in quickmarks) {
         let qm = quickmarks[i];
-        let html = `<div class = "quickmark" id = "${qm.qmID}" style = "background-color: ${qm.color};" onclick = "Quickmarks.open('${qm.qmID}')"><p style = "color: var(--dark);">${qm.note}</p></div>`;
+        let html = `<div class = "quickmark" id = "${qm.qmID}" style = "background-color: ${qm.color};" onclick = "Quickmarks.open('${qm.qmID}')"><p class = "quickmarkNote" style = "color: var(--dark);">${qm.note}</p></div>`;
         $(`#quickmarkList`).append(html);
       }
     });

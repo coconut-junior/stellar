@@ -36,6 +36,7 @@ textarea {
   padding: 20px;
   cursor: text;
   border-radius: 10px;
+  height: 100%;
   width: 100%;
   box-sizing: border-box;
   border: 1px solid var(--primary0);
@@ -202,6 +203,15 @@ h1 {
   text-align: left;
   margin: auto;
   margin-left: 40px;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20%;
+  width: 100%;
+  background-color: var(--dark);
 }
 
 li {
@@ -326,13 +336,23 @@ li {
   user-select: none;
 }
 
+.quickmarkNote {
+  color: black !important;
+  font-size: 24px;
+}
+
 #quickmarkList {
   box-sizing: border-box;
-  height: 60%;
+  height: 80%;
   width: 100%;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
-  padding: 30px;
+  padding: 80px;
+  overflow-y: scroll;
+  position: absolute;
+  bottom: 0;
 }
 
 #quickmarkPanel {
@@ -340,9 +360,19 @@ li {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 300px;
   width: 300px;
   gap: 10px;
+  background-color: var(--primary2);
+  padding: 20px;
+  position: absolute;
+  bottom: 0;
+  border-radius: 10px 10px 0px 0px;
+  border: 2px solid var(--gray);
+}
+
+#quickmarkPage {
+  background-image: url(images/dot_pattern.png);
+  background-size: 200px;
 }
 
 .medium {
@@ -1097,6 +1127,10 @@ input {
 
     --black: #262121; /*h2 text*/
     --gray: #ecf6fa;
+  }
+
+  #quickmarkPage {
+    background-image: url('images/dot_pattern_light.png');
   }
 
   #navLogo {
