@@ -17,7 +17,7 @@ function load() {
 
       for (i in quickmarks) {
         let qm = quickmarks[i];
-        let html = `<div class = "quickmark" id = "${qm.qmID}" style = "background-color: ${qm.color};" onclick = "Quickmarks.open('${qm.path}','${qm.id}')"><p style = "color: var(--dark);">${qm.note}</p></div>`;
+        let html = `<div class = "quickmark" id = "${qm.qmID}" style = "background-color: ${qm.color};" onclick = "Quickmarks.open('${qm.qmID}')"><p style = "color: var(--dark);">${qm.note}</p></div>`;
         $(`#quickmarkList`).append(html);
       }
     });
@@ -43,7 +43,7 @@ function create() {
 
     //run add quickmark script
     //this will modify json, adding path and id
-    runJSX('add_quickmark.jsx', `{"${quickmark.path},${quickmarkID}"}`);
+    runJSX('add_quickmark.jsx', `{"${quickmarkID}"}`);
 
     $(`#quickmarkNote`).val('');
     Quickmarks.load();
@@ -52,8 +52,8 @@ function create() {
   }
 }
 
-function open(path, qmID) {
-  runJSX('open_quickmark.jsx', `{"${path},${qmID}"}`);
+function open(qmID) {
+  runJSX('open_quickmark.jsx', `{"${qmID}"}`);
 }
 
 const Quickmarks = {
