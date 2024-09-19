@@ -27,6 +27,20 @@
   src: url('fonts/DSEG14Modern-Regular.woff') format('woff');
 }
 
+textarea {
+  font-size: 16px;
+  padding: 20px;
+  cursor: text;
+  border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--primary0);
+  color: var(--black);
+  background-color: var(--dark);
+  resize: none;
+  overflow-y: scroll;
+}
+
 #uiScale {
   -webkit-appearance: none;
   appearance: none;
@@ -290,6 +304,16 @@ li {
   user-select: none;
 }
 
+#quickmarkPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  width: 300px;
+  gap: 10px;
+}
+
 .medium {
   font-weight: bold;
 }
@@ -300,6 +324,13 @@ li {
 .navSearch[active='true'],
 .navSearch:hover {
   background-image: url('images/search_hover.svg');
+}
+.navQuickmark {
+  background-image: url('images/quickmark_default.svg');
+}
+.navQuickmark[active='true'],
+.navQuickmark:hover {
+  background-image: url('images/quickmark_hover.svg');
 }
 .navAutomation {
   background-image: url('images/automation_default.svg');
@@ -378,8 +409,10 @@ button:hover {
 button {
   flex-grow: 1;
   height: auto;
-  width: auto;
-  max-width: 300px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 40px;
+  box-sizing: border-box;
   font-size: 14px;
   font-weight: normal;
   font-family: 'CabinetGrotesk-Medium', 'Apple Color Emoji';
@@ -529,7 +562,7 @@ button:active {
   padding: 20px;
 }
 
-.navigation {
+#navigation {
   height: 100vh;
   width: 200px;
   margin: auto;
@@ -550,7 +583,6 @@ button:active {
   border: 1px solid var(--primary0);
   background-color: var(--secondary2);
   backdrop-filter: blur(30px);
-  app-region: drag;
 }
 
 .navButton[active='false']:hover {
@@ -561,7 +593,7 @@ button:active {
   color: var(--bright);
 }
 
-.navigation p {
+#navigation p {
   opacity: 1;
   padding-left: 40px;
   padding-top: 5px;
@@ -951,33 +983,33 @@ h2 {
     width: calc(100vw - 150px);
     margin-left: 90px;
   }
-  .navigation {
+  #navigation {
     width: auto;
     height: auto;
   }
-  .navigation p {
+  #navigation p {
     width: 30px;
     transition: 0.3s;
     opacity: 0;
     padding-left: 0px;
   }
-  .navigation:hover {
+  #navigation:hover {
     width: 150px;
   }
-  .navigation:hover p {
+  #navigation:hover p {
     opacity: 1;
     padding-left: 40px;
   }
   #navLogo {
     background-image: url('images/stellar_logo.png');
   }
-  .navigation:hover #navLogo {
+  #navigation:hover #navLogo {
     background-image: url('images/stellar_lockup.png');
   }
 }
 
 /* compact view */
-@media (max-width: 540px) {
+@media (max-width: 600px) {
   .card {
     height: 320px;
   }
@@ -1039,7 +1071,7 @@ input {
   #navLogo {
     background-image: url('images/stellar_lockup_light.png');
   }
-  .navigation:hover #navLogo {
+  #navigation:hover #navLogo {
     background-image: url('images/stellar_lockup_light.png');
   }
 
@@ -1079,6 +1111,12 @@ input {
   }
   .navAutomation[active='false']:hover {
     background-image: url('images/automation_black_hover.svg');
+  }
+  .navQuickmark {
+    background-image: url('images/quickmark_black.svg');
+  }
+  .navQuickmark[active='false']:hover {
+    background-image: url('images/quickmark_black_hover.svg');
   }
   .navSettings {
     background-image: url('images/settings_black.svg');

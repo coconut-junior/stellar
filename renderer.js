@@ -28,6 +28,31 @@ function isPackaged() {
   return ipcRenderer.sendSync('isPackaged');
 }
 
+function addQuickmark() {
+  let quickmark = {};
+  let quickmarkID = 0;
+  quickmark.note = $(`#quickmarkNote`).val();
+  quickmark.path = '';
+  quickmark.color = '';
+  quickmark.id = '';
+
+  console.log(scriptPath);
+  let dir = path.join(scriptPath, 'quickmarks');
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+  try {
+    let json = JSON.stringify(quickmark);
+    fs.writeFileSync(`${dir}/${quickmarkID}.json`, json);
+
+    //run add quickmark script
+    //this will modify json, adding path and id
+    runJSX('add_quickmark.jsx', `{"${quickmarkID}"}`);
+
+    $(`#quickmarkNote`).val('');
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 function updateAppearance() {
   let appearance = $(`#appearanceDropdown`).val();
   if (appearance == 'gundam') {

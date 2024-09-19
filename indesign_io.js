@@ -333,3 +333,5 @@ function runTool(fileName, url, args) {
       console.log('unknown tool type');
   }
 }
+
+module.exports = { scriptPath };
