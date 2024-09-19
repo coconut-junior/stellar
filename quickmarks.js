@@ -1,4 +1,5 @@
 var quickmarks = [];
+var colors = ['#FFB800', '#B0FF8B', '#CC8BFF'];
 
 function load() {
   quickmarks = [];
@@ -26,12 +27,18 @@ function load() {
   }
 }
 
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 function create() {
   let quickmark = {};
   let quickmarkID = generateRandomId();
   quickmark.qmID = quickmarkID;
   quickmark.note = $(`#quickmarkNote`).val();
-  quickmark.color = '#FFB800';
+  quickmark.color = colors[getRandomInt(0, colors.length - 1)];
   quickmark.path = '';
   quickmark.id = '';
 

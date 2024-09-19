@@ -211,7 +211,7 @@ h1 {
   justify-content: center;
   height: 20%;
   width: 100%;
-  background-color: var(--dark);
+  background-color: var(--secondary2);
 }
 
 li {
