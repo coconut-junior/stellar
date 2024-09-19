@@ -282,6 +282,7 @@ async function getScriptPath() {
     versionNumber = 'Version ' + versionNumber + '.0';
     scriptPath = p + '/' + versionNumber + '/en_US/Scripts/Scripts Panel';
     getDependencies();
+    Quickmarks.load();
   });
 }
 

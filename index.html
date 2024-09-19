@@ -123,12 +123,15 @@
 
     <div class="wrapper" id="quickmarkPage" data-tab-page>
       <h1 style="margin: auto; text-align: center">Quickmarks</h1>
+      <div id="quickmarkList"></div>
       <div id="quickmarkPanel">
         <textarea
           id="quickmarkNote"
           placeholder="Enter a quick note..."
         ></textarea>
-        <button id="quickmarkCreate" onclick="addQuickmark()">Create</button>
+        <button id="quickmarkCreate" onclick="Quickmarks.create()">
+          Create
+        </button>
       </div>
     </div>
 

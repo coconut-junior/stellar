@@ -27,6 +27,10 @@
   src: url('fonts/DSEG14Modern-Regular.woff') format('woff');
 }
 
+p {
+  font-size: 16px;
+}
+
 textarea {
   font-size: 16px;
   padding: 20px;
@@ -204,6 +208,24 @@ li {
   list-style: none;
 }
 
+.quickmark {
+  padding: 20px;
+  border-radius: 10px;
+  height: 300px;
+  width: 200px;
+  display: flex;
+  background-color: rgba(159, 239, 255, 0.5);
+  background-image: url('images/noise.png');
+  background-size: contain;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-blend-mode: multiply;
+}
+
+.quickmark:hover {
+  background-image: url(images/paper_peel.png);
+}
+
 #navLogo {
   background-image: url('images/stellar_lockup.png');
   background-size: contain;
@@ -302,6 +324,15 @@ li {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+#quickmarkList {
+  box-sizing: border-box;
+  height: 60%;
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  padding: 30px;
 }
 
 #quickmarkPanel {
