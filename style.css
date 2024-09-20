@@ -234,7 +234,7 @@ li {
 
 .quickmark {
   padding: 20px;
-  border-radius: 10px;
+  border-radius: 0px 0px 20px 20px;
   height: 300px;
   width: 200px;
   display: flex;
@@ -244,13 +244,14 @@ li {
   background-position: bottom;
   background-repeat: no-repeat;
   background-blend-mode: multiply;
-  transition: 0.3s;
   flex-direction: column;
   gap: 10px;
+  cursor: grab;
 }
 
 .quickmark:active {
-  scale: 0.9;
+  scale: 1.05;
+  cursor: grabbing;
 }
 
 .quickmark:hover {

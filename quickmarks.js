@@ -1,5 +1,71 @@
+const interact = require('interactjs');
 var quickmarks = [];
 var colors = ['#FFB800', '#B0FF8B', '#CC8BFF'];
+
+// target elements with the "draggable" class
+interact('.draggable')
+  .draggable({
+    // enable inertial throwing
+    inertia: true,
+    styleCursor: false,
+    // keep the element within the area of it's parent
+    modifiers: [
+      interact.modifiers.restrictRect({
+        restriction: 'parent',
+        endOnly: true,
+      }),
+      interact.modifiers.snap({
+        targets: [interact.snappers.grid({ x: 30, y: 30 })],
+        range: Infinity,
+        relativePoints: [{ x: 0, y: 0 }],
+      }),
+      interact.modifiers.restrict({
+        restriction: document.getElementById('quickmarkList').parentNode,
+        elementRect: { top: 0, left: 0, bottom: 1, right: 1 },
+        endOnly: true,
+      }),
+    ],
+    // enable autoScroll
+    autoScroll: false,
+
+    listeners: {
+      // call this function on every dragmove event
+      move: dragMoveListener,
+      end: savePositions,
+    },
+  })
+  .styleCursor(false);
+
+function savePositions() {
+  for (i in quickmarks) {
+    let qm = quickmarks[i];
+    let qmID = qm.qmID;
+    qm.position = $(`#${qmID}`).css('transform');
+    qm.x = $(`#${qmID}`).attr('data-x');
+    qm.y = $(`#${qmID}`).attr('data-y');
+
+    let dir = path.join(scriptPath, 'quickmarks');
+    let json = JSON.stringify(qm);
+    fs.writeFileSync(`${dir}/${qmID}.json`, json);
+  }
+}
+
+function dragMoveListener(event) {
+  var target = event.target;
+  // keep the dragged position in the data-x/data-y attributes
+  var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+  var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+  // translate the element
+  target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+
+  // update the posiion attributes
+  target.setAttribute('data-x', x);
+  target.setAttribute('data-y', y);
+}
+
+// this function is used later in the resizing and gesture demos
+window.dragMoveListener = dragMoveListener;
 
 function load() {
   quickmarks = [];
@@ -18,8 +84,18 @@ function load() {
 
       for (i in quickmarks) {
         let qm = quickmarks[i];
-        let html = `<div class = "quickmark" id = "${qm.qmID}" style = "background-color: ${qm.color};" onclick = "Quickmarks.open('${qm.qmID}')"><div class = "removeQuickmarkButton tooltip" onclick = "Quickmarks.remove('${qm.qmID}')"><span class = "tooltiptext">Remove</span></div><p class = "quickmarkNote" style = "color: var(--dark);">${qm.note}</p></div>`;
+        let html = `<div class = "quickmark draggable" id = "${qm.qmID}" style = "background-color: ${qm.color};" onclick = "Quickmarks.open('${qm.qmID}')">
+                <div class = "removeQuickmarkButton tooltip" onclick = "Quickmarks.remove('${qm.qmID}')">
+                  <span class = "tooltiptext">Remove</span>
+                </div>
+                <p class = "quickmarkNote" style = "color: var(--dark);">${qm.note}</p>
+              </div>`;
         $(`#quickmarkList`).append(html);
+        if (qm.position != undefined) {
+          $(`#${qm.qmID}`).css('transform', qm.position);
+          $(`#${qm.qmID}`).attr('data-x', qm.x);
+          $(`#${qm.qmID}`).attr('data-y', qm.y);
+        }
       }
     });
   } catch (error) {
@@ -41,6 +117,7 @@ function create() {
   quickmark.color = colors[getRandomInt(0, colors.length - 1)];
   quickmark.path = '';
   quickmark.id = '';
+  quickmark.createTime = Date.now();
 
   let dir = path.join(scriptPath, 'quickmarks');
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
@@ -68,7 +145,7 @@ function remove(qmID) {
 }
 
 function open(qmID) {
-  runJSX('open_quickmark.jsx', `{"${qmID}"}`);
+  //runJSX('open_quickmark.jsx', `{"${qmID}"}`);
 }
 
 const Quickmarks = {
