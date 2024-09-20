@@ -18,7 +18,7 @@ function load() {
 
       for (i in quickmarks) {
         let qm = quickmarks[i];
-        let html = `<div class = "quickmark" id = "${qm.qmID}" style = "background-color: ${qm.color};" onclick = "Quickmarks.open('${qm.qmID}')"><p class = "quickmarkNote" style = "color: var(--dark);">${qm.note}</p></div>`;
+        let html = `<div class = "quickmark" id = "${qm.qmID}" style = "background-color: ${qm.color};" onclick = "Quickmarks.open('${qm.qmID}')"><div class = "removeQuickmarkButton tooltip" onclick = "Quickmarks.remove('${qm.qmID}')"><span class = "tooltiptext">Remove</span></div><p class = "quickmarkNote" style = "color: var(--dark);">${qm.note}</p></div>`;
         $(`#quickmarkList`).append(html);
       }
     });
@@ -59,6 +59,14 @@ function create() {
   }
 }
 
+function remove(qmID) {
+  let f = path.join(scriptPath, `quickmarks/${qmID}.json`);
+  if (fs.existsSync(f)) {
+    fs.rmSync(f);
+    $(`#${qmID}`).remove();
+  }
+}
+
 function open(qmID) {
   runJSX('open_quickmark.jsx', `{"${qmID}"}`);
 }
@@ -67,6 +75,7 @@ const Quickmarks = {
   load: load,
   create: create,
   open: open,
+  remove: remove,
   get: function () {
     return quickmarks;
   },

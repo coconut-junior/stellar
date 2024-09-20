@@ -214,6 +214,20 @@ h1 {
   background-color: var(--secondary2);
 }
 
+.removeQuickmarkButton {
+  height: 32px;
+  width: 32px;
+  opacity: 0.5;
+  visibility: hidden;
+  background-image: url(images/remove_quickmark.svg);
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.removeQuickmarkButton:hover {
+  opacity: 1;
+}
+
 li {
   list-style: none;
 }
@@ -230,10 +244,21 @@ li {
   background-position: bottom;
   background-repeat: no-repeat;
   background-blend-mode: multiply;
+  transition: 0.3s;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quickmark:active {
+  scale: 0.9;
 }
 
 .quickmark:hover {
   background-image: url(images/paper_peel.png);
+}
+
+.quickmark:hover .removeQuickmarkButton {
+  visibility: visible;
 }
 
 #navLogo {
