@@ -246,6 +246,7 @@ li {
 .quickmark {
   padding: 20px;
   height: fit-content;
+  width: 200px;
 }
 
 .quickmarkWrapper {
@@ -275,10 +276,6 @@ li {
 
 .quickmark:active {
   cursor: grabbing;
-}
-
-.quickmark:hover {
-  background-color: var(--primary4);
 }
 
 .quickmark:hover .quickmarkButton {
@@ -389,6 +386,7 @@ li {
   color: black !important;
   font-size: 24px;
   opacity: 0.5;
+  word-break: break-word;
 }
 
 #quickmarkList {
@@ -400,6 +398,7 @@ li {
   justify-content: center;
   gap: 10px;
   padding: 80px;
+  overflow-x: scroll;
   overflow-y: scroll;
   position: absolute;
   bottom: 0;
@@ -418,6 +417,11 @@ li {
   bottom: 0;
   border-radius: 10px 10px 0px 0px;
   border: 2px solid var(--gray);
+  z-index: 3;
+}
+
+#quickmarkNote {
+  overflow: hidden;
 }
 
 #quickmarkPage {
@@ -690,6 +694,7 @@ button:active {
   left: 0px;
   transform: translateY(-50%);
   transition: 0.2s;
+  z-index: 3;
 
   border: 1px solid var(--primary0);
   background-color: var(--secondary2);

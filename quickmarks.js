@@ -2,13 +2,11 @@ const interact = require('interactjs');
 var quickmarks = [];
 var colors = ['#FFB800', '#B0FF8B', '#CC8BFF', '#FFA5A5', '#EAE8E3'];
 
-// target elements with the "draggable" class
 interact('.draggable')
   .draggable({
-    // enable inertial throwing
     inertia: true,
     styleCursor: false,
-    // keep the element within the area of it's parent
+
     modifiers: [
       interact.modifiers.restrictRect({
         restriction: 'parent',
@@ -25,11 +23,10 @@ interact('.draggable')
         endOnly: true,
       }),
     ],
-    // enable autoScroll
+
     autoScroll: false,
 
     listeners: {
-      // call this function on every dragmove event
       move: dragMoveListener,
       end: savePositions,
     },
