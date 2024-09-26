@@ -1,6 +1,6 @@
 const interact = require('interactjs');
 var quickmarks = [];
-var colors = ['#FFB800', '#B0FF8B', '#CC8BFF'];
+var colors = ['#FFB800', '#B0FF8B', '#CC8BFF', '#FFA5A5', '#EAE8E3'];
 
 // target elements with the "draggable" class
 interact('.draggable')
@@ -52,6 +52,12 @@ function savePositions() {
 
 function dragMoveListener(event) {
   var target = event.target;
+  let quickmarks = document.querySelectorAll('.quickmark');
+  quickmarks.forEach((qm) => {
+    qm.style.zIndex = 0;
+  });
+
+  target.style.zIndex = 1;
   // keep the dragged position in the data-x/data-y attributes
   var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
   var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
@@ -84,12 +90,23 @@ function load() {
 
       for (i in quickmarks) {
         let qm = quickmarks[i];
-        let html = `<div class = "quickmark draggable" id = "${qm.qmID}" style = "background-color: ${qm.color};" onclick = "Quickmarks.open('${qm.qmID}')">
-                <div class = "removeQuickmarkButton tooltip" onclick = "Quickmarks.remove('${qm.qmID}')">
+        let html = `<div class = "quickmark draggable" id = "${qm.qmID}" >
+                
+        <div class = "quickmarkWrapper tilt" style = "background-color: ${qm.color};">
+        <div style = "display:flex;flex-wrap:wrap">
+<div class = "quickmarkButton tooltip" id = "removeQuickmark" onclick = "Quickmarks.remove('${qm.qmID}')">
                   <span class = "tooltiptext">Remove</span>
+                  
                 </div>
+                <div class = "quickmarkButton tooltip" id = "openQuickmark" onclick = "Quickmarks.open('${qm.qmID}')">
+                  <span class = "tooltiptext">Open</span>
+                  
+                </div>
+        </div>
                 <p class = "quickmarkNote" style = "color: var(--dark);">${qm.note}</p>
-              </div>`;
+                </div>
+                </div>
+         `;
         $(`#quickmarkList`).append(html);
         if (qm.position != undefined) {
           $(`#${qm.qmID}`).css('transform', qm.position);
@@ -97,6 +114,15 @@ function load() {
           $(`#${qm.qmID}`).attr('data-y', qm.y);
         }
       }
+
+      $('.tilt').universalTilt({
+        settings: {
+          scale: 1.1,
+        },
+        callbacks: {
+          // callbacks...
+        },
+      });
     });
   } catch (error) {
     console.error('Error reading files:', error);
@@ -145,7 +171,7 @@ function remove(qmID) {
 }
 
 function open(qmID) {
-  //runJSX('open_quickmark.jsx', `{"${qmID}"}`);
+  runJSX('open_quickmark.jsx', `{"${qmID}"}`);
 }
 
 const Quickmarks = {

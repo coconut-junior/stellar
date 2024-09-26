@@ -32,16 +32,17 @@ p {
 }
 
 textarea {
+  min-width: 300px;
+  cursor: text;
+  border-radius: 10px;
+  border: 1px solid var(--primary1);
+  background-color: var(--primary1);
   font-size: 16px;
   padding: 20px;
   cursor: text;
-  border-radius: 10px;
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid var(--primary0);
-  color: var(--black);
-  background-color: var(--dark);
   resize: none;
   overflow-y: scroll;
 }
@@ -157,7 +158,8 @@ td {
 
 p,
 h1,
-input {
+input,
+textarea {
   color: var(--black);
 }
 
@@ -178,7 +180,8 @@ input {
   app-region: none;
 }
 
-input:focus {
+input:focus,
+textarea:focus {
   background-color: var(--primary2);
 }
 
@@ -214,18 +217,26 @@ h1 {
   background-color: var(--secondary2);
 }
 
-.removeQuickmarkButton {
+.quickmarkButton {
   height: 32px;
   width: 32px;
   opacity: 0.5;
   visibility: hidden;
-  background-image: url(images/remove_quickmark.svg);
+
   background-position: center;
   background-repeat: no-repeat;
 }
 
-.removeQuickmarkButton:hover {
+.quickmarkButton:hover {
   opacity: 1;
+}
+
+#removeQuickmark {
+  background-image: url(images/remove_quickmark.svg);
+}
+
+#openQuickmark {
+  background-image: url(images/open_quickmark.svg);
 }
 
 li {
@@ -233,6 +244,11 @@ li {
 }
 
 .quickmark {
+  padding: 20px;
+  height: fit-content;
+}
+
+.quickmarkWrapper {
   padding: 20px;
   border-radius: 0px 0px 20px 20px;
   height: 300px;
@@ -247,18 +263,25 @@ li {
   flex-direction: column;
   gap: 10px;
   cursor: grab;
+
+  box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
+.quickmarkWrapper:hover {
+  background-image: url(images/paper_peel.png);
 }
 
 .quickmark:active {
-  scale: 1.05;
   cursor: grabbing;
 }
 
 .quickmark:hover {
-  background-image: url(images/paper_peel.png);
+  background-color: var(--primary4);
 }
 
-.quickmark:hover .removeQuickmarkButton {
+.quickmark:hover .quickmarkButton {
   visibility: visible;
 }
 
@@ -365,6 +388,7 @@ li {
 .quickmarkNote {
   color: black !important;
   font-size: 24px;
+  opacity: 0.5;
 }
 
 #quickmarkList {
@@ -388,7 +412,7 @@ li {
   justify-content: center;
   width: 300px;
   gap: 10px;
-  background-color: var(--primary2);
+  background-color: var(--secondary1);
   padding: 20px;
   position: absolute;
   bottom: 0;
