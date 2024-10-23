@@ -274,7 +274,7 @@ li {
   background-image: url(images/paper_peel.png);
 }
 
-.quickmark:active {
+.quickmarkWrapper:active {
   cursor: grabbing;
 }
 

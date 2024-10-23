@@ -90,7 +90,7 @@ function load() {
         let html = `<div class = "quickmark draggable" id = "${qm.qmID}" >
                 
         <div class = "quickmarkWrapper tilt" style = "background-color: ${qm.color};">
-        <div style = "display:flex;flex-wrap:wrap">
+        <div style = "display:flex;flex-wrap:wrap;">
 <div class = "quickmarkButton tooltip" id = "removeQuickmark" onclick = "Quickmarks.remove('${qm.qmID}')">
                   <span class = "tooltiptext">Remove</span>
                   

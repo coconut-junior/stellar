@@ -206,9 +206,11 @@ function createWindow() {
   });
 
   globalShortcut.register('CommandOrControl+R', function () {
-    console.log('CommandOrControl+R is pressed');
-    app.relaunch();
-    app.exit();
+    if (mainWindow.isFocused()) {
+      console.log('CommandOrControl+R is pressed');
+      app.relaunch();
+      app.exit();
+    }
   });
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
