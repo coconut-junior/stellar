@@ -121,39 +121,31 @@ function getRelativePath(path) {
 }
 
 $(`#automationSearch`).on('keyup', function (e) {
-  try {
-    search(e.target.value);
-  } catch (e) {
-    console.log('Could not search');
-  }
+  search(e.target.value);
 });
 
 function search(query) {
+  console.log(`searching for ${query}`);
   let resultCount = 0;
+  let automationList = $(`.result`);
 
-  for (let i = 0; i < results.length; ++i) {
-    query = query.toLowerCase();
-    let element = results[i];
-    let name = element.getAttribute('name').toLowerCase();
-
-    if (name.match(query)) {
-      element.style.display = 'grid';
+  automationList.each(function (i) {
+    let name = this.getAttribute('name');
+    if (name.toLowerCase().match(query.toLowerCase())) {
+      this.style.display = 'grid';
       ++resultCount;
     } else {
-      element.style.display = 'none';
+      this.style.display = 'none';
+      console.log(`hiding ${name}`);
     }
-  }
+  });
+
+  console.log(`${resultCount} results`);
 
   if (resultCount < 3) {
-    $(`#automationTasks`).css(
-      'grid-template-columns',
-      'repeat(auto-fit, minmax(300px, 350px))'
-    );
+    $(`#automationTasks`).css('justify-content', 'left');
   } else {
-    $(`#automationTasks`).css(
-      'grid-template-columns',
-      'repeat(auto-fit, minmax(300px, auto))'
-    );
+    $(`#automationTasks`).css('justify-content', 'unset');
   }
 }
 
