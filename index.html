@@ -26,7 +26,17 @@
     <!-- Automations Page -->
     <div class="active wrapper" id="automationPage" data-tab-page>
       <div id="automationStatus" status="loading">
-        <h1 style="grid-area: title">Automation</h1>
+        <h1
+          style="
+            grid-area: title;
+            height: auto;
+            width: auto;
+            position: relative;
+            background-color: transparent;
+          "
+        >
+          Automation
+        </h1>
         <div id="resourceMonitor" class="tooltip" style="grid-area: meter">
           <h2
             style="
@@ -121,8 +131,28 @@
       <div class="statusBar">Updating automations...</div>
     </div>
 
+    <div class="wrapper" id="quickmarkPage" data-tab-page>
+      <h1 style="margin: auto; text-align: center">Quickmarks</h1>
+      <div id="quickmarkList"></div>
+      <div id="quickmarkPanel">
+        <textarea
+          maxlength="60"
+          id="quickmarkNote"
+          placeholder="Select an item in InDesign, then enter a quick note here..."
+        ></textarea>
+        <button
+          id="quickmarkCreate"
+          onclick="Quickmarks.create()"
+          style="height: 50px"
+        >
+          Create
+        </button>
+      </div>
+    </div>
+
     <!-- Settings Page -->
     <div class="wrapper" id="settingsPage" data-tab-page>
+      <h1 style="margin: auto; text-align: center">Settings</h1>
       <div
         style="
           display: flex;
@@ -134,7 +164,6 @@
           min-width: 300px;
         "
       >
-        <h1 style="margin: auto; text-align: center">Settings</h1>
         <br />
 
         <table style="padding-top: 0">
@@ -222,7 +251,7 @@
     <div id="betaIcon"></div>
 
     <!-- Sidebar -->
-    <ul class="navigation">
+    <ul id="navigation">
       <li id="navLogo" onclick="showAbout()"></li>
       <break></break>
       <li
@@ -232,6 +261,15 @@
         data-tab-target="#automationPage"
       >
         <p>Automation</p>
+      </li>
+
+      <li
+        class="navButton navQuickmark"
+        active="false"
+        id=""
+        data-tab-target="#quickmarkPage"
+      >
+        <p>Quickmarks</p>
       </li>
       <li
         class="navButton navSearch"

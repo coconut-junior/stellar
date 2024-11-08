@@ -282,6 +282,7 @@ async function getScriptPath() {
     versionNumber = 'Version ' + versionNumber + '.0';
     scriptPath = p + '/' + versionNumber + '/en_US/Scripts/Scripts Panel';
     getDependencies();
+    Quickmarks.load();
   });
 }
 
@@ -333,3 +334,5 @@ function runTool(fileName, url, args) {
       console.log('unknown tool type');
   }
 }
+
+module.exports = { scriptPath };

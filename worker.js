@@ -63,6 +63,56 @@ function download(url, dest, total, cb) {
   });
 }
 
+function getTagId(tagName) {
+  var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
+  var path = `/v1/tags/by-name`;
+
+  let options = {
+    hostname: host,
+    path: path,
+    method: 'POST',
+    headers: headers,
+  };
+
+  return new Promise((resolve, reject) => {
+    var postData = JSON.stringify({ name: tagName });
+    var req = https.request(options, function (response) {
+      response.on('data', function (data) {
+        try {
+          resolve(JSON.parse(data).id);
+        } catch (e) {
+          reject();
+        }
+      });
+    });
+    req.write(postData);
+    req.end();
+  });
+}
+
+function getAssetsByTags(tags) {
+  var path = `/v1/assets?size=1&tagIds=${tags}`;
+  let options = {
+    hostname: host,
+    path: path,
+    headers: headers,
+  };
+
+  return new Promise((resolve, reject) => {
+    https.get(options, function (response) {
+      response.on('data', function (data) {
+        try {
+          let json = JSON.parse(data);
+          let assets = json.content;
+          resolve(assets);
+        } catch (e) {
+          reject();
+        }
+      });
+    });
+  });
+}
+
 function searchAssets(query) {
   query = query.replaceAll(' ', '%20').replaceAll('&', '').replaceAll('#', '');
 
@@ -131,7 +181,6 @@ function getAssetLink(assetID) {
 }
 
 function downloadLogos(rows, logoPath) {
-  // searchAssets('Ty - Squish-a-Boos (use uploaded logos)').then((r)=>{console.log(r);})
   var logos = [];
   var brands = [];
 
