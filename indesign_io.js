@@ -310,6 +310,7 @@ function runJSX(scriptName, arguments) {
       console.log(`stderr: ${stderr}`);
       return;
     }
+
     console.log(`stdout: ${stdout}`);
   });
 

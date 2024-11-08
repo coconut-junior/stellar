@@ -33,6 +33,14 @@ interact('.draggable')
   })
   .styleCursor(false);
 
+function wait(ms) {
+  var start = new Date().getTime();
+  var end = start;
+  while (end < start + ms) {
+    end = new Date().getTime();
+  }
+}
+
 function savePositions() {
   for (i in quickmarks) {
     let qm = quickmarks[i];
@@ -153,6 +161,7 @@ function create() {
     runJSX('add_quickmark.jsx', `{"${quickmarkID}"}`);
 
     $(`#quickmarkNote`).val('');
+    wait(1000);
     Quickmarks.load();
   } catch (e) {
     console.log(e);

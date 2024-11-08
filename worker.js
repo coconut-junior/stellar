@@ -181,7 +181,6 @@ function getAssetLink(assetID) {
 }
 
 function downloadLogos(rows, logoPath) {
-  var logos = [];
   var brands = [];
 
   //parse excel sheet
