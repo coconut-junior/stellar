@@ -32,6 +32,11 @@ var failed = 0;
 function download(url, dest, total, cb) {
   let settings = { method: 'Get', cache: 'no-store', keepalive: false };
 
+  if (!url) {
+    postMessage([failed, total]);
+    return;
+  }
+
   fetch(url, settings).then((res) => {
     var file = fs.createWriteStream(dest);
     res.body.pipe(file);
@@ -90,8 +95,9 @@ function getTagId(tagName) {
   });
 }
 
-function getAssetsByTags(tags) {
-  var path = `/v1/assets?size=1&tagIds=${tags}`;
+function getAssetsByTags(tagIds) {
+  var path = `/v1/assets?size=1&tagIds=${tagIds}`;
+  console.log(path);
   let options = {
     hostname: host,
     path: path,
@@ -142,9 +148,13 @@ function searchAssets(query) {
 }
 
 function findMatch(brand) {
-  return new Promise((resolve, reject) => {
-    searchAssets(brand).then((assets) => {
-      if (assets.length != 0) {
+  return new Promise(async (resolve, reject) => {
+    //replace with new function to get assets by tags
+    let logoTagId = await getTagId('logo');
+    let brandTagId = await getTagId(brand);
+
+    getAssetsByTags(`${logoTagId},${brandTagId}`).then((assets) => {
+      if (brandTagId && assets && assets.length != 0) {
         let id = assets[0].id;
         resolve(getAssetLink(id));
       } else {
@@ -194,12 +204,22 @@ function downloadLogos(rows, logoPath) {
 
   for (let i = 0; i < brands.length; ++i) {
     let brand = brands[i];
-    brand = brand.replaceAll("',").replaceAll(/\//g, ' ');
+    brand = brand
+      .replaceAll("',")
+      .replaceAll(/\//g, '%20')
+      .replaceAll(' ', '%20')
+      .replace(/[\r\n]+/g, '%20');
 
-    findMatch(brand + ' logo').then((match) => {
-      try {
-        download(match, `${logoPath}/${brand}.ai`, brands.length);
-      } catch (e) {
+    findMatch(brand).then((match) => {
+      if (brand != match) {
+        //if brand is returned, that means url wasnt
+        try {
+          download(match, `${logoPath}/${brand}.ai`, brands.length);
+        } catch (e) {
+          console.log(`failed to download ${brand}`);
+          postMessage([failed, brands.length]);
+        }
+      } else {
         console.log(`failed to download ${brand}`);
         postMessage([failed, brands.length]);
       }
