@@ -210,6 +210,10 @@ function downloadLogos(rows, logoPath) {
       .replaceAll(' ', '%20')
       .replace(/[\r\n]+/g, '%20');
 
+    if (brand.match(',')) {
+      brand = brand.split(',')[0]; //only grab first logo in list
+    }
+
     findMatch(brand).then((match) => {
       if (brand != match) {
         //if brand is returned, that means url wasnt
