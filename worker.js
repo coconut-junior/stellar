@@ -84,7 +84,8 @@ function getTagId(tagName) {
     var req = https.request(options, function (response) {
       response.on('data', function (data) {
         try {
-          resolve(JSON.parse(data).id);
+          let content = JSON.parse(data);
+          resolve(content.id);
         } catch (e) {
           reject();
         }
@@ -159,7 +160,9 @@ function findMatch(brand) {
         resolve(getAssetLink(id));
       } else {
         ++failed;
-        console.log(brand + ' was not matched');
+        console.log(
+          brand + ` was not matched, tagIds: ${logoTagId},${brandTagId}`
+        );
         resolve(brand);
       }
     });
@@ -191,7 +194,8 @@ function getAssetLink(assetID) {
 }
 
 function downloadLogos(rows, logoPath) {
-  var brands = [];
+  var brands = []; //valid logos only
+  var assetDict = new Object();
 
   //parse excel sheet
   for (let i = 0; i < rows.length; ++i) {
@@ -199,34 +203,44 @@ function downloadLogos(rows, logoPath) {
     var logo = row['Logo'];
     if (logo.trim() != '' && logo.trim().toLowerCase() != 'none') {
       brands = brands.concat(logo);
-    }
-  }
+      let brand = logo;
+      brand = brand
+        .trim()
+        .replaceAll("',")
+        .replaceAll(/\//g, ' ')
+        .replaceAll(' ', ' ')
+        .replace(/[\r\n]+/g, ' ');
 
-  for (let i = 0; i < brands.length; ++i) {
-    let brand = brands[i];
-    brand = brand
-      .replaceAll("',")
-      .replaceAll(/\//g, '%20')
-      .replaceAll(' ', '%20')
-      .replace(/[\r\n]+/g, '%20');
+      if (brand.match(',')) {
+        brand = brand.split(',')[0]; //only grab first logo in list
+      }
 
-    if (brand.match(',')) {
-      brand = brand.split(',')[0]; //only grab first logo in list
-    }
+      console.log(`formatted brand is ${brand}`);
 
-    findMatch(brand).then((match) => {
-      if (brand != match) {
-        //if brand is returned, that means url wasnt
-        try {
-          download(match, `${logoPath}/${brand}.ai`, brands.length);
-        } catch (e) {
+      findMatch(brand).then((match) => {
+        if (brand != match) {
+          let asset = new Object();
+          asset.logo = brand + '.ai';
+          assetDict[`${i}`] = asset; //catalog logo
+          console.log('printing assets');
+          console.log(assetDict);
+          fs.writeFileSync(
+            `${logoPath}/assets.json`,
+            JSON.stringify(assetDict)
+          );
+
+          //if brand is returned, that means url wasnt
+          try {
+            download(match, `${logoPath}/${brand}.ai`, brands.length);
+          } catch (e) {
+            console.log(`failed to download ${brand}`);
+            postMessage([failed, brands.length]);
+          }
+        } else {
           console.log(`failed to download ${brand}`);
           postMessage([failed, brands.length]);
         }
-      } else {
-        console.log(`failed to download ${brand}`);
-        postMessage([failed, brands.length]);
-      }
-    });
+      });
+    }
   }
 }
