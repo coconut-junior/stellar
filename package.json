@@ -5,10 +5,9 @@
   "description": "Quickly access creative assets and find product info.",
   "main": "main.js",
   "scripts": {
-    "start": "electron main.js",
-    "pack": "electron-builder --dir",
+    "compile": "tsc",
+    "start": "npm run compile && electron main.js",
     "lint": "echo \"No linting configured\"",
-    "postinstall": "electron-builder install-app-deps",
     "release": "electron-builder -mw --arm64"
   },
   "build": {
@@ -59,9 +58,15 @@
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.4.0",
+    "@types/jquery": "^3.5.32",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "copyfiles": "^2.4.1",
     "electron": "^32.1.2",
     "electron-builder": "^25.0.5",
     "eslint": "^9.10.0",
-    "node": "^22.8.0"
+    "node": "^22.8.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.7.2"
   }
 }

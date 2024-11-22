@@ -32,6 +32,11 @@ var failed = 0;
 function download(url, dest, total, cb) {
   let settings = { method: 'Get', cache: 'no-store', keepalive: false };
 
+  if (!url) {
+    postMessage([failed, total]);
+    return;
+  }
+
   fetch(url, settings).then((res) => {
     var file = fs.createWriteStream(dest);
     res.body.pipe(file);
@@ -79,7 +84,8 @@ function getTagId(tagName) {
     var req = https.request(options, function (response) {
       response.on('data', function (data) {
         try {
-          resolve(JSON.parse(data).id);
+          let content = JSON.parse(data);
+          resolve(content.id);
         } catch (e) {
           reject();
         }
@@ -90,8 +96,9 @@ function getTagId(tagName) {
   });
 }
 
-function getAssetsByTags(tags) {
-  var path = `/v1/assets?size=1&tagIds=${tags}`;
+function getAssetsByTags(tagIds) {
+  var path = `/v1/assets?size=1&tagIds=${tagIds}`;
+  console.log(path);
   let options = {
     hostname: host,
     path: path,
@@ -142,14 +149,20 @@ function searchAssets(query) {
 }
 
 function findMatch(brand) {
-  return new Promise((resolve, reject) => {
-    searchAssets(brand).then((assets) => {
-      if (assets.length != 0) {
+  return new Promise(async (resolve, reject) => {
+    //replace with new function to get assets by tags
+    let logoTagId = await getTagId('logo');
+    let brandTagId = await getTagId(brand);
+
+    getAssetsByTags(`${logoTagId},${brandTagId}`).then((assets) => {
+      if (brandTagId && assets && assets.length != 0) {
         let id = assets[0].id;
         resolve(getAssetLink(id));
       } else {
         ++failed;
-        console.log(brand + ' was not matched');
+        console.log(
+          brand + ` was not matched, tagIds: ${logoTagId},${brandTagId}`
+        );
         resolve(brand);
       }
     });
@@ -180,8 +193,18 @@ function getAssetLink(assetID) {
   });
 }
 
+function formatForURL(text) {
+  return text
+    .trim()
+    .replaceAll("',")
+    .replaceAll(/\//g, ' ')
+    .replaceAll(' ', ' ')
+    .replace(/[\r\n]+/g, ' ');
+}
+
 function downloadLogos(rows, logoPath) {
-  var brands = [];
+  var brands = []; //valid logos only
+  var assetDict = new Object();
 
   //parse excel sheet
   for (let i = 0; i < rows.length; ++i) {
@@ -189,20 +212,35 @@ function downloadLogos(rows, logoPath) {
     var logo = row['Logo'];
     if (logo.trim() != '' && logo.trim().toLowerCase() != 'none') {
       brands = brands.concat(logo);
-    }
-  }
+      let brand = logo;
+      brand = formatForURL(brand);
 
-  for (let i = 0; i < brands.length; ++i) {
-    let brand = brands[i];
-    brand = brand.replaceAll("',").replaceAll(/\//g, ' ');
-
-    findMatch(brand + ' logo').then((match) => {
-      try {
-        download(match, `${logoPath}/${brand}.ai`, brands.length);
-      } catch (e) {
-        console.log(`failed to download ${brand}`);
-        postMessage([failed, brands.length]);
+      if (brand.match(',')) {
+        brand = brand.split(',')[0]; //only grab first logo in list
       }
-    });
+
+      console.log(`formatted brand is ${brand}`);
+
+      findMatch(brand).then((match) => {
+        if (brand != match) {
+          let asset = new Object();
+          asset.logo = brand + '.ai';
+          assetDict[`${i}`] = asset; //catalog logo
+          fs.writeFileSync(
+            `${logoPath}/assets.json`,
+            JSON.stringify(assetDict)
+          );
+
+          //if brand is returned, that means url wasnt
+          try {
+            download(match, `${logoPath}/${brand}.ai`, brands.length);
+          } catch (e) {
+            postMessage([failed, brands.length]);
+          }
+        } else {
+          postMessage([failed, brands.length]);
+        }
+      });
+    }
   }
 }

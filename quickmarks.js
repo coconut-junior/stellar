@@ -104,7 +104,7 @@ function load() {
                   
                 </div>
                 <div class = "quickmarkButton tooltip" id = "openQuickmark" onclick = "Quickmarks.open('${qm.qmID}')">
-                  <span class = "tooltiptext">Open</span>
+                  <span class = "tooltiptext">Go To</span>
                   
                 </div>
         </div>
@@ -161,7 +161,7 @@ function create() {
     runJSX('add_quickmark.jsx', `{"${quickmarkID}"}`);
 
     $(`#quickmarkNote`).val('');
-    wait(1000);
+    wait(500);
     Quickmarks.load();
   } catch (e) {
     console.log(e);
