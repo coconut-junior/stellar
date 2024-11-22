@@ -213,7 +213,7 @@ function downloadLogos(rows, logoPath) {
     if (logo.trim() != '' && logo.trim().toLowerCase() != 'none') {
       brands = brands.concat(logo);
       let brand = logo;
-      brand = formatForURL;
+      brand = formatForURL(brand);
 
       if (brand.match(',')) {
         brand = brand.split(',')[0]; //only grab first logo in list

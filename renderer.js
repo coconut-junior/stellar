@@ -47,14 +47,11 @@ $(`#minimizeDropdown`).on('change', function () {
 });
 function uiScaleUpdate() {
     let zoom = parseFloat($(`#uiScale`).val());
-    //@ts-expect-error
-    $(`#uiScaleText`).html(`${parseInt(zoom * 100)}%`);
+    $(`#uiScaleText`).html(`${zoom * 100}%`);
 }
 function uiScaleChange() {
-    //@ts-expect-error
     let zoom = parseFloat($(`#uiScale`).val());
-    //@ts-expect-error
-    $(`#uiScaleText`).html(`${parseInt(zoom * 100)}%`);
+    $(`#uiScaleText`).html(`${zoom * 100}%`);
     webFrame.setZoomFactor(zoom);
     setZoom(zoom);
 }

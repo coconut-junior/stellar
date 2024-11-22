@@ -7,5 +7,5 @@
     "esModuleInterop": true,
     "types": ["node", "jquery"]
   },
-  "files": ["renderer.ts"]
+  "include": ["*.ts"]
 }
