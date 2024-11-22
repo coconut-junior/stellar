@@ -11,6 +11,7 @@ var apiKey = fs.readFileSync(path.join(__dirname, 'lytho_api.key'), 'utf8');
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const requestOverloadMsg =
   'Looks like Lytho is overloaded at the moment! Please try again in a few minutes.';
+const cooldown = 100;
 
 const host = 'openapi.us-1.lytho.us';
 var headers = {
@@ -32,8 +33,8 @@ onmessage = (e) => {
 
 var failed = 0;
 
-function download(url, dest, total, cb) {
-  sleep(100);
+async function download(url, dest, total, cb) {
+  await sleep(cooldown);
   let settings = { method: 'Get', cache: 'no-store', keepalive: false };
 
   if (!url) {
@@ -73,7 +74,7 @@ function download(url, dest, total, cb) {
 }
 
 async function getTagId(tagName) {
-  await sleep(500);
+  await sleep(cooldown);
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
   var path = `/v1/tags/by-name`;
 
@@ -106,8 +107,8 @@ async function getTagId(tagName) {
   });
 }
 
-function getAssetsByTags(tagIds) {
-  sleep(100);
+async function getAssetsByTags(tagIds) {
+  await sleep(cooldown);
   var path = `/v1/assets?size=1&tagIds=${tagIds}`;
 
   let options = {
@@ -136,8 +137,8 @@ function getAssetsByTags(tagIds) {
   });
 }
 
-function searchAssets(query) {
-  sleep(100);
+async function searchAssets(query) {
+  await sleep(cooldown);
   query = query.replaceAll(' ', '%20').replaceAll('&', '').replaceAll('#', '');
 
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
@@ -158,7 +159,6 @@ function searchAssets(query) {
           assets = json.content;
           resolve(assets);
         } catch (e) {
-          ++failed;
           reject();
         }
       });
@@ -166,9 +166,8 @@ function searchAssets(query) {
   });
 }
 
-function findMatch(brand) {
-  //cooldown
-  sleep(100);
+async function findMatch(brand) {
+  await sleep(cooldown);
 
   return new Promise(async (resolve, reject) => {
     //replace with new function to get assets by tags
@@ -180,14 +179,14 @@ function findMatch(brand) {
         let id = assets[0].id;
         resolve(getAssetLink(id));
       } else {
-        ++failed;
         resolve(brand);
       }
     });
   });
 }
 
-function getAssetLink(assetID) {
+async function getAssetLink(assetID) {
+  await sleep(cooldown);
   var path = '/v1/assets/' + assetID + '/embeddedlink-original';
 
   let options = {
