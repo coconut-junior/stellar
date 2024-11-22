@@ -98,7 +98,7 @@ function getTagId(tagName) {
 
 function getAssetsByTags(tagIds) {
   var path = `/v1/assets?size=1&tagIds=${tagIds}`;
-  console.log(path);
+
   let options = {
     hostname: host,
     path: path,
@@ -141,6 +141,7 @@ function searchAssets(query) {
           assets = json.content;
           resolve(assets);
         } catch (e) {
+          ++failed;
           reject();
         }
       });
@@ -160,9 +161,6 @@ function findMatch(brand) {
         resolve(getAssetLink(id));
       } else {
         ++failed;
-        console.log(
-          brand + ` was not matched, tagIds: ${logoTagId},${brandTagId}`
-        );
         resolve(brand);
       }
     });
@@ -184,7 +182,12 @@ function getAssetLink(assetID) {
       response.on('data', function (data) {
         let json = JSON.parse(data);
         let link = json.link;
-        resolve(link);
+        if (link) {
+          resolve(link);
+        } else {
+          ++failed;
+          reject();
+        }
       });
     });
 

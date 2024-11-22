@@ -289,7 +289,7 @@ async function getScriptPath() {
 function runJSX(scriptName, arguments) {
   //save extendscript files
   var args = arguments ?? `{"stellar"}`;
-  let bashScript = `osascript -e 'tell application id "com.adobe.indesign"\nset args to ${args}\ndo script "${scriptPath}/${scriptName}" language javascript with arguments args\nend tell'`;
+  let bashScript = `osascript -e 'tell application id "com.adobe.indesign"\nactivate\nset args to ${args}\ndo script "${scriptPath}/${scriptName}" language javascript with arguments args\nend tell'`;
   let script = bashScript;
 
   //run bash script

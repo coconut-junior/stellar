@@ -8,7 +8,7 @@
     "compile": "tsc",
     "start": "npm run compile && electron main.js",
     "lint": "echo \"No linting configured\"",
-    "release": "electron-builder -mw --arm64"
+    "release": "npm run compile && electron-builder -mw --arm64"
   },
   "build": {
     "appId": "design.jbx.stellar",
