@@ -21,6 +21,11 @@ function buildFlyer() {
     var finished = 0;
     var total = 0;
     worker.onmessage = (e) => {
+        console.log(e.data);
+        if (typeof e.data[0] === 'string' && e.data[0].match('error')) {
+            showError(e.data[1]);
+            worker.terminate();
+        }
         ++finished;
         let failed = e.data[0];
         total = e.data[1];

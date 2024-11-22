@@ -8,6 +8,9 @@ const { hostname } = require('os');
 const DecompressZip = require('decompress-zip');
 
 var apiKey = fs.readFileSync(path.join(__dirname, 'lytho_api.key'), 'utf8');
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const requestOverloadMsg =
+  'Looks like Lytho is overloaded at the moment! Please try again in a few minutes.';
 
 const host = 'openapi.us-1.lytho.us';
 var headers = {
@@ -30,6 +33,7 @@ onmessage = (e) => {
 var failed = 0;
 
 function download(url, dest, total, cb) {
+  sleep(100);
   let settings = { method: 'Get', cache: 'no-store', keepalive: false };
 
   if (!url) {
@@ -68,7 +72,8 @@ function download(url, dest, total, cb) {
   });
 }
 
-function getTagId(tagName) {
+async function getTagId(tagName) {
+  await sleep(500);
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
   var path = `/v1/tags/by-name`;
 
@@ -81,22 +86,28 @@ function getTagId(tagName) {
 
   return new Promise((resolve, reject) => {
     var postData = JSON.stringify({ name: tagName });
-    var req = https.request(options, function (response) {
-      response.on('data', function (data) {
-        try {
+    try {
+      var req = https.request(options, function (response) {
+        response.on('data', function (data) {
           let content = JSON.parse(data);
+          if (JSON.stringify(content).match('Too Many Requests')) {
+            console.log('Too many requests!');
+            postMessage(['error', requestOverloadMsg]);
+          }
           resolve(content.id);
-        } catch (e) {
-          reject();
-        }
+        });
       });
-    });
-    req.write(postData);
-    req.end();
+      req.write(postData);
+      req.end();
+    } catch (e) {
+      console.log('FAILED TO GET TAG');
+      reject();
+    }
   });
 }
 
 function getAssetsByTags(tagIds) {
+  sleep(100);
   var path = `/v1/assets?size=1&tagIds=${tagIds}`;
 
   let options = {
@@ -106,21 +117,27 @@ function getAssetsByTags(tagIds) {
   };
 
   return new Promise((resolve, reject) => {
-    https.get(options, function (response) {
-      response.on('data', function (data) {
-        try {
+    try {
+      https.get(options, function (response) {
+        response.on('data', function (data) {
           let json = JSON.parse(data);
+          if (JSON.stringify(json).match('Too Many Requests')) {
+            console.log('Too many requests!');
+            postMessage(['error', requestOverloadMsg]);
+          }
           let assets = json.content;
           resolve(assets);
-        } catch (e) {
-          reject();
-        }
+        });
       });
-    });
+    } catch (e) {
+      console.log('couldnt reach server');
+      reject();
+    }
   });
 }
 
 function searchAssets(query) {
+  sleep(100);
   query = query.replaceAll(' ', '%20').replaceAll('&', '').replaceAll('#', '');
 
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
@@ -150,6 +167,9 @@ function searchAssets(query) {
 }
 
 function findMatch(brand) {
+  //cooldown
+  sleep(100);
+
   return new Promise(async (resolve, reject) => {
     //replace with new function to get assets by tags
     let logoTagId = await getTagId('logo');
