@@ -193,6 +193,15 @@ function getAssetLink(assetID) {
   });
 }
 
+function formatForURL(text) {
+  return text
+    .trim()
+    .replaceAll("',")
+    .replaceAll(/\//g, ' ')
+    .replaceAll(' ', ' ')
+    .replace(/[\r\n]+/g, ' ');
+}
+
 function downloadLogos(rows, logoPath) {
   var brands = []; //valid logos only
   var assetDict = new Object();
@@ -204,12 +213,7 @@ function downloadLogos(rows, logoPath) {
     if (logo.trim() != '' && logo.trim().toLowerCase() != 'none') {
       brands = brands.concat(logo);
       let brand = logo;
-      brand = brand
-        .trim()
-        .replaceAll("',")
-        .replaceAll(/\//g, ' ')
-        .replaceAll(' ', ' ')
-        .replace(/[\r\n]+/g, ' ');
+      brand = formatForURL;
 
       if (brand.match(',')) {
         brand = brand.split(',')[0]; //only grab first logo in list
@@ -222,8 +226,6 @@ function downloadLogos(rows, logoPath) {
           let asset = new Object();
           asset.logo = brand + '.ai';
           assetDict[`${i}`] = asset; //catalog logo
-          console.log('printing assets');
-          console.log(assetDict);
           fs.writeFileSync(
             `${logoPath}/assets.json`,
             JSON.stringify(assetDict)
@@ -233,11 +235,9 @@ function downloadLogos(rows, logoPath) {
           try {
             download(match, `${logoPath}/${brand}.ai`, brands.length);
           } catch (e) {
-            console.log(`failed to download ${brand}`);
             postMessage([failed, brands.length]);
           }
         } else {
-          console.log(`failed to download ${brand}`);
           postMessage([failed, brands.length]);
         }
       });
