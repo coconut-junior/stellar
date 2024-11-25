@@ -3,4 +3,4 @@ out
 dist
 *.key
 build
-*.map
+*js.map
