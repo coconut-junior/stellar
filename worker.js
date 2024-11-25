@@ -11,7 +11,7 @@ var apiKey = fs.readFileSync(path.join(__dirname, 'lytho_api.key'), 'utf8');
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const requestOverloadMsg =
   'Looks like Lytho is overloaded at the moment! Please try again in a few minutes.';
-const cooldown = 100;
+const cooldown = 500;
 
 const host = 'openapi.us-1.lytho.us';
 var headers = {
@@ -33,8 +33,7 @@ onmessage = (e) => {
 
 var failed = 0;
 
-async function download(url, dest, total, cb) {
-  await sleep(cooldown);
+function download(url, dest, total, cb) {
   let settings = { method: 'Get', cache: 'no-store', keepalive: false };
 
   if (!url) {
@@ -73,8 +72,7 @@ async function download(url, dest, total, cb) {
   });
 }
 
-async function getTagId(tagName) {
-  await sleep(cooldown);
+function getTagId(tagName) {
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
   var path = `/v1/tags/by-name`;
 
@@ -93,6 +91,7 @@ async function getTagId(tagName) {
           let content = JSON.parse(data);
           if (JSON.stringify(content).match('Too Many Requests')) {
             console.log('Too many requests!');
+            console.log(content);
             postMessage(['error', requestOverloadMsg]);
           }
           resolve(content.id);
@@ -107,8 +106,7 @@ async function getTagId(tagName) {
   });
 }
 
-async function getAssetsByTags(tagIds) {
-  await sleep(cooldown);
+function getAssetsByTags(tagIds) {
   var path = `/v1/assets?size=1&tagIds=${tagIds}`;
 
   let options = {
@@ -124,6 +122,7 @@ async function getAssetsByTags(tagIds) {
           let json = JSON.parse(data);
           if (JSON.stringify(json).match('Too Many Requests')) {
             console.log('Too many requests!');
+            console.log(json);
             postMessage(['error', requestOverloadMsg]);
           }
           let assets = json.content;
@@ -137,8 +136,7 @@ async function getAssetsByTags(tagIds) {
   });
 }
 
-async function searchAssets(query) {
-  await sleep(cooldown);
+function searchAssets(query) {
   query = query.replaceAll(' ', '%20').replaceAll('&', '').replaceAll('#', '');
 
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
@@ -159,6 +157,8 @@ async function searchAssets(query) {
           assets = json.content;
           resolve(assets);
         } catch (e) {
+          console.log('could not get content object');
+          console.log(json);
           reject();
         }
       });
@@ -166,9 +166,15 @@ async function searchAssets(query) {
   });
 }
 
-async function findMatch(brand) {
-  await sleep(cooldown);
+function pause(millis) {
+  var date = new Date();
+  var curDate = null;
+  do {
+    curDate = new Date();
+  } while (curDate - date < millis);
+}
 
+function findMatch(brand) {
   return new Promise(async (resolve, reject) => {
     //replace with new function to get assets by tags
     let logoTagId = await getTagId('logo');
@@ -185,8 +191,7 @@ async function findMatch(brand) {
   });
 }
 
-async function getAssetLink(assetID) {
-  await sleep(cooldown);
+function getAssetLink(assetID) {
   var path = '/v1/assets/' + assetID + '/embeddedlink-original';
 
   let options = {
