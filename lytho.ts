@@ -4,7 +4,7 @@ function openFile() {
   return ipcRenderer.sendSync('openFile');
 }
 
-function buildFlyer() {
+export default function buildFlyer() {
   $(`#buildFlyerButton`).css('background-color', 'black');
   $(`#buildFlyerButton`).html('&#9889; Downloading...');
   minimizeApp();
@@ -51,7 +51,6 @@ function buildFlyer() {
       $(`#buildFlyerButton`).css('background-color', 'var(--primary4)');
       $(`#buildFlyerButton`).css('background-size', `0px 60px`);
       $(`#buildFlyerButton`).html('&#9889; Launch');
-      //@ts-expect-error
       runJSX('build_flyer_stellar.jsx', `{"${fileName}","stellar"}`);
     }
   };

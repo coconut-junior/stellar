@@ -1,3 +1,6 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = buildFlyer;
 const xlsx = require('xlsx');
 function openFile() {
     return ipcRenderer.sendSync('openFile');
@@ -40,7 +43,6 @@ function buildFlyer() {
             $(`#buildFlyerButton`).css('background-color', 'var(--primary4)');
             $(`#buildFlyerButton`).css('background-size', `0px 60px`);
             $(`#buildFlyerButton`).html('&#9889; Launch');
-            //@ts-expect-error
             runJSX('build_flyer_stellar.jsx', `{"${fileName}","stellar"}`);
         }
     };
