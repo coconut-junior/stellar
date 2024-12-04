@@ -16,7 +16,10 @@ $(`#uiScale`).val(store.get('uiScale') ?? 0.8);
 let scaleFactor: number = parseFloat($(`#uiScale`).val() as string);
 $(`#uiScaleText`).html(((scaleFactor * 100) as unknown as string) + '%');
 
-var apiKey = fs.readFileSync(path.join(__dirname, 'lytho_api.key'), 'utf8');
+var apiKey: string = fs.readFileSync(
+  path.join(__dirname, 'lytho_api.key'),
+  'utf8'
+);
 if (isPackaged()) {
   $(`#betaIcon`).css('display', 'none');
 }

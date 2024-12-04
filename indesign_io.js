@@ -212,9 +212,9 @@ async function getDependencies() {
 }
 async function getScriptPath() {
     $(`.statusBar`).html('Checking InDesign configuration...');
-    let versionCmd = 'ls -la /Applications/ | grep InDesign';
+    let versionCmd = 'ls -la /Applications/ | grep InDesign'; //macOS only
     exec(versionCmd, (error, stdout, stderr) => {
-        var p = getHomePath() + `/Library/Preferences/Adobe InDesign`;
+        var p = getHomePath() + `/Library/Preferences/Adobe InDesign`; //macOS only
         if (error) {
             console.log(`error: ${error.message}`);
             showError(`Couldn't retrieve latest InDesign version. Please reinstall InDesign and try running the software again.`);
@@ -240,8 +240,18 @@ async function getScriptPath() {
         Quickmarks.load();
     });
 }
+function runPy(fileName, args) {
+    exec(`python3 ${fileName} ${args}`, (error, stdout, stderr) => {
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+    });
+    return;
+}
 function runJSX(scriptName, arguments) {
-    //save extendscript files
+    //macOS only
     var args = arguments ?? `{"stellar"}`;
     let bashScript = `osascript -e 'tell application id "com.adobe.indesign"\nactivate\nset args to ${args}\ndo script "${scriptPath}/${scriptName}" language javascript with arguments args\nend tell'`;
     let script = bashScript;
@@ -271,6 +281,9 @@ function runTool(fileName, url, args) {
         case 'jsx':
             console.log('this is an indesign script');
             runJSX(fileName, args);
+            break;
+        case 'py':
+            runPy(fileName, args);
             break;
         case 'html':
             console.log('this is a webpage');

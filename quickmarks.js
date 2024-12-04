@@ -104,7 +104,7 @@ function load() {
                   
                 </div>
                 <div class = "quickmarkButton tooltip" id = "openQuickmark" onclick = "Quickmarks.open('${qm.qmID}')">
-                  <span class = "tooltiptext">Go To</span>
+                  <span class = "tooltiptext">Go to Location</span>
                   
                 </div>
         </div>

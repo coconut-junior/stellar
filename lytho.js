@@ -10,17 +10,19 @@ function buildFlyer() {
     $(`#buildFlyerButton`).html('&#9889; Downloading...');
     minimizeApp();
     let fileName = openFile();
-    let logoPath = path.dirname(fileName) + '/logos';
-    if (!fs.existsSync(logoPath)) {
-        fs.mkdirSync(logoPath);
-    }
-    let workbook = xlsx.readFile(fileName);
-    let sheetNames = workbook.SheetNames;
-    let rows = xlsx.utils.sheet_to_json(workbook.Sheets[sheetNames[0]]);
-    focusWindow();
     let worker = new Worker('worker.js');
-    let key = store.get('apiKey');
-    worker.postMessage([rows, logoPath]);
+    if (fileName) {
+        let logoPath = path.dirname(fileName) + '/logos';
+        if (!fs.existsSync(logoPath)) {
+            fs.mkdirSync(logoPath);
+        }
+        let workbook = xlsx.readFile(fileName);
+        let sheetNames = workbook.SheetNames;
+        let rows = xlsx.utils.sheet_to_json(workbook.Sheets[sheetNames[0]]);
+        focusWindow();
+        let key = store.get('apiKey');
+        worker.postMessage([rows, logoPath]);
+    }
     var finished = 0;
     var total = 0;
     worker.onmessage = (e) => {
