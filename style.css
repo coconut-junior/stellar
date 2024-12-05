@@ -11,26 +11,21 @@
   --secondary1: #0d1520;
   --secondary2: #121927;
 }
-
 ::selection {
   background-color: var(--primary2);
   color: var(--bright);
 }
-
 @font-face {
   font-family: 'DSEG14 Classic';
   src: url('fonts/DSEG14Classic-Regular.woff') format('woff');
 }
-
 @font-face {
   font-family: 'DSEG14 Modern';
   src: url('fonts/DSEG14Modern-Regular.woff') format('woff');
 }
-
 p {
   font-size: 16px;
 }
-
 textarea {
   min-width: 300px;
   cursor: text;
@@ -46,7 +41,6 @@ textarea {
   resize: none;
   overflow-y: scroll;
 }
-
 #uiScale {
   -webkit-appearance: none;
   appearance: none;
@@ -57,63 +51,52 @@ textarea {
   box-shadow: 0px 0px 0px 12px var(--secondary1) inset;
   display: flex;
 }
-
 #uiScale::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   background: var(--primary3);
-  width: 15px; /* Set a specific slider handle width */
+  width: 15px;
   height: 15px;
   border-radius: 100%;
   cursor: pointer;
   border: 1px solid var(--gray);
   box-sizing: content-box;
 }
-
 #uiScale::-webkit-slider-thumb:hover {
-  width: 17px; /* Set a specific slider handle width */
+  width: 17px;
   height: 17px;
 }
-
 .resultIcon {
   filter: invert();
 }
-
 .resultBox {
   background-image: url('images/loading_dark.gif');
 }
 .removeButton {
   filter: invert();
 }
-
 ::selection {
   background-color: var(--primary1);
 }
-
 ::-webkit-scrollbar {
   width: 10px;
 }
-
 ::-webkit-scrollbar-track {
   border-radius: 10px;
   background-color: var(--secondary2);
   margin: 20px;
 }
-
 ::-webkit-scrollbar-thumb {
   background: var(--black);
   border-radius: 10px;
 }
-
 :focus {
   outline: none;
 }
-
 * {
   margin: 0;
   padding: 0;
   font-family: 'CabinetGrotesk-Variable';
-  /* cursor: url('images/pointer.svg') 4 5, pointer; */
   cursor: default;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
@@ -123,12 +106,10 @@ textarea {
   -ms-user-select: none;
   user-select: none;
 }
-
 body {
   background-color: var(--secondary1);
   overflow: hidden;
 }
-
 table {
   border-collapse: separate;
   color: var(--black);
@@ -155,18 +136,15 @@ td {
   padding: 10px;
   border-bottom: 1px solid var(--gray);
 }
-
 p,
 h1,
 input,
 textarea {
   color: var(--black);
 }
-
 ::-webkit-search-cancel-button {
   display: none;
 }
-
 input {
   cursor: text;
   width: auto;
@@ -179,16 +157,13 @@ input {
   padding: 10px;
   app-region: none;
 }
-
 input:focus,
 textarea:focus {
   background-color: var(--primary2);
 }
-
 input:hover {
   border-color: var(--primary0);
 }
-
 input[type='search'] {
   min-width: 300px;
   background-image: url(images/search.svg);
@@ -199,7 +174,6 @@ input[type='search'] {
   height: 50px;
   cursor: text;
 }
-
 h1 {
   color: var(--bright);
   font-size: 24px;
@@ -216,39 +190,31 @@ h1 {
   width: 100%;
   background-color: var(--secondary2);
 }
-
 .quickmarkButton {
   height: 32px;
   width: 32px;
   opacity: 0.5;
   visibility: hidden;
-
   background-position: center;
   background-repeat: no-repeat;
 }
-
 .quickmarkButton:hover {
   opacity: 1;
 }
-
 #removeQuickmark {
   background-image: url(images/remove_quickmark.svg);
 }
-
 #openQuickmark {
   background-image: url(images/open_quickmark.svg);
 }
-
 li {
   list-style: none;
 }
-
 .quickmark {
   padding: 20px;
   height: fit-content;
   width: 200px;
 }
-
 .quickmarkWrapper {
   padding: 20px;
   border-radius: 0px 0px 20px 20px;
@@ -264,24 +230,19 @@ li {
   flex-direction: column;
   gap: 10px;
   cursor: grab;
-
   box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
   -webkit-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
 }
-
 .quickmarkWrapper:hover {
   background-image: url(images/paper_peel.png);
 }
-
 .quickmarkWrapper:active {
   cursor: grabbing;
 }
-
 .quickmark:hover .quickmarkButton {
   visibility: visible;
 }
-
 #navLogo {
   background-image: url('images/stellar_lockup.png');
   background-size: contain;
@@ -292,7 +253,6 @@ li {
   margin: 0px;
   padding: 10px;
 }
-
 #automationTasks {
   height: 100%;
   width: calc(100% - 60px);
@@ -310,19 +270,15 @@ li {
   margin-bottom: 0;
   margin-top: 0;
 }
-
 #automationTasks[status='none'] {
   background-image: none;
 }
-
 #automationTasks[status='offline'] {
   background-image: url('images/offline_dark.svg');
 }
-
 #automationTasks[status='loading'] {
   background-image: url('images/loading_dark.gif');
 }
-
 #automationStatus {
   margin-top: 10px;
   display: flex;
@@ -338,14 +294,12 @@ li {
   border: 1px solid var(--primary0);
   app-region: drag;
 }
-
 #resourceMonitor {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   app-region: none;
 }
-
 .meterFill {
   background-color: var(--secondary1);
   background-blend-mode: screen;
@@ -355,7 +309,6 @@ li {
   width: auto;
   border-radius: 5px 5px 10px 0px;
 }
-
 .resourceMeter {
   box-sizing: border-box;
   border-width: 0px 2px 2px 2px;
@@ -370,7 +323,6 @@ li {
   justify-content: flex-end;
   position: relative;
 }
-
 .cardGroup {
   padding: 0px 20px 20px 20px;
   background-color: var(--secondary2);
@@ -381,14 +333,12 @@ li {
   -ms-user-select: none;
   user-select: none;
 }
-
 .quickmarkNote {
   color: black !important;
   font-size: 24px;
   opacity: 0.5;
   word-break: break-word;
 }
-
 #quickmarkList {
   box-sizing: border-box;
   height: 80%;
@@ -402,7 +352,6 @@ li {
   position: absolute;
   bottom: 0;
 }
-
 #quickmarkPanel {
   display: flex;
   flex-direction: column;
@@ -418,20 +367,16 @@ li {
   border: 2px solid var(--gray);
   z-index: 3;
 }
-
 #quickmarkNote {
   overflow: hidden;
 }
-
 #quickmarkPage {
   background-image: url(images/dot_pattern.png);
   background-size: 200px;
 }
-
 .medium {
   font-weight: bold;
 }
-
 .navSearch {
   background-image: url('images/search_default.svg');
 }
@@ -467,7 +412,6 @@ li {
 .navInfo:hover {
   background-image: url('images/info_hover.svg');
 }
-
 @keyframes glowing {
   0% {
     background-position: 0 0;
@@ -479,47 +423,38 @@ li {
     background-position: 0 0;
   }
 }
-
 select {
-  /* Reset */
   font-size: 12px;
   appearance: none;
   border: 1px solid var(--gray);
   outline: 0;
   font: inherit;
-  /* Personalize */
   padding: 5px 2.5em 5px 0.5em;
   background: url('images/dropdown_dark.svg') no-repeat right 0.8em center / 1em;
   color: var(--black);
   border-radius: 0.25em;
   transition: 0.2s;
-  /* <option> colors */
   option {
     color: inherit;
     background-color: transparent;
   }
-  /* Remove focus outline */
   &:focus {
     outline: none;
   }
-  /* Remove IE arrow */
   &::-ms-expand {
     display: none;
   }
 }
-
 select:hover {
   background-color: var(--gray);
   border: 1px solid var(--black);
 }
-
 button:hover {
   color: var(--bright);
   background-color: var(--primary0);
   padding-top: 2px;
   padding-bottom: 8px;
 }
-
 button {
   flex-grow: 1;
   height: auto;
@@ -540,25 +475,21 @@ button {
   background-repeat: no-repeat;
   background-position: center;
   background-size: 36px;
-
   border: 1px solid var(--primary0);
   background-color: var(--primary1);
   transition: 0.2s;
 }
-
 .primary:hover:before {
   opacity: 1;
   width: calc(100% + 4px);
   height: calc(100% + 4px);
 }
-
 .primary:hover:after {
   background: black;
   width: 100%;
   height: 100%;
   border-radius: 10px;
 }
-
 .primary:after {
   z-index: -1;
   content: '';
@@ -574,7 +505,6 @@ button {
   transition-timing-function: ease;
   overflow: hidden;
 }
-
 .primary:before {
   content: '';
   background: linear-gradient(
@@ -600,16 +530,13 @@ button {
   transition: opacity 0.3s ease-in-out;
   overflow: hidden;
 }
-
 button p {
   box-shadow: none;
   border: none;
 }
-
 button:active {
   transform: scale(0.9);
 }
-
 .wrapper {
   position: absolute;
   width: calc(100vw - 220px);
@@ -621,7 +548,6 @@ button:active {
   align-items: center;
   margin-left: 220px;
 }
-
 .file-selectors {
   width: auto;
   height: 100%;
@@ -631,13 +557,11 @@ button:active {
   box-shadow: 0px 4px 100px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
 }
-
 .listOptions {
   height: 60px;
   background-color: var(--black);
   border-radius: 20px;
 }
-
 #drop_zone {
   display: flex;
   border: 2px dashed var(--primary1);
@@ -650,32 +574,26 @@ button:active {
   align-items: center;
   justify-content: center;
 }
-
 #assetButton {
   height: 100%;
   width: 100%;
   background-image: url('images/asset_icon.svg');
 }
-
 #flyerButton,
 #productBlockButton {
   height: 45%;
 }
-
 #drop_zone:hover {
   border-color: var(--primary3);
   background-color: var(--primary1);
 }
-
 .productTitle {
   text-align: left;
 }
-
 #timestamp {
   text-align: center;
   padding: 20px;
 }
-
 #navigation {
   height: 100vh;
   width: 200px;
@@ -694,26 +612,21 @@ button:active {
   transform: translateY(-50%);
   transition: 0.2s;
   z-index: 3;
-
   border: 1px solid var(--primary0);
   background-color: var(--secondary2);
   backdrop-filter: blur(30px);
 }
-
 .navButton[active='false']:hover {
   background-color: var(--primary4);
 }
-
 .navButton:hover p {
   color: var(--bright);
 }
-
 #navigation p {
   opacity: 1;
   padding-left: 40px;
   padding-top: 5px;
 }
-
 .resultButtons {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -721,7 +634,6 @@ button:active {
   gap: 10px;
   height: 40px;
 }
-
 .primary {
   width: 100%;
   border: none;
@@ -735,14 +647,12 @@ button:active {
   background-size: 0px 60px;
   transition: 0.2s;
 }
-
 .primary:hover {
   color: white;
   filter: drop-shadow(0px 0px 20px var(--primary3));
   background-color: var(--primary3);
   backdrop-filter: blur(30px);
 }
-
 #idScript999 {
   content-visibility: hidden;
   background-size: 300% 100%;
@@ -756,7 +666,6 @@ button:active {
   );
   animation: animateBg 2s infinite linear;
 }
-
 @keyframes animateBg {
   0% {
     background-position: 0 0;
@@ -765,7 +674,6 @@ button:active {
     background-position: 100% 0;
   }
 }
-
 .navButton {
   height: 30px;
   width: auto;
@@ -778,13 +686,11 @@ button:active {
   border-radius: 10px;
   app-region: none;
 }
-
 break {
   border-top: 1px solid var(--primary0);
   margin-top: 5px;
   margin-bottom: 5px;
 }
-
 .navButton:active {
   transform: scale(0.9);
 }
@@ -797,7 +703,6 @@ break {
 .navButton[active='false'] {
   background-color: transparent;
 }
-
 .toolbar {
   display: flex;
   height: 60px;
@@ -810,7 +715,6 @@ break {
   position: absolute;
   top: 40px;
 }
-
 .workingArea {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -824,7 +728,6 @@ break {
   position: absolute;
   top: 200px;
 }
-
 .resultBox {
   grid-column-start: 1;
   grid-column-end: 3;
@@ -843,7 +746,6 @@ break {
   flex-shrink: 0;
   grid-auto-flow: row dense;
 }
-
 #betaIcon {
   position: absolute;
   top: 0;
@@ -854,7 +756,6 @@ break {
   background-size: contain;
   background-repeat: no-repeat;
 }
-
 .productInfo {
   margin: auto;
   width: auto;
@@ -862,20 +763,17 @@ break {
   display: flex;
   flex-direction: column;
 }
-
 hr {
   border: 0;
   border-top: 2px dotted lightgray;
   margin: 10px 0px 10px 0px;
 }
-
 h2 {
   text-align: center;
   color: var(--black);
   font-size: 20px;
   font-weight: bold;
 }
-
 .viewOptions {
   position: relative;
   top: -80px;
@@ -889,7 +787,6 @@ h2 {
   border-radius: 20px 20px 0px 0px;
   background-color: none;
 }
-
 .viewToggle {
   height: 50px;
   width: 100px;
@@ -906,7 +803,6 @@ h2 {
   flex-shrink: 0;
   top: 2px;
 }
-
 .toggleSwitch {
   position: relative;
   pointer-events: none;
@@ -923,11 +819,9 @@ h2 {
   background-position: center;
   transition: 0.3s;
 }
-
 .viewToggle:active .toggleSwitch {
   scale: 0.9;
 }
-
 .result {
   height: auto;
   width: auto;
@@ -943,50 +837,41 @@ h2 {
   transition: 0.2s;
   max-width: 400px;
 }
-
 .result:hover {
   border-color: var(--primary3);
 }
-
 .resultGroup {
   display: flex;
   flex-direction: row;
   width: 100%;
 }
-
 .resultIcon {
   width: 15px;
   margin-right: 5px;
 }
-
 .resultEntry {
   text-align: left;
   width: 100%;
 }
-
 .resultEntry,
 .resultIcon {
   display: inline-block;
 }
-
 .entryButton {
   height: 50px;
   width: 100px;
 }
-
 #resultCounter {
   font-weight: 500;
   font-size: 18px;
   padding: 10px;
 }
-
 .statusBar {
   color: var(--black);
   padding: 10px;
   height: auto;
   border: none;
 }
-
 #adList {
   padding: 5px;
   display: none;
@@ -996,7 +881,6 @@ h2 {
   gap: 10px;
   overflow-y: auto;
 }
-
 .adItem {
   padding: 10px;
   border-radius: 5px;
@@ -1007,7 +891,6 @@ h2 {
   flex-direction: row;
   justify-content: space-between;
 }
-
 .removeButton {
   height: 20px;
   width: 20px;
@@ -1017,11 +900,9 @@ h2 {
   background-repeat: no-repeat;
   flex-shrink: 0;
 }
-
 .removeButton:active {
   scale: 0.9;
 }
-
 .segmentedText {
   font-family: 'DSEG14 Classic';
   font-size: 18px;
@@ -1029,11 +910,9 @@ h2 {
   text-align: center;
   margin: auto;
 }
-
 .tooltip {
   position: relative;
 }
-
 .tooltip .tooltiptext {
   font-size: 16px;
   visibility: hidden;
@@ -1049,19 +928,13 @@ h2 {
   right: 100%;
   z-index: 1;
 }
-
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
-
-/*fullscreen hd monitor*/
 @media (min-width: 1400px) {
 }
-
-/*laptop*/
 @media (max-width: 1280px) {
 }
-
 @media (max-width: 1080px) {
   #automationStatus {
     display: grid;
@@ -1091,8 +964,6 @@ h2 {
     margin-top: 20px;
     margin-left: 0;
   }
-
-  /*compact nav bar*/
   #automationTasks,
   #automationStatus {
     width: calc(100vw - 150px);
@@ -1122,8 +993,6 @@ h2 {
     background-image: url('images/stellar_lockup.png');
   }
 }
-
-/* compact view */
 @media (max-width: 600px) {
   .card {
     height: 320px;
@@ -1140,19 +1009,15 @@ h2 {
     margin: 20px;
   }
 }
-
 [data-tab-page] {
   display: none;
 }
-
 .active[data-tab-page] {
   display: flex;
 }
-
 input {
   cursor: default;
 }
-
 :root[theme='gundam'] {
   --bright: white;
   --dark: #290c0c;
@@ -1166,59 +1031,48 @@ input {
   --secondary1: #400808;
   --secondary2: #330606;
 }
-
 @media (prefers-color-scheme: light) {
   :root {
     --dark: white;
     --bright: black;
-    --primary0: #dddddd; /*outline*/
-    --primary1: #f5f5f5; /*buttons*/
+    --primary0: #dddddd;
+    --primary1: #f5f5f5;
     --primary2: white;
     --primary3: #4b73ff;
-
-    --secondary1: #fdffff; /*window bg*/
-    --secondary2: #f9fbfc; /*card group bg*/
-
-    --black: #262121; /*h2 text*/
+    --secondary1: #fdffff;
+    --secondary2: #f9fbfc;
+    --black: #262121;
     --gray: #ecf6fa;
   }
-
   #quickmarkPage {
     background-image: url('images/dot_pattern_light.png');
   }
-
   #navLogo {
     background-image: url('images/stellar_lockup_light.png');
   }
   #navigation:hover #navLogo {
     background-image: url('images/stellar_lockup_light.png');
   }
-
   .meterFill {
     background-blend-mode: multiply;
     background-image: url('images/led_dots_dark.webp');
   }
-
   select {
     background: url('images/dropdown_light.svg') no-repeat right 0.8em center /
       1.4em;
   }
-
   #automationTasks[status='offline'] {
     background-image: url('images/offline_light.svg');
   }
-
   button:hover {
     color: var(--bright);
     background-color: var(--secondary1);
   }
-
   .primary:hover {
     color: var(--dark);
     filter: drop-shadow(0px 0px 20px var(--primary3));
     background-color: var(--primary3);
   }
-
   .navSearch {
     background-image: url('images/search_black.svg');
   }
@@ -1250,7 +1104,6 @@ input {
     background-image: url('images/info_black_hover.svg');
   }
 }
-
 @media (max-width: 1080px) and (prefers-color-scheme: light) {
   #navLogo {
     background-image: url('images/stellar_logo.png');
