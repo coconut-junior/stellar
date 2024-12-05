@@ -40,11 +40,8 @@ var monitorLoop = setInterval(function () {
   var percentageCPU = 100 - ~~((100 * idleDifference) / totalDifference);
   let mem_used_gb = Math.round((total_mem - free_mem) / 1024 / 1024 / 1024);
 
-  console.log(`cpu ${percentageCPU}%`);
-
   $(`#cpuPercent`).html(`${percentageCPU}%`);
   $(`#memUsage`).html(`${mem_used_gb} GB`);
-
   $(`#ramMeter`).css('height', `${used_mem_percent * 100}%`);
   $(`#cpuMeter`).css('height', `${percentageCPU}%`);
 }, 250);

@@ -42,7 +42,7 @@ function wait(ms) {
 }
 
 function savePositions() {
-  for (i in quickmarks) {
+  for (let i in quickmarks) {
     let qm = quickmarks[i];
     let qmID = qm.qmID;
     qm.position = $(`#${qmID}`).css('transform');
@@ -59,6 +59,7 @@ function dragMoveListener(event) {
   var target = event.target;
   let quickmarks = document.querySelectorAll('.quickmark');
   quickmarks.forEach((qm) => {
+    //@ts-expect-error
     qm.style.zIndex = 0;
   });
 
@@ -76,6 +77,7 @@ function dragMoveListener(event) {
 }
 
 // this function is used later in the resizing and gesture demos
+//@ts-expect-error
 window.dragMoveListener = dragMoveListener;
 
 function load() {
@@ -93,7 +95,7 @@ function load() {
         }
       });
 
-      for (i in quickmarks) {
+      for (let i in quickmarks) {
         let qm = quickmarks[i];
         let html = `<div class = "quickmark draggable" id = "${qm.qmID}" >
                 
@@ -120,6 +122,7 @@ function load() {
         }
       }
 
+      //@ts-expect-error
       $('.tilt').universalTilt({
         settings: {
           scale: 1.1,
@@ -140,11 +143,28 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+type Quickmark = {
+  qmID: string;
+  note: string;
+  color: string;
+  path: string;
+  id: string;
+  createTime: number;
+};
+
 function create() {
-  let quickmark = {};
-  let quickmarkID = generateRandomId();
+  let quickmark: Quickmark = {
+    qmID: '',
+    note: '',
+    color: '',
+    path: '',
+    id: '',
+    createTime: 0,
+  };
+  let quickmarkID: string = generateRandomId();
+
   quickmark.qmID = quickmarkID;
-  quickmark.note = $(`#quickmarkNote`).val();
+  quickmark.note = $(`#quickmarkNote`).val().toString();
   quickmark.color = colors[getRandomInt(0, colors.length - 1)];
   quickmark.path = '';
   quickmark.id = '';
@@ -180,7 +200,7 @@ function open(qmID) {
   runJSX('open_quickmark.jsx', `{"${qmID}"}`);
 }
 
-const Quickmarks = {
+export const QM = {
   load: load,
   create: create,
   open: open,
@@ -190,7 +210,7 @@ const Quickmarks = {
   },
 };
 
-function generateRandomId() {
+function generateRandomId(): string {
   const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
@@ -200,4 +220,4 @@ function generateRandomId() {
   return result;
 }
 
-module.exports = { Quickmarks };
+module.exports = QM;

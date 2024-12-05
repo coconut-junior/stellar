@@ -81,11 +81,11 @@ function download(url, dest, total, cb?) {
 
 function getTagId(tagName) {
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
-  var wPath = `/v1/tags/by-name`;
+  var path = `/v1/tags/by-name`;
 
   let options = {
     hostname: host,
-    wPath: wPath,
+    path: path,
     method: 'POST',
     headers: headers,
   };
@@ -114,11 +114,11 @@ function getTagId(tagName) {
 }
 
 function getAssetsByTags(tagIds) {
-  var wPath = `/v1/assets?size=1&tagIds=${tagIds}`;
+  var path = `/v1/assets?size=1&tagIds=${tagIds}`;
 
   let options = {
     hostname: host,
-    wPath: wPath,
+    path: path,
     headers: headers,
   };
 
@@ -147,12 +147,12 @@ function searchAssets(query) {
   query = query.replaceAll(' ', '%20').replaceAll('&', '').replaceAll('#', '');
 
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
-  var wPath = '/v1/assets/search?searchQuery=' + query + '&size=' + size;
+  var path = '/v1/assets/search?searchQuery=' + query + '&size=' + size;
   var assets;
 
   let options = {
     hostname: host,
-    wPath: wPath,
+    path: path,
     headers: headers,
   };
 
@@ -198,12 +198,12 @@ function findMatch(brand) {
 }
 
 function getAssetLink(assetID) {
-  var wPath = '/v1/assets/' + assetID + '/embeddedlink-original';
+  var path = '/v1/assets/' + assetID + '/embeddedlink-original';
 
   let options = {
     method: 'POST',
     hostname: host,
-    wPath: wPath,
+    path: path,
     headers: headers,
   };
 
@@ -256,8 +256,7 @@ function downloadLogos(rows, logoPath) {
 
       findMatch(brand).then((match) => {
         if (brand != match) {
-          let asset: Asset;
-          asset.logo = brand + '.ai';
+          let asset: Asset = { logo: brand + '.ai' };
           assetDict[`${i}`] = asset; //catalog logo
           wFs.writeFileSync(
             `${logoPath}/assets.json`,

@@ -4,7 +4,7 @@ const { shell } = require('electron');
 const path = require('path');
 const UniversalTilt = require('universal-tilt.js');
 const fs = require('fs');
-const { Quickmarks } = require(path.join(__dirname, 'quickmarks.js'));
+const Quickmarks = require(path.join(__dirname, 'quickmarks.js'));
 
 var results: string[] = [];
 var store = new Store();
