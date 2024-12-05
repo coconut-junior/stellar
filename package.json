@@ -3,10 +3,11 @@
   "productName": "Stellar",
   "version": "1.3.0",
   "description": "Quickly access creative assets and find product info.",
-  "main": "main.js",
+  "main": "dist/main.js",
   "scripts": {
-    "compile": "tsc",
-    "start": "npm run compile && electron main.js",
+    "copyResources": "copyfiles -f * dist && copyfiles -f fonts/* dist/fonts ** copyfiles images/* dist/images",
+    "compile": "tsc && npm run copyResources",
+    "start": "npm run compile && electron .",
     "lint": "echo \"No linting configured\"",
     "release": "npm run compile && electron-builder -mw --arm64"
   },
