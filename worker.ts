@@ -1,14 +1,21 @@
 const { resolveObjectURL } = require('buffer');
-const fs = require('fs');
-const fetch = require('node-fetch');
+const wFs = require('fs');
+const wFetch = require('node-fetch');
 const { settings } = require('party-js');
 const https = require('https');
-const path = require('path');
+const wPath = require('path');
 const { hostname } = require('os');
 const DecompressZip = require('decompress-zip');
 
-var apiKey = fs.readFileSync(path.join(__dirname, 'lytho_api.key'), 'utf8');
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+interface Asset {
+  logo: string;
+}
+
+var apiKey: string = wFs.readFileSync(
+  wPath.join(__dirname, 'lytho_api.key'),
+  'utf8'
+);
+const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const requestOverloadMsg =
   'Looks like Lytho is overloaded at the moment! Please try again in a few minutes.';
 const cooldown = 500;
@@ -33,7 +40,7 @@ onmessage = (e) => {
 
 var failed = 0;
 
-function download(url, dest, total, cb) {
+function download(url, dest, total, cb?) {
   let settings = { method: 'Get', cache: 'no-store', keepalive: false };
 
   if (!url) {
@@ -41,14 +48,14 @@ function download(url, dest, total, cb) {
     return;
   }
 
-  fetch(url, settings).then((res) => {
-    var file = fs.createWriteStream(dest);
+  wFetch(url, settings).then((res) => {
+    var file = wFs.createWriteStream(dest);
     res.body.pipe(file);
     file.on('finish', function () {
       file.close(cb);
       postMessage([failed, total, res.statusText]); //send response back to renderer
       if (url.match('.zip')) {
-        let extractPath = path.dirname(dest).replaceAll('//', '/');
+        let extractPath = wPath.dirname(dest).replaceAll('//', '/');
         console.log(extractPath);
         let unzipper = new DecompressZip(dest);
 
@@ -60,7 +67,7 @@ function download(url, dest, total, cb) {
           postMessage('unzipComplete');
         });
         unzipper.extract({
-          path: extractPath,
+          wPath: extractPath,
         });
       }
     });
@@ -74,11 +81,11 @@ function download(url, dest, total, cb) {
 
 function getTagId(tagName) {
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
-  var path = `/v1/tags/by-name`;
+  var wPath = `/v1/tags/by-name`;
 
   let options = {
     hostname: host,
-    path: path,
+    wPath: wPath,
     method: 'POST',
     headers: headers,
   };
@@ -107,11 +114,11 @@ function getTagId(tagName) {
 }
 
 function getAssetsByTags(tagIds) {
-  var path = `/v1/assets?size=1&tagIds=${tagIds}`;
+  var wPath = `/v1/assets?size=1&tagIds=${tagIds}`;
 
   let options = {
     hostname: host,
-    path: path,
+    wPath: wPath,
     headers: headers,
   };
 
@@ -140,12 +147,12 @@ function searchAssets(query) {
   query = query.replaceAll(' ', '%20').replaceAll('&', '').replaceAll('#', '');
 
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
-  var path = '/v1/assets/search?searchQuery=' + query + '&size=' + size;
+  var wPath = '/v1/assets/search?searchQuery=' + query + '&size=' + size;
   var assets;
 
   let options = {
     hostname: host,
-    path: path,
+    wPath: wPath,
     headers: headers,
   };
 
@@ -158,7 +165,6 @@ function searchAssets(query) {
           resolve(assets);
         } catch (e) {
           console.log('could not get content object');
-          console.log(json);
           reject();
         }
       });
@@ -167,7 +173,7 @@ function searchAssets(query) {
 }
 
 function pause(millis) {
-  var date = new Date();
+  var date: any = new Date();
   var curDate = null;
   do {
     curDate = new Date();
@@ -180,7 +186,7 @@ function findMatch(brand) {
     let logoTagId = await getTagId('logo');
     let brandTagId = await getTagId(brand);
 
-    getAssetsByTags(`${logoTagId},${brandTagId}`).then((assets) => {
+    getAssetsByTags(`${logoTagId},${brandTagId}`).then((assets: any[]) => {
       if (brandTagId && assets && assets.length != 0) {
         let id = assets[0].id;
         resolve(getAssetLink(id));
@@ -192,12 +198,12 @@ function findMatch(brand) {
 }
 
 function getAssetLink(assetID) {
-  var path = '/v1/assets/' + assetID + '/embeddedlink-original';
+  var wPath = '/v1/assets/' + assetID + '/embeddedlink-original';
 
   let options = {
     method: 'POST',
     hostname: host,
-    path: path,
+    wPath: wPath,
     headers: headers,
   };
 
@@ -250,10 +256,10 @@ function downloadLogos(rows, logoPath) {
 
       findMatch(brand).then((match) => {
         if (brand != match) {
-          let asset = new Object();
+          let asset: Asset;
           asset.logo = brand + '.ai';
           assetDict[`${i}`] = asset; //catalog logo
-          fs.writeFileSync(
+          wFs.writeFileSync(
             `${logoPath}/assets.json`,
             JSON.stringify(assetDict)
           );
