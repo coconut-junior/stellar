@@ -17,11 +17,11 @@
 }
 @font-face {
   font-family: 'DSEG14 Classic';
-  src: url('fonts/DSEG14Classic-Regular.woff') format('woff');
+  src: url(fonts/DSEG14Classic-Regular.woff) format('woff');
 }
 @font-face {
   font-family: 'DSEG14 Modern';
-  src: url('fonts/DSEG14Modern-Regular.woff') format('woff');
+  src: url(fonts/DSEG14Modern-Regular.woff) format('woff');
 }
 p {
   font-size: 16px;
@@ -48,7 +48,7 @@ textarea {
   height: 10px;
   padding: 10px;
   background: var(--primary4);
-  box-shadow: 0px 0px 0px 12px var(--secondary1) inset;
+  box-shadow: 0 0 0 12px var(--secondary1) inset;
   display: flex;
 }
 #uiScale::-webkit-slider-thumb {
@@ -70,7 +70,7 @@ textarea {
   filter: invert();
 }
 .resultBox {
-  background-image: url('images/loading_dark.gif');
+  background-image: url(images/loading_dark.gif);
 }
 .removeButton {
   filter: invert();
@@ -217,12 +217,12 @@ li {
 }
 .quickmarkWrapper {
   padding: 20px;
-  border-radius: 0px 0px 20px 20px;
+  border-radius: 0 0 20px 20px;
   height: 300px;
   width: 200px;
   display: flex;
   background-color: rgba(159, 239, 255, 0.5);
-  background-image: url('images/noise.png');
+  background-image: url(images/noise.png);
   background-size: contain;
   background-position: bottom;
   background-repeat: no-repeat;
@@ -230,9 +230,9 @@ li {
   flex-direction: column;
   gap: 10px;
   cursor: grab;
-  box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
-  -webkit-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.75);
 }
 .quickmarkWrapper:hover {
   background-image: url(images/paper_peel.png);
@@ -244,13 +244,13 @@ li {
   visibility: visible;
 }
 #navLogo {
-  background-image: url('images/stellar_lockup.png');
+  background-image: url(images/stellar_lockup.png);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   height: 20px;
   width: auto;
-  margin: 0px;
+  margin: 0;
   padding: 10px;
 }
 #automationTasks {
@@ -274,10 +274,10 @@ li {
   background-image: none;
 }
 #automationTasks[status='offline'] {
-  background-image: url('images/offline_dark.svg');
+  background-image: url(images/offline_dark.svg);
 }
 #automationTasks[status='loading'] {
-  background-image: url('images/loading_dark.gif');
+  background-image: url(images/loading_dark.gif);
 }
 #automationStatus {
   margin-top: 10px;
@@ -303,18 +303,18 @@ li {
 .meterFill {
   background-color: var(--secondary1);
   background-blend-mode: screen;
-  background-image: url('images/led_dots.webp');
+  background-image: url(images/led_dots.webp);
   background-size: 70px;
   height: 100%;
   width: auto;
-  border-radius: 5px 5px 10px 0px;
+  border-radius: 5px 5px 10px 0;
 }
 .resourceMeter {
   box-sizing: border-box;
-  border-width: 0px 2px 2px 2px;
+  border-width: 0 2px 2px;
   border-style: solid;
   border-color: var(--gray);
-  border-radius: 0px 0px 15px 15px;
+  border-radius: 0 0 15px 15px;
   width: 90px;
   height: auto;
   padding: 5px;
@@ -324,7 +324,7 @@ li {
   position: relative;
 }
 .cardGroup {
-  padding: 0px 20px 20px 20px;
+  padding: 0 20px 20px;
   background-color: var(--secondary2);
   height: 100%;
   border-radius: 20px;
@@ -363,7 +363,7 @@ li {
   padding: 20px;
   position: absolute;
   bottom: 0;
-  border-radius: 10px 10px 0px 0px;
+  border-radius: 10px 10px 0 0;
   border: 2px solid var(--gray);
   z-index: 3;
 }
@@ -378,39 +378,39 @@ li {
   font-weight: bold;
 }
 .navSearch {
-  background-image: url('images/search_default.svg');
+  background-image: url(images/search_default.svg);
 }
 .navSearch[active='true'],
 .navSearch:hover {
-  background-image: url('images/search_hover.svg');
+  background-image: url(images/search_hover.svg);
 }
 .navQuickmark {
-  background-image: url('images/quickmark_default.svg');
+  background-image: url(images/quickmark_default.svg);
 }
 .navQuickmark[active='true'],
 .navQuickmark:hover {
-  background-image: url('images/quickmark_hover.svg');
+  background-image: url(images/quickmark_hover.svg);
 }
 .navAutomation {
-  background-image: url('images/automation_default.svg');
+  background-image: url(images/automation_default.svg);
 }
 .navAutomation[active='true'],
 .navAutomation:hover {
-  background-image: url('images/automation_hover.svg');
+  background-image: url(images/automation_hover.svg);
 }
 .navSettings {
-  background-image: url('images/settings_default.svg');
+  background-image: url(images/settings_default.svg);
 }
 .navSettings[active='true'],
 .navSettings:hover {
-  background-image: url('images/settings_hover.svg');
+  background-image: url(images/settings_hover.svg);
 }
 .navInfo {
-  background-image: url('images/info_default.svg');
+  background-image: url(images/info_default.svg);
 }
 .navInfo[active='true'],
 .navInfo:hover {
-  background-image: url('images/info_hover.svg');
+  background-image: url(images/info_hover.svg);
 }
 @keyframes glowing {
   0% {
@@ -430,20 +430,18 @@ select {
   outline: 0;
   font: inherit;
   padding: 5px 2.5em 5px 0.5em;
-  background: url('images/dropdown_dark.svg') no-repeat right 0.8em center / 1em;
+  background: url(images/dropdown_dark.svg) no-repeat right 0.8em center / 1em;
   color: var(--black);
   border-radius: 0.25em;
   transition: 0.2s;
-  option {
-    color: inherit;
-    background-color: transparent;
-  }
-  &:focus {
-    outline: none;
-  }
-  &::-ms-expand {
-    display: none;
-  }
+  optioncolor: inherit;
+  background-color: transparent;
+}
+&:focus {
+  outline: none;
+}
+&::-ms-expand {
+  display: none;
 }
 select:hover {
   background-color: var(--gray);
@@ -494,7 +492,7 @@ button {
   z-index: -1;
   content: '';
   position: absolute;
-  width: 0%;
+  width: 0;
   height: 100%;
   background: transparent;
   left: 0;
@@ -520,8 +518,8 @@ button {
   background-size: 400%;
   z-index: -1;
   filter: blur(5px);
-  height: 0px;
-  width: 0px;
+  height: 0;
+  width: 0;
   animation: glowing 20s linear infinite;
   opacity: 0;
   border-radius: 10px;
@@ -554,7 +552,7 @@ button:active {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  box-shadow: 0px 4px 100px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 100px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
 }
 .listOptions {
@@ -577,7 +575,7 @@ button:active {
 #assetButton {
   height: 100%;
   width: 100%;
-  background-image: url('images/asset_icon.svg');
+  background-image: url(images/asset_icon.svg);
 }
 #flyerButton,
 #productBlockButton {
@@ -604,11 +602,11 @@ button:active {
   justify-content: center;
   flex-direction: column;
   gap: 10px;
-  border-radius: 0px 20px 20px 0px;
-  box-shadow: 0px 4px 100px rgba(0, 0, 0, 0.1);
+  border-radius: 0 20px 20px 0;
+  box-shadow: 0 4px 100px rgba(0, 0, 0, 0.1);
   position: absolute;
   top: 50%;
-  left: 0px;
+  left: 0;
   transform: translateY(-50%);
   transition: 0.2s;
   z-index: 3;
@@ -643,8 +641,8 @@ button:active {
   background-color: var(--primary4);
   background-repeat: no-repeat;
   background-position: left;
-  background-image: url('images/progress.png');
-  background-size: 0px 60px;
+  background-image: url(images/progress.png);
+  background-size: 0 60px;
   transition: 0.2s;
 }
 .primary:hover {
@@ -738,7 +736,7 @@ break {
   height: calc(100vh - 270px);
   padding: 20px;
   border-radius: 20px;
-  background-image: url('images/loading.gif');
+  background-image: url(images/loading.gif);
   background-size: 50px;
   background-repeat: no-repeat;
   background-position: center;
@@ -752,21 +750,21 @@ break {
   right: 0;
   height: 72px;
   width: 72px;
-  background-image: url('images/beta.png');
+  background-image: url(images/beta.png);
   background-size: contain;
   background-repeat: no-repeat;
 }
 .productInfo {
   margin: auto;
   width: auto;
-  padding: 0px 20px 0px 20px;
+  padding: 0 20px;
   display: flex;
   flex-direction: column;
 }
 hr {
   border: 0;
   border-top: 2px dotted lightgray;
-  margin: 10px 0px 10px 0px;
+  margin: 10px 0;
 }
 h2 {
   text-align: center;
@@ -780,11 +778,11 @@ h2 {
   left: -380px;
   height: 80px;
   width: auto;
-  padding: 0px 20px 5px 20px;
+  padding: 0 20px 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 20px 20px 0px 0px;
+  border-radius: 20px 20px 0 0;
   background-color: none;
 }
 .viewToggle {
@@ -794,7 +792,7 @@ h2 {
   border: 3px solid var(--white);
   align-items: center;
   border-radius: 15px;
-  background-image: url('images/viewtoggle.svg');
+  background-image: url(images/viewtoggle.svg);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -813,7 +811,7 @@ h2 {
   top: 5px;
   display: flex;
   border-radius: 10px;
-  background-image: url('images/normalview_icon.svg');
+  background-image: url(images/normalview_icon.svg);
   background-size: 20px;
   background-repeat: no-repeat;
   background-position: center;
@@ -894,7 +892,7 @@ h2 {
 .removeButton {
   height: 20px;
   width: 20px;
-  background-image: url('images/remove.svg');
+  background-image: url(images/remove.svg);
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -920,9 +918,9 @@ h2 {
   background-color: var(--dark);
   color: var(--bright);
   text-align: center;
-  padding: 10px 20px 10px 20px;
+  padding: 10px 20px;
   border: 1px solid var(--gray);
-  border-radius: 20px 0px 20px 20px;
+  border-radius: 20px 0 20px 20px;
   position: absolute;
   top: 100%;
   right: 100%;
@@ -939,7 +937,7 @@ h2 {
   #automationStatus {
     display: grid;
     width: calc(100vw - 40px);
-    margin-left: 0px;
+    margin-left: 0;
     grid-template-areas: 'title meter' 'search search';
     height: auto;
     margin-top: 0;
@@ -977,7 +975,7 @@ h2 {
     width: 30px;
     transition: 0.3s;
     opacity: 0;
-    padding-left: 0px;
+    padding-left: 0;
   }
   #navigation:hover {
     width: 150px;
@@ -987,10 +985,10 @@ h2 {
     padding-left: 40px;
   }
   #navLogo {
-    background-image: url('images/stellar_logo.png');
+    background-image: url(images/stellar_logo.png);
   }
   #navigation:hover #navLogo {
-    background-image: url('images/stellar_lockup.png');
+    background-image: url(images/stellar_lockup.png);
   }
 }
 @media (max-width: 600px) {
@@ -1045,24 +1043,24 @@ input {
     --gray: #ecf6fa;
   }
   #quickmarkPage {
-    background-image: url('images/dot_pattern_light.png');
+    background-image: url(images/dot_pattern_light.png);
   }
   #navLogo {
-    background-image: url('images/stellar_lockup_light.png');
+    background-image: url(images/stellar_lockup_light.png);
   }
   #navigation:hover #navLogo {
-    background-image: url('images/stellar_lockup_light.png');
+    background-image: url(images/stellar_lockup_light.png);
   }
   .meterFill {
     background-blend-mode: multiply;
-    background-image: url('images/led_dots_dark.webp');
+    background-image: url(images/led_dots_dark.webp);
   }
   select {
-    background: url('images/dropdown_light.svg') no-repeat right 0.8em center /
+    background: url(images/dropdown_light.svg) no-repeat right 0.8em center /
       1.4em;
   }
   #automationTasks[status='offline'] {
-    background-image: url('images/offline_light.svg');
+    background-image: url(images/offline_light.svg);
   }
   button:hover {
     color: var(--bright);
@@ -1074,38 +1072,38 @@ input {
     background-color: var(--primary3);
   }
   .navSearch {
-    background-image: url('images/search_black.svg');
+    background-image: url(images/search_black.svg);
   }
   .navSearch[active='false']:hover {
-    background-image: url('images/search_black_hover.svg');
+    background-image: url(images/search_black_hover.svg);
   }
   .navAutomation {
-    background-image: url('images/automation_black.svg');
+    background-image: url(images/automation_black.svg);
   }
   .navAutomation[active='false']:hover {
-    background-image: url('images/automation_black_hover.svg');
+    background-image: url(images/automation_black_hover.svg);
   }
   .navQuickmark {
-    background-image: url('images/quickmark_black.svg');
+    background-image: url(images/quickmark_black.svg);
   }
   .navQuickmark[active='false']:hover {
-    background-image: url('images/quickmark_black_hover.svg');
+    background-image: url(images/quickmark_black_hover.svg);
   }
   .navSettings {
-    background-image: url('images/settings_black.svg');
+    background-image: url(images/settings_black.svg);
   }
   .navSettings[active='false']:hover {
-    background-image: url('images/settings_black_hover.svg');
+    background-image: url(images/settings_black_hover.svg);
   }
   .navInfo {
-    background-image: url('images/info_black.svg');
+    background-image: url(images/info_black.svg);
   }
   .navInfo[active='false']:hover {
-    background-image: url('images/info_black_hover.svg');
+    background-image: url(images/info_black_hover.svg);
   }
 }
 @media (max-width: 1080px) and (prefers-color-scheme: light) {
   #navLogo {
-    background-image: url('images/stellar_logo.png');
+    background-image: url(images/stellar_logo.png);
   }
 }
