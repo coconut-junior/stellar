@@ -18,7 +18,7 @@ var apiKey: string = wFs.readFileSync(
 const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const requestOverloadMsg =
   'Looks like Lytho is overloaded at the moment! Please try again in a few minutes.';
-const cooldown = 500;
+const cooldown = 100;
 
 const host = 'openapi.us-1.lytho.us';
 var headers = {
@@ -41,6 +41,7 @@ onmessage = (e) => {
 var failed = 0;
 
 function download(url, dest, total, cb?) {
+  timeout(cooldown);
   let settings = { method: 'Get', cache: 'no-store', keepalive: false };
 
   if (!url) {
@@ -80,6 +81,7 @@ function download(url, dest, total, cb?) {
 }
 
 function getTagId(tagName) {
+  timeout(cooldown);
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
   var path = `/v1/tags/by-name`;
 
@@ -257,7 +259,7 @@ function downloadLogos(rows, logoPath) {
       findMatch(brand).then((match) => {
         if (brand != match) {
           let asset: Asset = { logo: brand + '.ai' };
-          assetDict[`${i}`] = asset; //catalog logo
+          assetDict[logo] = asset; //catalog logo
           wFs.writeFileSync(
             `${logoPath}/assets.json`,
             JSON.stringify(assetDict)
