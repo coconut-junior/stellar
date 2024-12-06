@@ -7,6 +7,8 @@ const wPath = require('path');
 const { hostname } = require('os');
 const DecompressZip = require('decompress-zip');
 
+var assetDict = new Object();
+
 interface Asset {
   logo: string;
 }
@@ -15,10 +17,18 @@ var apiKey: string = wFs.readFileSync(
   wPath.join(__dirname, 'lytho_api.key'),
   'utf8'
 );
-const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function timeout(ms) {
+  var start = new Date().getTime();
+  var end = start;
+  while (end < start + ms) {
+    end = new Date().getTime();
+  }
+}
+
 const requestOverloadMsg =
   'Looks like Lytho is overloaded at the moment! Please try again in a few minutes.';
-const cooldown = 100;
+const cooldown = 50;
 
 const host = 'openapi.us-1.lytho.us';
 var headers = {
@@ -41,7 +51,6 @@ onmessage = (e) => {
 var failed = 0;
 
 function download(url, dest, total, cb?) {
-  timeout(cooldown);
   let settings = { method: 'Get', cache: 'no-store', keepalive: false };
 
   if (!url) {
@@ -81,7 +90,6 @@ function download(url, dest, total, cb?) {
 }
 
 function getTagId(tagName) {
-  timeout(cooldown);
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
   var path = `/v1/tags/by-name`;
 
@@ -174,14 +182,6 @@ function searchAssets(query) {
   });
 }
 
-function pause(millis) {
-  var date: any = new Date();
-  var curDate = null;
-  do {
-    curDate = new Date();
-  } while (curDate - date < millis);
-}
-
 function findMatch(brand) {
   return new Promise(async (resolve, reject) => {
     //replace with new function to get assets by tags
@@ -237,9 +237,16 @@ function formatForURL(text) {
     .replace(/[\r\n]+/g, ' ');
 }
 
+function cleanString(str) {
+  return str
+    .split('')
+    .filter((char) => char.toLowerCase() !== char.toUpperCase())
+    .join('');
+}
+
 function downloadLogos(rows, logoPath) {
+  assetDict = {};
   var brands = []; //valid logos only
-  var assetDict = new Object();
 
   //parse excel sheet
   for (let i = 0; i < rows.length; ++i) {
@@ -258,15 +265,15 @@ function downloadLogos(rows, logoPath) {
 
       findMatch(brand).then((match) => {
         if (brand != match) {
-          let asset: Asset = { logo: brand + '.ai' };
-          assetDict[logo] = asset; //catalog logo
-          wFs.writeFileSync(
-            `${logoPath}/assets.json`,
-            JSON.stringify(assetDict)
-          );
-
           //if brand is returned, that means url wasnt
           try {
+            let logoKeyText = cleanString(rows[i]['Logo']);
+            let asset: Asset = { logo: `${brand}.ai` };
+            assetDict[logoKeyText] = asset; //catalog logo
+            wFs.writeFileSync(
+              `${logoPath}/assets.json`,
+              JSON.stringify(assetDict)
+            );
             download(match, `${logoPath}/${brand}.ai`, brands.length);
           } catch (e) {
             postMessage([failed, brands.length]);
