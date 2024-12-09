@@ -60,6 +60,7 @@ async function downloadDependencies() {
     let url = dependency['url'];
     let filePath = `${scriptPath}/${fileName}`;
     let description = dependency['description'];
+    let requirements = dependency['requirements'];
 
     $(`.statusBar`).html(`Downloading ${fileName}...`);
 
@@ -122,8 +123,9 @@ async function downloadDependencies() {
 
       //assign click event
       $(`#launchButton${id}`).on('click', function (event) {
-        launch(`#launchButton${id}`, fileName, url, null);
+        launch(`#launchButton${id}`, fileName, url, requirements);
       });
+
       //animate
       gsap.from(`#idScript${id}`, {
         duration: 2,
@@ -288,15 +290,30 @@ async function getScriptPath() {
 }
 
 function runPy(fileName: string, args?: string) {
-  exec(`python3 ${fileName} ${args}`, (error, stdout, stderr) => {
+  let installCmd = `pip3 install -r ${args}`;
+  let pyScript = `${scriptPath}/${fileName}`;
+  let runCmd = `python3 "${pyScript}"`;
+
+  exec(installCmd, (error, stdout, stderr) => {
+    if (stdout) {
+      console.log(stdout);
+    }
+    if (error) {
+      console.log(`error: ${error.message}`);
+      return;
+    }
     if (stderr) {
-      console.log(`stderr: ${stderr}`);
       return;
     }
 
-    console.log(`stdout: ${stdout}`);
+    console.log('requirements installed, launching');
+    exec(runCmd, (error, stdout, stderr) => {
+      console.log(runCmd);
+      if (stdout) {
+        console.log(stdout);
+      }
+    });
   });
-  return;
 }
 
 function runJSX(scriptName: string, arguments: string) {
