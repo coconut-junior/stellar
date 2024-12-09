@@ -1,7 +1,7 @@
 {
   "name": "stellar",
   "productName": "Stellar",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Quickly access creative assets and find product info.",
   "main": "dist/main.js",
   "scripts": {
@@ -12,6 +12,14 @@
     "release": "npm run compile && electron-builder -mw --arm64"
   },
   "build": {
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
     "appId": "design.jbx.stellar",
     "win": {
       "target": [
@@ -26,7 +34,7 @@
       ]
     }
   },
-  "repository": "https://github.com/coconut-junior/pasteboard",
+  "repository": "https://github.com/coconut-junior/stellar",
   "keywords": [],
   "author": {
     "name": "Jimmy Blanck",

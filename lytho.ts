@@ -9,6 +9,7 @@ export default function buildFlyer() {
   let worker = new Worker('worker.js');
 
   if (fileName) {
+    $(`*`).css('cursor', 'wait');
     $(`#buildFlyerButton`).css('background-color', 'black');
     $(`#buildFlyerButton`).html('&#9889; Downloading...');
     minimizeApp();
@@ -52,6 +53,7 @@ export default function buildFlyer() {
       $(`#buildFlyerButton`).css('background-color', 'var(--primary4)');
       $(`#buildFlyerButton`).css('background-size', `0px 60px`);
       $(`#buildFlyerButton`).html('&#9889; Launch');
+      $(`*`).css('cursor', 'default');
       runJSX('build_flyer_stellar.jsx', `{"${fileName}","stellar"}`);
     }
   };
