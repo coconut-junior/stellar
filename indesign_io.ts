@@ -162,7 +162,7 @@ function openProductBlock(fileName, indexes) {
 
 var launch = function (button, fileName, url, args) {
   gsap.from(button, {
-    duration: 0.5,
+    duration: 0.2,
     ease: 'circ.in',
     transformOrigin: 'center',
     scale: 0.9,
@@ -173,7 +173,7 @@ var launch = function (button, fileName, url, args) {
 
   //button
   gsap.to(button, {
-    delay: 0.5,
+    delay: 0.2,
     duration: 0.2,
     ease: 'circ.out',
     transformOrigin: 'center',
