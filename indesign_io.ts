@@ -294,6 +294,8 @@ function runPy(fileName: string, args?: string) {
   let pyScript = `${scriptPath}/${fileName}`;
   let runCmd = `python3 "${pyScript}"`;
 
+  $(`.statusBar`).html(`Installing Python script ${fileName}...`);
+
   exec(installCmd, (error, stdout, stderr) => {
     if (stdout) {
       console.log(stdout);
@@ -313,6 +315,7 @@ function runPy(fileName: string, args?: string) {
         console.log(stdout);
       }
     });
+    $(`.statusBar`).html('');
   });
 }
 
