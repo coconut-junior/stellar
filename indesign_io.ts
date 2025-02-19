@@ -3,11 +3,20 @@ const { gsap } = require('gsap/dist/gsap');
 const dependencyURL = 'https://jbx.design/stellar/dependencies.json';
 const party = require('party-js');
 const runFlyerScript = require(path.join(__dirname, 'lytho.js')).buildFlyer;
+const osName = getOS();
+const appData = process.env.APPDATA;
 
 var dependencies = [];
 var scriptPath: string = undefined;
 
 getScriptPath();
+
+function getOS() {
+  const platform = require('os').platform();
+  if (platform === 'darwin') return 'Mac';
+  if (platform === 'win32') return 'Windows';
+  return 'Other';
+}
 
 function makeDir(dir: string) {
   ipcRenderer.sendSync('makeDir', dir);
@@ -252,11 +261,13 @@ async function getDependencies() {
 
 async function getScriptPath() {
   $(`.statusBar`).html('Checking InDesign configuration...');
+  osName == 'Mac' ? getScriptPathMac() : getScriptPathWin();
+}
+
+function getScriptPathMac() {
   let versionCmd = 'ls -la /Applications/ | grep InDesign'; //macOS only
-
+  let IDPath = getHomePath() + `/Library/Preferences/Adobe InDesign`;
   exec(versionCmd, (error, stdout, stderr) => {
-    var p = getHomePath() + `/Library/Preferences/Adobe InDesign`; //macOS only
-
     if (error) {
       console.log(`error: ${error.message}`);
       showError(
@@ -268,25 +279,45 @@ async function getScriptPath() {
       showError(`stderr: ${stderr}`);
       return;
     }
-
-    let versions = stdout.split('\n');
-    versions = versions.filter(function (entry) {
+    //list versions
+    let versions = stdout.split('\n').filter(function (entry) {
       return /\S/.test(entry);
     });
+    //convert to integer array
     for (let i = 0; i < versions.length; ++i) {
       versions[i] = parseInt(
         versions[i].split('Adobe')[1].replace(/^\D+/g, '').replaceAll(':', '')
       );
     }
 
+    //pick largest version number
     const max = versions.reduce((a, b) => Math.max(a, b), -Infinity);
     let versionNumber: number = max - 2005;
     $(`#indVersion`).html(`${versionNumber + 2005} (v ${versionNumber}.0)`);
     let versionString: string = 'Version ' + versionNumber + '.0';
-    scriptPath = p + '/' + versionString + '/en_US/Scripts/Scripts Panel';
+    scriptPath = IDPath + '/' + versionString + '/en_US/Scripts/Scripts Panel';
     getDependencies();
     Quickmarks.load();
   });
+}
+
+function getScriptPathWin() {
+  let IDPath = appData + `/Adobe/InDesign/Version`;
+
+  exec(
+    'powershell.exe Get-ItemProperty HKLM:\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table –AutoSize | findstr Adobe',
+    (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error: ${error}`);
+        return;
+      }
+      console.log(stdout);
+      console.error(stderr);
+
+      getDependencies();
+      Quickmarks.load();
+    }
+  );
 }
 
 function runPy(fileName: string, args?: string) {
@@ -320,10 +351,24 @@ function runPy(fileName: string, args?: string) {
 }
 
 function runJSX(scriptName: string, arguments: string) {
-  //macOS only
   var args = arguments ?? `{"stellar"}`;
+
+  if (osName == 'Windows') {
+    args = args.replace('{', '').replace('}', ''); //reformat args list for powershell
+  }
+
+  let psScript = `
+    $indesign = New-Object -ComObject InDesign.Application\n
+    $scriptSystem = New-Object -ComObject Scripting.FileSystemObject\n
+    $scriptFile = $scriptSystem.OpenTextFile("${scriptPath}/${scriptName}")\n
+    $scriptContent = $scriptFile.ReadAll()\n
+    $scriptFile.Close()\n
+    $scriptToRun = $scriptContent + "main(arguments)"\n
+    $arguments = ${args}\n
+    $indesign.DoScript($scriptToRun, $arguments, 1)
+  `;
   let bashScript = `osascript -e 'tell application id "com.adobe.indesign"\nactivate\nset args to ${args}\ndo script "${scriptPath}/${scriptName}" language javascript with arguments args\nend tell'`;
-  let script = bashScript;
+  let script = osName == 'Mac' ? bashScript : psScript;
 
   //run bash script
   exec(`${script}`, (error, stdout, stderr) => {

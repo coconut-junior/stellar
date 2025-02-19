@@ -42,6 +42,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@adobe/target-nodejs-sdk": "^2.4.3",
     "@electron/notarize": "^2.4.0",
     "@fingerprintjs/fingerprintjs": "^4.5.0",
     "decompress-zip": "^0.3.3",
@@ -52,6 +53,7 @@
     "electron-store": "^8.1.0",
     "electron-unhandled": "^5.0.0",
     "electron-updater": "^6.3.4",
+    "env-paths": "^3.0.0",
     "extract-zip": "^2.0.1",
     "gsap": "^3.12.5",
     "interactjs": "^1.10.27",
