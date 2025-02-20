@@ -312,9 +312,11 @@ function getScriptPathWin() {
         return;
       }
 
-      let output = stdout.split('\n').filter(item => item.match("Adobe InDesign"));
+      let output = stdout
+        .split('\n')
+        .filter((item) => item.match('Adobe InDesign'));
       let versions = [];
-      for(let i = 0;i<output.length;++i) {
+      for (let i = 0; i < output.length; ++i) {
         let line = output[i];
         const version = line.match(/\b\d+\.\d+\b/)[0];
         versions.push(parseInt(version));
@@ -327,7 +329,7 @@ function getScriptPathWin() {
       scriptPath = `${IDPath} ${max}.0\\en_US\\Scripts\\Scripts Panel`;
       console.log(scriptPath);
       getDependencies();
-      // Quickmarks.load();
+      Quickmarks.load(); //untested on windows
     }
   );
 }
@@ -366,13 +368,11 @@ function runJSX(scriptName: string, arguments: string) {
   var args = arguments ?? `{"stellar"}`;
 
   if (osName == 'Windows') {
-    //no effing clue
-    args = '';
+    args = args.replace('{', '@(').replace('}', ')');
   }
 
-  console.log(args);
-
-  let psScript = `powershell "$app = new-object -comobject InDesign.Application; $arguments = ${args}; $app.DoScript('${scriptPath}\\${scriptName}', 1246973031)"`;
+  //1246973031 is the value of idJavascript enum
+  let psScript = `powershell "$app = new-object -comobject InDesign.Application; $arguments = ${args}; $app.DoScript('${scriptPath}\\${scriptName}', 1246973031, $arguments)"`;
   let bashScript = `osascript -e 'tell application id "com.adobe.indesign"\nactivate\nset args to ${args}\ndo script "${scriptPath}/${scriptName}" language javascript with arguments args\nend tell'`;
   let script = osName == 'Mac' ? bashScript : psScript;
 
