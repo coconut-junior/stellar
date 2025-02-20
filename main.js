@@ -53,6 +53,7 @@ ipcMain.handle('showUpdateWindow', (event) => {
     minimizable: false,
     alwaysOnTop: true,
   });
+  updateWindow.removeMenu();
 
   updateWindow.once('ready-to-show', () => {
     updateWindow.show();
@@ -189,6 +190,8 @@ function createWindow() {
     show: false,
     alwaysOnTop: false,
   });
+
+  //mainWindow.removeMenu();
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();

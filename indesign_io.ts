@@ -317,15 +317,16 @@ function getScriptPathWin() {
       for(let i = 0;i<output.length;++i) {
         let line = output[i];
         const version = line.match(/\b\d+\.\d+\b/)[0];
-        versions.push(parseFloat(version));
+        versions.push(parseInt(version));
       }
 
       const max = versions.reduce((a, b) => Math.max(a, b), -Infinity);
 
       console.log(versions[0]);
-      scriptPath = `${IDPath} ${max}\\en_US\\Scripts\\Scripts Panel`;
+      $(`#indVersion`).html(`${max + 2005} (v ${max}.0)`);
+      scriptPath = `${IDPath} ${max}.0\\en_US\\Scripts\\Scripts Panel`;
       console.log(scriptPath);
-      // getDependencies();
+      getDependencies();
       // Quickmarks.load();
     }
   );
@@ -365,19 +366,13 @@ function runJSX(scriptName: string, arguments: string) {
   var args = arguments ?? `{"stellar"}`;
 
   if (osName == 'Windows') {
-    args = args.replace('{', '').replace('}', ''); //reformat args list for powershell
+    //no effing clue
+    args = '';
   }
 
-  let psScript = `
-    $indesign = New-Object -ComObject InDesign.Application\n
-    $scriptSystem = New-Object -ComObject Scripting.FileSystemObject\n
-    $scriptFile = $scriptSystem.OpenTextFile("${scriptPath}/${scriptName}")\n
-    $scriptContent = $scriptFile.ReadAll()\n
-    $scriptFile.Close()\n
-    $scriptToRun = $scriptContent + "main(arguments)"\n
-    $arguments = ${args}\n
-    $indesign.DoScript($scriptToRun, $arguments, 1)
-  `;
+  console.log(args);
+
+  let psScript = `powershell "$app = new-object -comobject InDesign.Application; $arguments = ${args}; $app.DoScript('${scriptPath}\\${scriptName}', 1246973031)"`;
   let bashScript = `osascript -e 'tell application id "com.adobe.indesign"\nactivate\nset args to ${args}\ndo script "${scriptPath}/${scriptName}" language javascript with arguments args\nend tell'`;
   let script = osName == 'Mac' ? bashScript : psScript;
 
