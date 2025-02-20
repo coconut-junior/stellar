@@ -5,7 +5,7 @@
   "description": "Quickly access creative assets and find product info.",
   "main": "dist/main.js",
   "scripts": {
-    "copyResources": "copyfiles -f * dist && copyfiles -f fonts/* dist/fonts ** copyfiles images/* dist/images",
+    "copyResources": "copyfiles -f * dist && copyfiles -f fonts/* dist/fonts && copyfiles images/* dist/images",
     "compile": "tsc && npm run copyResources",
     "start": "npm run compile && electron .",
     "lint": "echo \"No linting configured\"",

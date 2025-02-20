@@ -302,20 +302,31 @@ function getScriptPathMac() {
 }
 
 function getScriptPathWin() {
-  let IDPath = appData + `/Adobe/InDesign/Version`;
+  let IDPath = appData + `\\Adobe\\InDesign\\Version`;
 
   exec(
-    'powershell.exe Get-ItemProperty HKLM:\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table –AutoSize | findstr Adobe',
+    'powershell "Get-ItemProperty HKLM:\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -AutoSize | findstr Adobe"',
     (error, stdout, stderr) => {
       if (error) {
         console.error(`Error: ${error}`);
         return;
       }
-      console.log(stdout);
-      console.error(stderr);
 
-      getDependencies();
-      Quickmarks.load();
+      let output = stdout.split('\n').filter(item => item.match("Adobe InDesign"));
+      let versions = [];
+      for(let i = 0;i<output.length;++i) {
+        let line = output[i];
+        const version = line.match(/\b\d+\.\d+\b/)[0];
+        versions.push(parseFloat(version));
+      }
+
+      const max = versions.reduce((a, b) => Math.max(a, b), -Infinity);
+
+      console.log(versions[0]);
+      scriptPath = `${IDPath} ${max}\\en_US\\Scripts\\Scripts Panel`;
+      console.log(scriptPath);
+      // getDependencies();
+      // Quickmarks.load();
     }
   );
 }

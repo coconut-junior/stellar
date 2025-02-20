@@ -9,7 +9,7 @@ const Quickmarks = require(path.join(__dirname, 'quickmarks.js'));
 var results: string[] = [];
 var store = new Store();
 
-webFrame.setZoomFactor(parseFloat(store.get('uiScale') ?? 0.9));
+webFrame.setZoomFactor(parseFloat(store.get('uiScale') ?? 0.8));
 $(`#appearanceDropdown`).val(store.get('appearance'));
 $(`#minimizeDropdown`).val(String(store.get('minimizeOnLaunch')));
 $(`#uiScale`).val(store.get('uiScale') ?? 0.8);
