@@ -78,7 +78,8 @@ async function downloadDependencies() {
 
     let currentVersion = store.get(versionIdentifier);
     if (fileName.match('.zip')) {
-      if (currentVersion == version) {
+      if (false) {
+        //if (currentVersion == version) {}
         console.log('zip version is current, skipping!');
         enableFlyerScript();
         continue;
@@ -101,13 +102,13 @@ async function downloadDependencies() {
       makeDir(extractPath);
     }
 
-    console.log(`requesting for ${fileName} ${url}`);
-
     await sleep(100); //we must do this or github will punish us for so making req's so quickly
+    let dest = path.join(scriptPath, fileName);
+    console.log(`dest is ${dest}`);
     worker.postMessage([
       'downloadFile',
       dependency['url'],
-      `${scriptPath}/${fileName}`,
+      dest,
       dependencies['scripts'].length,
     ]);
 
@@ -298,6 +299,7 @@ function getScriptPathMac() {
     scriptPath = IDPath + '/' + versionString + '/en_US/Scripts/Scripts Panel';
     getDependencies();
     Quickmarks.load();
+    console.log(scriptPath);
   });
 }
 

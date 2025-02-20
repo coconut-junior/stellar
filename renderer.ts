@@ -109,7 +109,9 @@ function showError(message) {
 }
 
 function minimizeApp() {
-  ipcRenderer.invoke('minimize');
+  try {
+    ipcRenderer.invoke('minimize');
+  } catch (e) {}
 }
 
 function getRelativePath(path: string): string {

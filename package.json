@@ -45,6 +45,7 @@
     "@adobe/target-nodejs-sdk": "^2.4.3",
     "@electron/notarize": "^2.4.0",
     "@fingerprintjs/fingerprintjs": "^4.5.0",
+    "decompress": "^4.2.1",
     "decompress-zip": "^0.3.3",
     "dialog-node": "^0.2.1",
     "dotenv": "^16.4.5",

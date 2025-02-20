@@ -5,7 +5,7 @@ const { settings } = require('party-js');
 const https = require('https');
 const wPath = require('path');
 const { hostname } = require('os');
-const DecompressZip = require('decompress-zip');
+const decompress = require('decompress');
 
 var assetDict = new Object();
 
@@ -66,18 +66,10 @@ function download(url, dest, total, cb?) {
       postMessage([failed, total, res.statusText]); //send response back to renderer
       if (url.match('.zip')) {
         let extractPath = wPath.dirname(dest).replaceAll('//', '/');
-        console.log(extractPath);
-        let unzipper = new DecompressZip(dest);
-
-        unzipper.on('error', function (err) {
-          console.log('Caught an error', err);
-        });
-        unzipper.on('extract', () => {
+        console.log(`extract path is ${extractPath}`);
+        decompress(dest, extractPath).then(() => {
           console.log('finished unzipping');
           postMessage('unzipComplete');
-        });
-        unzipper.extract({
-          wPath: extractPath,
         });
       }
     });
