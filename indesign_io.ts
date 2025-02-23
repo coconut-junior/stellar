@@ -78,8 +78,7 @@ async function downloadDependencies() {
 
     let currentVersion = store.get(versionIdentifier);
     if (fileName.match('.zip')) {
-      if (false) {
-        //if (currentVersion == version) {}
+      if (currentVersion == version) {
         console.log('zip version is current, skipping!');
         enableFlyerScript();
         continue;
@@ -370,7 +369,8 @@ function runJSX(scriptName: string, arguments: string) {
   var args = arguments ?? `{"stellar"}`;
 
   if (osName == 'Windows') {
-    args = args.replace('{', '@(').replace('}', ')');
+    //working
+    args = args.replace('{','@(').replace('}',')').replace(`"`,`'`).replace(`"`,`'`);
   }
 
   //1246973031 is the value of idJavascript enum
