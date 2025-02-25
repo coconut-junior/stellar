@@ -170,6 +170,9 @@ function openProductBlock(fileName, indexes) {
 }
 
 var launch = function (button, fileName, url, args) {
+  fileName == 'buildFlyer' ? runFlyerScript() : runTool(fileName, url, args);
+
+  //button scale animation
   gsap.from(button, {
     duration: 0.2,
     ease: 'circ.in',
@@ -180,7 +183,7 @@ var launch = function (button, fileName, url, args) {
     gsap.to(button, 0.1, { backgroundColor: 'black' });
   }
 
-  //button
+  //button sparkles animation
   gsap.to(button, {
     delay: 0.2,
     duration: 0.2,
@@ -206,7 +209,6 @@ var launch = function (button, fileName, url, args) {
   });
 
   if (fileName == 'buildFlyer') {
-    runFlyerScript();
     gsap.to(button, 1, {
       delay: 1,
       y: 0,
@@ -220,8 +222,6 @@ var launch = function (button, fileName, url, args) {
       y: 0,
       x: 0,
       ease: 'circ.in',
-      onComplete: runTool,
-      onCompleteParams: [fileName, url, args],
     });
   }
 };
@@ -370,7 +370,11 @@ function runJSX(scriptName: string, arguments: string) {
 
   if (osName == 'Windows') {
     //working
-    args = args.replace('{','@(').replace('}',')').replace(`"`,`'`).replace(`"`,`'`);
+    args = args
+      .replace('{', '@(')
+      .replace('}', ')')
+      .replace(`"`, `'`)
+      .replace(`"`, `'`);
   }
 
   //1246973031 is the value of idJavascript enum
