@@ -5,12 +5,32 @@ const fs = require('fs');
 const { ipcMain } = require('electron');
 const { globalShortcut } = require('electron');
 const Store = require('electron-store');
+const { autoUpdater } = require('electron-updater');
 let mainWindow;
 let updateWindow;
 
 var homePath = require('os').homedir();
 var store = new Store();
 var minimizeOnLaunch = false;
+
+setInterval(() => {
+  autoUpdater.checkForUpdates();
+}, 60000);
+
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail:
+      'A new version has been downloaded. Restart the application to apply the updates.',
+  };
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall();
+  });
+});
 
 app.on('window-all-closed', function () {
   if (process.platform == 'darwin') {
@@ -56,6 +76,7 @@ ipcMain.handle('showUpdateWindow', (event) => {
   updateWindow.removeMenu();
 
   updateWindow.once('ready-to-show', () => {
+    autoUpdater.checkForUpdatesAndNotify();
     updateWindow.show();
   });
 

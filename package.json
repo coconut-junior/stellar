@@ -1,8 +1,8 @@
 {
   "name": "stellar",
   "productName": "Stellar",
-  "version": "1.4.0",
-  "description": "Quickly access creative assets and find product info.",
+  "version": "1.5.1",
+  "description": "Easily automate Adobe InDesign tasks.",
   "main": "dist/main.js",
   "scripts": {
     "copyResources": "copyfiles -f * dist && copyfiles -f fonts/* dist/fonts && copyfiles images/* dist/images",
@@ -12,6 +12,11 @@
     "release": "npm run compile && electron-builder -mw --arm64 --x64"
   },
   "build": {
+    "publish": {
+      "provider": "github",
+      "owner": "coconut-junior",
+      "repo": "stellar"
+    },
     "directories": {
       "output": "release"
     },
@@ -65,6 +70,7 @@
     "request": "^2.88.2",
     "save": "^2.9.0",
     "universal-tilt.js": "^2.0.6",
+    "update-electron-app": "^3.1.1",
     "xlsx": "^0.19.3"
   },
   "devDependencies": {
