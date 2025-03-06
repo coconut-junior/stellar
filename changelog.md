@@ -1,5 +1,18 @@
 Changelog:
 
+# Release 2.0.0
+
+Added
+
+- Windows support
+- Automatic app updates
+
+# Release 1.4.0
+
+Added
+
+- Quickmarks feature for bookmarking objects in multiple InDesign documents
+
 # Release 1.3.0
 
 Changed
@@ -10,7 +23,7 @@ Changed
 Added
 
 - New, more verbose update process
-- Sinanju theme (to celebrate Phi's love for Gundam)
+- Sinanju theme (in honor of Phil's love for Gundam)
 - Slider for adjusting UI scale
 - Adobe InDesign version is listed as year of release in addition to version number
 

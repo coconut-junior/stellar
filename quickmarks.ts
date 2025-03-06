@@ -87,13 +87,14 @@ function load() {
 
   try {
     fs.readdir(dir, (err, files) => {
-      files.forEach((file) => {
+      for (let i = 0; i < files.length; ++i) {
+        let file = files[i];
         if (file.endsWith('.json')) {
           let text = fs.readFileSync(path.join(dir, file));
           let qm = JSON.parse(text);
           quickmarks.push(qm);
         }
-      });
+      }
 
       for (let i in quickmarks) {
         let qm = quickmarks[i];
