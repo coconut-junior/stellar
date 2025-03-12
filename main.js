@@ -1,11 +1,16 @@
-const { app, BrowserWindow, shell, nativeTheme } = require('electron');
+const {
+  app,
+  BrowserWindow,
+  shell,
+  nativeTheme,
+  autoUpdater,
+} = require('electron');
 const path = require('path');
 const { dialog } = require('electron');
 const fs = require('fs');
 const { ipcMain } = require('electron');
 const { globalShortcut } = require('electron');
 const Store = require('electron-store');
-const { autoUpdater } = require('electron-updater');
 let mainWindow;
 let updateWindow;
 
