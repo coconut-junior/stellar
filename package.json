@@ -1,7 +1,7 @@
 {
   "name": "stellar",
   "productName": "Stellar",
-  "version": "1.5.1",
+  "version": "2.0.1",
   "description": "Easily automate Adobe InDesign tasks.",
   "main": "dist/main.js",
   "scripts": {
@@ -32,12 +32,17 @@
       ]
     },
     "mac": {
+      "notarize": false,
+      "hardenedRuntime": true,
+      "entitlements": "./entitlements.mac.plist",
+      "entitlementsInherit": "./entitlements.mac.plist",
       "category": "public.app-category.productivity",
       "target": [
         "zip",
         "dmg"
       ]
-    }
+    },
+    "afterSign": "./notarize.js"
   },
   "repository": "https://github.com/coconut-junior/stellar",
   "keywords": [],
@@ -47,14 +52,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@adobe/target-nodejs-sdk": "^2.4.3",
-    "@electron/notarize": "^2.4.0",
-    "@fingerprintjs/fingerprintjs": "^4.5.0",
     "decompress": "^4.2.1",
     "dialog-node": "^0.2.1",
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.4.7",
     "electron-forge": "^5.2.4",
-    "electron-notarize": "^1.2.2",
     "electron-store": "^8.1.0",
     "electron-unhandled": "^5.0.0",
     "electron-updater": "^6.3.4",
@@ -63,6 +64,7 @@
     "gsap": "^3.12.5",
     "interactjs": "^1.10.27",
     "jquery": "^3.7.1",
+    "jsonfile": "^6.1.0",
     "license": "^1.0.3",
     "node-stream-zip": "^1.15.0",
     "node-xlsx": "^0.24.0",
@@ -84,6 +86,7 @@
     "eslint": "^9.10.0",
     "node": "^22.8.0",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "webpack-config-utils": "^2.3.1"
   }
 }

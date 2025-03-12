@@ -93,6 +93,9 @@ function setZoom(zoom: number) {
   ipcRenderer.sendSync('setZoom', zoom);
 }
 
+function showReleaseNotes() {
+  ipcRenderer.invoke('showReleaseNotes');
+}
 function showAbout() {
   ipcRenderer.invoke('showAbout');
 }

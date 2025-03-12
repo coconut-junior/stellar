@@ -7,6 +7,10 @@ Added
 - Windows support
 - Automatic app updates
 
+Fixed
+
+- Logos are now matched in the DAM by the tag "logos" and the name of the brand, rather than just searching for the brand name and choosing the first result
+
 # Release 1.4.0
 
 Added

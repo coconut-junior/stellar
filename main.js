@@ -83,6 +83,23 @@ ipcMain.handle('showUpdateWindow', (event) => {
   updateWindow.loadFile(path.join(__dirname, 'update.html'));
 });
 
+ipcMain.handle('showReleaseNotes', (event) => {
+  releaseNotes = new BrowserWindow({
+    title: 'Release Notes',
+    width: 400,
+    height: 800,
+    closable: true,
+    minimizable: false,
+    alwaysOnTop: true,
+  });
+
+  releaseNotes.once('ready-to-show', () => {
+    releaseNotes.show();
+  });
+
+  releaseNotes.loadFile(path.join(__dirname, 'changelog.md'));
+});
+
 ipcMain.handle('closeUpdateWindow', (event) => {
   if (updateWindow) updateWindow.destroy();
 });
