@@ -179,7 +179,7 @@ function searchAssets(query) {
 function findMatch(brand) {
   return new Promise(async (resolve, reject) => {
     //replace with new function to get assets by tags
-    let logoTagId = await getTagId(brand);
+    let logoTagId = await getTagId('logo');
     timeout(100); //if we dont wait here, server will respond with "too many requests"
     let brandTagId = await getTagId(brand);
     timeout(100);
