@@ -263,7 +263,10 @@ function downloadLogos(rows, logoPath) {
         if (brand != match) {
           //if brand is returned, that means url wasnt
           try {
-            let logoKeyText = cleanString(rows[i]['Logo']);
+            let logo = rows[i]['Logo'];
+            let logoKeyText = logo.match(',')
+              ? cleanString(logo.split(',')[0])
+              : cleanString(logo);
             let asset: Asset = { logo: `${brand}.ai` };
             assetDict[logoKeyText] = asset; //catalog logo
             wFs.writeFileSync(
