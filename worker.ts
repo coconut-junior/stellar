@@ -187,15 +187,16 @@ function findMatch(brand) {
     getAssetsByTags(`${logoTagId},${brandTagId}`).then((assets: any[]) => {
       if (brandTagId && assets && assets.length != 0) {
         let id = assets[0].id;
-        resolve(getAssetLink(id));
+        let fileName = assets[0].fileName;
+        resolve(getAssetLink(id, fileName)); //return asset id
       } else {
-        resolve(brand);
+        resolve(brand); //if match not found, return brand name instead
       }
     });
   });
 }
 
-function getAssetLink(assetID) {
+function getAssetLink(assetID, fileName) {
   var path = '/v1/assets/' + assetID + '/embeddedlink-original';
 
   let options = {
@@ -211,7 +212,7 @@ function getAssetLink(assetID) {
         let json = JSON.parse(data);
         let link = json.link;
         if (link) {
-          resolve(link);
+          resolve({ link: link, fileName: fileName });
         } else {
           ++failed;
           reject();
@@ -263,17 +264,22 @@ function downloadLogos(rows, logoPath) {
         if (brand != match) {
           //if brand is returned, that means url wasnt
           try {
+            //@ts-ignore
+            let link = match.link;
+            //@ts-ignore
+            let fileName = match.fileName;
+
             let logo = rows[i]['Logo'];
             let logoKeyText = logo.match(',')
               ? cleanString(logo.split(',')[0])
               : cleanString(logo);
-            let asset: Asset = { logo: `${brand}.ai` };
+            let asset: Asset = { logo: `${fileName}` };
             assetDict[logoKeyText] = asset; //catalog logo
             wFs.writeFileSync(
               `${logoPath}/assets.json`,
               JSON.stringify(assetDict)
             );
-            download(match, `${logoPath}/${brand}.ai`, brands.length);
+            download(link, `${logoPath}/${fileName}`, brands.length);
           } catch (e) {
             postMessage([failed, brands.length]);
           }

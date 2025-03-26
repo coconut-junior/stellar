@@ -1,5 +1,11 @@
 Changelog:
 
+# Release 2.0.2
+
+Fixed
+
+- Logos are now saved with original filename from DAM, rather than brand name
+
 # Release 2.0.0
 
 Added
