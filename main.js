@@ -1,10 +1,4 @@
-const {
-  app,
-  BrowserWindow,
-  shell,
-  nativeTheme,
-  autoUpdater,
-} = require('electron');
+const { app, BrowserWindow, nativeTheme } = require('electron');
 const path = require('path');
 const { dialog } = require('electron');
 const fs = require('fs');
@@ -18,24 +12,8 @@ var homePath = require('os').homedir();
 var store = new Store();
 var minimizeOnLaunch = false;
 
-setInterval(() => {
-  autoUpdater.checkForUpdates();
-}, 60000);
-
-autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-  const dialogOpts = {
-    type: 'info',
-    buttons: ['Restart', 'Later'],
-    title: 'Application Update',
-    message: process.platform === 'win32' ? releaseNotes : releaseName,
-    detail:
-      'A new version of Stellar has been downloaded. Restart the application to apply the updates.',
-  };
-
-  dialog.showMessageBox(dialogOpts).then((returnValue) => {
-    if (returnValue.response === 0) autoUpdater.quitAndInstall();
-  });
-});
+const { updateElectronApp } = require('update-electron-app');
+updateElectronApp();
 
 app.on('window-all-closed', function () {
   if (process.platform == 'darwin') {
@@ -81,7 +59,7 @@ ipcMain.handle('showUpdateWindow', (event) => {
   updateWindow.removeMenu();
 
   updateWindow.once('ready-to-show', () => {
-    autoUpdater.checkForUpdatesAndNotify();
+    autoUpdater.checkForUpdates();
     updateWindow.show();
   });
 
