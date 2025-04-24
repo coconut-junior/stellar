@@ -28,7 +28,7 @@
     "appId": "design.jbx.stellar",
     "win": {
       "target": [
-        "nsis"
+        "squirrel"
       ]
     },
     "mac": {
