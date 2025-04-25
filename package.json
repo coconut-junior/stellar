@@ -29,7 +29,8 @@
     "win": {
       "target": [
         "squirrel"
-      ]
+      ],
+      "defaultArch": "x64"
     },
     "mac": {
       "notarize": false,
