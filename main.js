@@ -216,7 +216,9 @@ function createWindow() {
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
-    app.isPackaged ? mainWindow.removeMenu() : mainWindow.setMenuBarVisibility(true);
+    app.isPackaged
+      ? mainWindow.removeMenu()
+      : mainWindow.setMenuBarVisibility(true);
     // Open the DevTools.
     //mainWindow.webContents.openDevTools();
   });
