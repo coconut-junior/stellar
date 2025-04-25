@@ -6,3 +6,4 @@ release
 *.key
 *.map
 .env
+.DS_Store
