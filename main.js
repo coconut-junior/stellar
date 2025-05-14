@@ -59,7 +59,6 @@ ipcMain.handle('showUpdateWindow', (event) => {
   updateWindow.removeMenu();
 
   updateWindow.once('ready-to-show', () => {
-    autoUpdater.checkForUpdates();
     updateWindow.show();
   });
 
@@ -94,6 +93,10 @@ ipcMain.on('setZoom', function (event, zoom) {
 
 ipcMain.handle('showAbout', (event) => {
   about();
+});
+
+ipcMain.handle('quitApp', (event) => {
+  app.quit();
 });
 
 ipcMain.on('showError', function (event, message) {

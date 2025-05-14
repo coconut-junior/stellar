@@ -285,13 +285,28 @@ function getScriptPathMac() {
     });
     //convert to integer array
     for (let i = 0; i < versions.length; ++i) {
-      versions[i] = parseInt(
+      let n = parseInt(
         versions[i].split('Adobe')[1].replace(/^\D+/g, '').replaceAll(':', '')
       );
+      //detect incomplete installation
+      let IDAppPath = `/Applications/Adobe InDesign ${n}/Adobe InDesign ${n}.app`;
+      if (!fs.existsSync(IDAppPath)) {
+        versions[i] = 0;
+      } else {
+        versions[i] = n;
+      }
     }
 
     //pick largest version number
     const max = versions.reduce((a, b) => Math.max(a, b), -Infinity);
+
+    if (max == 0) {
+      alert(
+        'Cannot find any InDesign installations. Please install InDesign, then relaunch Stellar.'
+      );
+      quitApp();
+    }
+
     let versionNumber: number = max - 2005;
     $(`#indVersion`).html(`${versionNumber + 2005} (v ${versionNumber}.0)`);
     let versionString: string = 'Version ' + versionNumber + '.0';

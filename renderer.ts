@@ -117,6 +117,10 @@ function minimizeApp() {
   } catch (e) {}
 }
 
+function quitApp() {
+  ipcRenderer.invoke('quitApp');
+}
+
 function getRelativePath(path: string): string {
   if (path.match('Users')) {
     var newPath = path.split('/');
