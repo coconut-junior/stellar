@@ -1,7 +1,7 @@
 {
   "name": "stellar",
   "productName": "Stellar",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Easily automate Adobe InDesign tasks",
   "main": "dist/main.js",
   "scripts": {
