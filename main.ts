@@ -5,10 +5,9 @@ const fs = require('fs');
 const { ipcMain } = require('electron');
 const { globalShortcut } = require('electron');
 const Store = require('electron-store');
+const homePath = require('os').homedir();
 let mainWindow;
 let updateWindow;
-
-var homePath = require('os').homedir();
 var store = new Store();
 var minimizeOnLaunch = false;
 
@@ -32,6 +31,7 @@ function loadConfig() {
   if (store.get('appearance') == undefined) {
     store.set('appearance', 'system');
   }
+
   if (store.get('appearance') != 'gundam') {
     nativeTheme.themeSource = store.get('appearance');
   }
@@ -66,7 +66,7 @@ ipcMain.handle('showUpdateWindow', (event) => {
 });
 
 ipcMain.handle('showReleaseNotes', (event) => {
-  releaseNotes = new BrowserWindow({
+  let releaseNotes = new BrowserWindow({
     title: 'Release Notes',
     width: 400,
     height: 800,
@@ -215,8 +215,6 @@ function createWindow() {
     alwaysOnTop: false,
   });
 
-  //mainWindow.removeMenu();
-
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
     app.isPackaged
@@ -262,3 +260,5 @@ app.whenReady().then(() => {
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit();
 });
+
+export {};

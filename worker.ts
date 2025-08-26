@@ -64,7 +64,9 @@ function download(url, dest, total, cb?) {
     file.on('finish', function () {
       file.close(cb);
       postMessage([failed, total, res.statusText]); //send response back to renderer
+
       if (url.match('.zip')) {
+        console.log(`downloaded zip file from ${url}`);
         let extractPath = wPath.dirname(dest).replaceAll('//', '/');
         console.log(`extract path is ${extractPath}`);
         decompress(dest, extractPath).then(() => {

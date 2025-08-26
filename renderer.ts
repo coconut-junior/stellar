@@ -13,8 +13,9 @@ webFrame.setZoomFactor(parseFloat(store.get('uiScale') ?? 0.8));
 $(`#appearanceDropdown`).val(store.get('appearance'));
 $(`#minimizeDropdown`).val(String(store.get('minimizeOnLaunch')));
 $(`#uiScale`).val(store.get('uiScale') ?? 0.8);
-let scaleFactor: number = parseFloat($(`#uiScale`).val() as string);
-$(`#uiScaleText`).html(((scaleFactor * 100) as unknown as string) + '%');
+let scaleFactor: number = parseFloat($(`#uiScale`).val() as unknown as string);
+let scalePercentage: number = Math.floor(scaleFactor * 100);
+$(`#uiScaleText`).html(scalePercentage + '%');
 
 var apiKey: string = fs.readFileSync(
   path.join(__dirname, 'lytho_api.key'),
@@ -63,12 +64,12 @@ $(`#minimizeDropdown`).on('change', function () {
 
 function uiScaleUpdate() {
   let zoom = parseFloat($(`#uiScale`).val() as unknown as string);
-  $(`#uiScaleText`).html(`${zoom * 100}%`);
+  $(`#uiScaleText`).html(`${Math.floor(zoom * 100)}%`);
 }
 
 function uiScaleChange() {
   let zoom = parseFloat($(`#uiScale`).val() as unknown as string);
-  $(`#uiScaleText`).html(`${zoom * 100}%`);
+  $(`#uiScaleText`).html(`${Math.floor(zoom * 100)}%`);
   webFrame.setZoomFactor(zoom);
   setZoom(zoom);
 }
