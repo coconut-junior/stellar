@@ -92,7 +92,7 @@ ipcMain.on('setZoom', function (event, zoom) {
 });
 
 ipcMain.handle('showAbout', (event) => {
-  about();
+  app.showAboutPanel();
 });
 
 ipcMain.handle('quitApp', (event) => {
@@ -167,19 +167,9 @@ ipcMain.on('makeDir', (event, dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 });
 
-function about() {
-  const options = {
-    type: 'info',
-    message: 'Stellar ' + app.getVersion(),
-    detail:
-      'Developed and maintained by Jimmy Blanck www.jbx.design\n\nCopyright © ' +
-      new Date().getFullYear() +
-      ' Jimmy Blanck',
-    title: 'About',
-    icon: 'icon.png',
-  };
-  dialog.showMessageBox(options).then((box) => {});
-}
+ipcMain.on('getVersion', (event) => {
+  event.returnValue = app.getVersion();
+});
 
 ipcMain.on('setProgress', (event, progress) => {
   mainWindow.setProgressBar(progress);

@@ -16,6 +16,7 @@ $(`#uiScale`).val(store.get('uiScale') ?? 0.8);
 let scaleFactor: number = parseFloat($(`#uiScale`).val() as unknown as string);
 let scalePercentage: number = Math.floor(scaleFactor * 100);
 $(`#uiScaleText`).html(scalePercentage + '%');
+$(`#stellarVersion`).html(`${ipcRenderer.sendSync('getVersion')}`);
 
 var apiKey: string = fs.readFileSync(
   path.join(__dirname, 'lytho_api.key'),

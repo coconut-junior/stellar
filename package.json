@@ -1,8 +1,14 @@
 {
   "name": "stellar",
   "productName": "Stellar",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Easily automate Adobe InDesign tasks",
+  "homepage": "https://github.com/coconut-junior/stellar",
+  "author": {
+    "name": "Jimmy Blanck",
+    "email": "blanckjm@gmail.com",
+    "url": "https://jbx.design/"
+  },
   "main": "dist/main.js",
   "scripts": {
     "copyResources": "copyfiles -f * dist && copyfiles -f fonts/* dist/fonts && copyfiles images/* dist/images",
@@ -46,10 +52,6 @@
   },
   "repository": "https://github.com/coconut-junior/stellar",
   "keywords": [],
-  "author": {
-    "name": "Jimmy Blanck",
-    "email": "blanckjm@gmail.com"
-  },
   "license": "MIT",
   "dependencies": {
     "decompress": "^4.2.1",
