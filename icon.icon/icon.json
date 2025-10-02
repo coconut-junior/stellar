@@ -31,6 +31,12 @@
               "value" : {
                 "solid" : "display-p3:0.29412,0.45098,1.00000,1.00000"
               }
+            },
+            {
+              "appearance" : "tinted",
+              "value" : {
+                "solid" : "display-p3:0.00000,0.00000,0.00000,1.00000"
+              }
             }
           ],
           "glass" : true,
@@ -170,6 +176,8 @@
       "hidden" : false,
       "layers" : [
         {
+          "blend-mode" : "normal",
+          "glass" : true,
           "hidden" : false,
           "image-name" : "Rings.svg",
           "name" : "Rings",
