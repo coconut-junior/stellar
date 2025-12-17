@@ -1,3 +1,5 @@
+import { existsSync, mkdirSync } from 'fs';
+
 const interact = require('interactjs');
 var quickmarks = [];
 var colors = ['#FFB800', '#B0FF8B', '#CC8BFF', '#FFA5A5', '#EAE8E3'];
@@ -84,6 +86,9 @@ function load() {
   quickmarks = [];
   $(`#quickmarkList`).html('');
   let dir = path.join(scriptPath, 'quickmarks');
+  if (!existsSync(dir)) {
+    mkdirSync(dir);
+  }
 
   try {
     fs.readdir(dir, (err, files) => {

@@ -1,5 +1,15 @@
 Changelog:
 
+# Release 2.2.1
+
+Fixed
+
+- Performed a security audit and updated affected packages
+
+Changed
+
+- New app icon for macOS Tahoe
+
 # Release 2.0.2
 
 Fixed
