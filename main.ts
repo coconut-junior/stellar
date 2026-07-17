@@ -6,8 +6,8 @@ const { ipcMain } = require('electron');
 const { globalShortcut } = require('electron');
 const Store = require('electron-store');
 const homePath = require('os').homedir();
-let mainWindow;
-let updateWindow;
+let mainWindow: any;
+let updateWindow: any;
 var store = new Store();
 var minimizeOnLaunch = false;
 

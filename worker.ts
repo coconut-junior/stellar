@@ -5,20 +5,22 @@ const { settings } = require('party-js');
 const https = require('https');
 const wPath = require('path');
 const { hostname } = require('os');
-const decompress = require('decompress');
+const decompress = require('@xhmikosr/decompress');
 
-var assetDict = new Object();
+var assetDict: Record<string, Asset> = {};
 
 interface Asset {
-  logo: string;
+  logo?: string;
+  id?: string;
+  fileName?: string;
 }
 
 var apiKey: string = wFs.readFileSync(
   wPath.join(__dirname, 'lytho_api.key'),
-  'utf8'
+  'utf8',
 );
 
-function timeout(ms) {
+function timeout(ms: number) {
   var start = new Date().getTime();
   var end = start;
   while (end < start + ms) {
@@ -50,7 +52,7 @@ onmessage = (e) => {
 
 var failed = 0;
 
-function download(url, dest, total, cb?) {
+function download(url: string, dest: string, total: number, cb?: any) {
   let settings = { method: 'Get', cache: 'no-store', keepalive: false };
 
   if (!url) {
@@ -58,7 +60,7 @@ function download(url, dest, total, cb?) {
     return;
   }
 
-  wFetch(url, settings).then((res) => {
+  wFetch(url, settings).then((res: any) => {
     var file = wFs.createWriteStream(dest);
     res.body.pipe(file);
     file.on('finish', function () {
@@ -83,7 +85,7 @@ function download(url, dest, total, cb?) {
   });
 }
 
-function getTagId(tagName) {
+function getTagId(tagName: string) {
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
   var path = `/v1/tags/by-name`;
 
@@ -97,8 +99,8 @@ function getTagId(tagName) {
   return new Promise((resolve, reject) => {
     var postData = JSON.stringify({ name: tagName });
     try {
-      var req = https.request(options, function (response) {
-        response.on('data', function (data) {
+      var req = https.request(options, function (response: any) {
+        response.on('data', function (data: any) {
           let content = JSON.parse(data);
           if (JSON.stringify(content).match('Too Many Requests')) {
             console.log('Too many requests!');
@@ -118,7 +120,7 @@ function getTagId(tagName) {
   });
 }
 
-function getAssetsByTags(tagIds) {
+function getAssetsByTags(tagIds: string) {
   var path = `/v1/assets?size=1&tagIds=${tagIds}`;
 
   let options = {
@@ -129,8 +131,8 @@ function getAssetsByTags(tagIds) {
 
   return new Promise((resolve, reject) => {
     try {
-      https.get(options, function (response) {
-        response.on('data', function (data) {
+      https.get(options, function (response: any) {
+        response.on('data', function (data: any) {
           let json = JSON.parse(data);
           if (JSON.stringify(json).match('Too Many Requests')) {
             console.log('Too many requests!');
@@ -149,7 +151,7 @@ function getAssetsByTags(tagIds) {
   });
 }
 
-function searchAssets(query) {
+function searchAssets(query: string) {
   query = query.replaceAll(' ', '%20').replaceAll('&', '').replaceAll('#', '');
 
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
@@ -163,8 +165,8 @@ function searchAssets(query) {
   };
 
   return new Promise((resolve, reject) => {
-    https.get(options, function (response) {
-      response.on('data', function (data) {
+    https.get(options, function (response: any) {
+      response.on('data', function (data: any) {
         try {
           let json = JSON.parse(data);
           assets = json.content;
@@ -178,7 +180,7 @@ function searchAssets(query) {
   });
 }
 
-function findMatch(brand) {
+function findMatch(brand: string) {
   return new Promise(async (resolve, reject) => {
     //replace with new function to get assets by tags
     let logoTagId = await getTagId('logo');
@@ -186,10 +188,11 @@ function findMatch(brand) {
     let brandTagId = await getTagId(brand);
     timeout(100);
 
-    getAssetsByTags(`${logoTagId},${brandTagId}`).then((assets: any[]) => {
+    getAssetsByTags(`${logoTagId},${brandTagId}`).then((response: unknown) => {
+      let assets = response as Asset[];
       if (brandTagId && assets && assets.length != 0) {
-        let id = assets[0].id;
-        let fileName = assets[0].fileName;
+        let id = assets[0].id as string;
+        let fileName = assets[0].fileName as string;
         resolve(getAssetLink(id, fileName)); //return asset id
       } else {
         resolve(brand); //if match not found, return brand name instead
@@ -198,7 +201,7 @@ function findMatch(brand) {
   });
 }
 
-function getAssetLink(assetID, fileName) {
+function getAssetLink(assetID: string, fileName: string) {
   var path = '/v1/assets/' + assetID + '/embeddedlink-original';
 
   let options = {
@@ -209,8 +212,8 @@ function getAssetLink(assetID, fileName) {
   };
 
   return new Promise((resolve, reject) => {
-    const req = https.request(options, function (response) {
-      response.on('data', function (data) {
+    const req = https.request(options, function (response: any) {
+      response.on('data', function (data: any) {
         let json = JSON.parse(data);
         let link = json.link;
         if (link) {
@@ -227,25 +230,28 @@ function getAssetLink(assetID, fileName) {
   });
 }
 
-function formatForURL(text) {
+function formatForURL(text: string) {
   return text
     .trim()
-    .replaceAll("',")
+    .replaceAll(`'`, ``)
     .replaceAll(/\//g, ' ')
     .replaceAll(' ', ' ')
     .replace(/[\r\n]+/g, ' ');
 }
 
-function cleanString(str) {
+function cleanString(str: string) {
   return str
     .split('')
     .filter((char) => char.toLowerCase() !== char.toUpperCase())
     .join('');
 }
 
-function downloadLogos(rows, logoPath) {
+function downloadLogos(
+  rows: Array<{ [key: string]: string }>,
+  logoPath: string,
+) {
   assetDict = {};
-  var brands = []; //valid logos only
+  var brands: string[] = []; //valid logos only
 
   //parse excel sheet
   for (let i = 0; i < rows.length; ++i) {
@@ -279,7 +285,7 @@ function downloadLogos(rows, logoPath) {
             assetDict[logoKeyText] = asset; //catalog logo
             wFs.writeFileSync(
               `${logoPath}/assets.json`,
-              JSON.stringify(assetDict)
+              JSON.stringify(assetDict),
             );
             download(link, `${logoPath}/${fileName}`, brands.length);
           } catch (e) {
