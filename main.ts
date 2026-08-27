@@ -6,8 +6,8 @@ const { ipcMain } = require('electron');
 const { globalShortcut } = require('electron');
 const Store = require('electron-store');
 const homePath = require('os').homedir();
-let mainWindow;
-let updateWindow;
+let mainWindow: any;
+let updateWindow: any;
 var store = new Store();
 var minimizeOnLaunch = false;
 
@@ -130,13 +130,16 @@ ipcMain.on(
   },
 );
 
-ipcMain.on('setMinimizeBehavior', function (event, behavior) {
-  console.log('setting min behavior');
-  console.log(behavior);
-  minimizeOnLaunch = behavior;
-  store.set('minimizeOnLaunch', behavior);
-  event.returnValue = 'ok';
-});
+ipcMain.on(
+  'setMinimizeBehavior',
+  function (event: Electron.IpcMainEvent, behavior: boolean) {
+    console.log('setting min behavior');
+    console.log(behavior);
+    minimizeOnLaunch = behavior;
+    store.set('minimizeOnLaunch', behavior);
+    event.returnValue = 'ok';
+  },
+);
 
 ipcMain.handle('minimize', function () {
   if (minimizeOnLaunch) {
@@ -185,10 +188,10 @@ ipcMain.on('setProgress', (event: Electron.IpcMainEvent, progress: Number) => {
   event.returnValue = 'ok';
 });
 
-ipcMain.on('openFile', function () {
+ipcMain.on('openFile', function (event: Electron.IpcMainEvent) {
   let types = [{ name: 'Spreadsheets', extensions: ['xls', 'xlsx'] }];
   let options = { filters: types, properties: ['openFile'] };
-  dialog.showOpenDialog(options).then((result) => {
+  dialog.showOpenDialog(options).then((result: any) => {
     event.returnValue = result.filePaths[0];
   });
 });
