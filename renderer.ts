@@ -77,17 +77,19 @@ function uiScaleChange() {
 
 function createTitleBar() {
   var windowTopBar = document.getElementById('titlebar');
-  windowTopBar.style.width = '100%';
-  windowTopBar.style.height = '96px';
-  windowTopBar.style.backgroundColor = 'transparent';
-  windowTopBar.style.position = 'absolute';
-  windowTopBar.style.top = windowTopBar.style.left = 0 as unknown as string;
-  //@ts-expect-error
-  windowTopBar.style.webkitAppRegion = 'drag';
-  windowTopBar.style.zIndex = -1 as unknown as string;
+  if (windowTopBar) {
+    windowTopBar.style.width = '100%';
+    windowTopBar.style.height = '96px';
+    windowTopBar.style.backgroundColor = 'transparent';
+    windowTopBar.style.position = 'absolute';
+    windowTopBar.style.top = windowTopBar.style.left = 0 as unknown as string;
+    //@ts-expect-error
+    windowTopBar.style.webkitAppRegion = 'drag';
+    windowTopBar.style.zIndex = -1 as unknown as string;
+  }
 }
 
-function setAppearance(appearance) {
+function setAppearance(appearance: String) {
   ipcRenderer.sendSync('setAppearance', appearance);
 }
 
@@ -109,7 +111,7 @@ function getHomePath() {
   return ipcRenderer.sendSync('getHome');
 }
 
-function showError(message) {
+function showError(message: String) {
   ipcRenderer.sendSync('showError', message);
 }
 
