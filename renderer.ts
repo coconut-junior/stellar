@@ -20,7 +20,7 @@ $(`#stellarVersion`).html(`${ipcRenderer.sendSync('getVersion')}`);
 
 var apiKey: string = fs.readFileSync(
   path.join(__dirname, 'lytho_api.key'),
-  'utf8'
+  'utf8',
 );
 if (isPackaged()) {
   $(`#betaIcon`).css('display', 'none');
@@ -59,7 +59,7 @@ $(`#appearanceDropdown`).on('change', function () {
 $(`#minimizeDropdown`).on('change', function () {
   ipcRenderer.sendSync(
     'setMinimizeBehavior',
-    $(`#minimizeDropdown`).val() === 'true'
+    $(`#minimizeDropdown`).val() === 'true',
   );
 });
 
@@ -143,7 +143,7 @@ function search(query: string) {
   let automationList = $(`.result`);
 
   automationList.each(function (i) {
-    let name = this.getAttribute('name');
+    let name = this.getAttribute('name') ?? '?';
     if (name.toLowerCase().match(query.toLowerCase())) {
       this.style.display = 'grid';
       ++resultCount;

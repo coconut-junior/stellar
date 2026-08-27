@@ -47,7 +47,7 @@ function saveConfig() {
   store.set('windowHeight', mainWindow.getContentSize()[1]);
 }
 
-ipcMain.handle('showUpdateWindow', (event) => {
+ipcMain.handle('showUpdateWindow', () => {
   updateWindow = new BrowserWindow({
     width: 400,
     height: 180,
@@ -65,7 +65,7 @@ ipcMain.handle('showUpdateWindow', (event) => {
   updateWindow.loadFile(path.join(__dirname, 'update.html'));
 });
 
-ipcMain.handle('showReleaseNotes', (event) => {
+ipcMain.handle('showReleaseNotes', () => {
   let releaseNotes = new BrowserWindow({
     title: 'Release Notes',
     width: 400,
@@ -82,47 +82,53 @@ ipcMain.handle('showReleaseNotes', (event) => {
   releaseNotes.loadFile(path.join(__dirname, 'changelog.md'));
 });
 
-ipcMain.handle('closeUpdateWindow', (event) => {
+ipcMain.handle('closeUpdateWindow', () => {
   if (updateWindow) updateWindow.destroy();
 });
 
-ipcMain.on('setZoom', function (event, zoom) {
+ipcMain.on('setZoom', function (event: Electron.IpcMainEvent, zoom: Number) {
   store.set('uiScale', zoom);
   event.returnValue = 'ok';
 });
 
-ipcMain.handle('showAbout', (event) => {
+ipcMain.handle('showAbout', () => {
   app.showAboutPanel();
 });
 
-ipcMain.handle('quitApp', (event) => {
+ipcMain.handle('quitApp', () => {
   app.quit();
 });
 
-ipcMain.on('showError', function (event, message) {
-  let options = {
-    detail: message,
-    type: 'warning',
-    message: 'Warning',
-    title: 'Stellar',
-    icon: 'icon.png',
-  };
-  dialog.showMessageBox(options);
-  event.returnValue = 'ok'; //always set a returnValue for ipc call, if not app may hang
-});
+ipcMain.on(
+  'showError',
+  function (event: Electron.IpcMainEvent, message: String) {
+    let options = {
+      detail: message,
+      type: 'warning',
+      message: 'Warning',
+      title: 'Stellar',
+      icon: 'icon.png',
+    };
+    dialog.showMessageBox(options);
+    event.returnValue = 'ok'; //always set a returnValue for ipc call, if not app may hang
+  },
+);
 
-ipcMain.on('setAppearance', function (event, appearance) {
-  store.set('appearance', appearance);
+ipcMain.on(
+  'setAppearance',
+  function (event: Electron.IpcMainEvent, appearance: String) {
+    store.set('appearance', appearance);
 
-  if (appearance != 'gundam') {
-    nativeTheme.themeSource = appearance;
-  }
-  //gundam theme needs dark variant of icons & graphics
-  else {
-    nativeTheme.themeSource = 'dark';
-  }
-  event.returnValue = 'ok';
-});
+    if (appearance != 'gundam') {
+      nativeTheme.themeSource = appearance;
+    }
+    //gundam theme needs dark variant of icons & graphics
+    else {
+      nativeTheme.themeSource = 'dark';
+    }
+    event.returnValue = 'ok';
+  },
+);
 
 ipcMain.on('setMinimizeBehavior', function (event, behavior) {
   console.log('setting min behavior');
@@ -132,51 +138,54 @@ ipcMain.on('setMinimizeBehavior', function (event, behavior) {
   event.returnValue = 'ok';
 });
 
-ipcMain.handle('minimize', function (event) {
+ipcMain.handle('minimize', function () {
   if (minimizeOnLaunch) {
     BrowserWindow.getFocusedWindow().minimize();
   }
 });
 
-ipcMain.handle('focusWindow', function (event) {
+ipcMain.handle('focusWindow', function () {
   mainWindow.focus();
 });
 
-ipcMain.on('getHome', function (event) {
+ipcMain.on('getHome', function (event: Electron.IpcMainEvent) {
   event.returnValue = homePath;
 });
 
-ipcMain.on('isPackaged', function (event) {
+ipcMain.on('isPackaged', function (event: Electron.IpcMainEvent) {
   event.returnValue = app.isPackaged;
 });
 
-ipcMain.handle('setWindowOnTop', function (event) {
+ipcMain.handle('setWindowOnTop', function () {
   mainWindow.setAlwaysOnTop('true');
 });
 
-ipcMain.handle('setWindowOnBottom', function (event) {
+ipcMain.handle('setWindowOnBottom', function () {
   mainWindow.setAlwaysOnTop('false');
 });
 
-ipcMain.on('resize-window', (event, width, height) => {
-  let browserWindow = BrowserWindow.fromWebContents(event.sender);
-  browserWindow.setSize(width, height);
-});
+ipcMain.on(
+  'resize-window',
+  (event: Electron.IpcMainEvent, width: Number, height: Number) => {
+    let browserWindow = BrowserWindow.fromWebContents(event.sender);
+    browserWindow.setSize(width, height);
+  },
+);
 
-ipcMain.on('makeDir', (event, dir) => {
+ipcMain.on('makeDir', (event: Electron.IpcMainEvent, dir: String) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 });
 
-ipcMain.on('getVersion', (event) => {
+ipcMain.on('getVersion', (event: Electron.IpcMainEvent) => {
   event.returnValue = app.getVersion();
 });
 
-ipcMain.on('setProgress', (event, progress) => {
+ipcMain.on('setProgress', (event: Electron.IpcMainEvent, progress: Number) => {
   mainWindow.setProgressBar(progress);
   event.returnValue = 'ok';
 });
 
-ipcMain.on('openFile', function (event) {
+ipcMain.on('openFile', function () {
   let types = [{ name: 'Spreadsheets', extensions: ['xls', 'xlsx'] }];
   let options = { filters: types, properties: ['openFile'] };
   dialog.showOpenDialog(options).then((result) => {
@@ -218,7 +227,7 @@ function createWindow() {
     saveConfig();
   });
 
-  mainWindow.webContents.on('did-fail-load', async (err) => {
+  mainWindow.webContents.on('did-fail-load', async () => {
     app.relaunch();
     app.exit();
   });

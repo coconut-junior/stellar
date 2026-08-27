@@ -58,7 +58,6 @@
   "license": "MIT",
   "dependencies": {
     "decompress": "^4.2.1",
-    "dialog-node": "^0.2.1",
     "dotenv": "^16.4.7",
     "electron-store": "^8.1.0",
     "electron-unhandled": "^5.0.0",
@@ -71,12 +70,13 @@
     "node-stream-zip": "^1.15.0",
     "party-js": "^2.2.0",
     "save": "^2.9.0",
-    "universal-tilt.js": "^2.0.6",
     "update-electron-app": "^3.1.1",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz",
+    "universal-tilt.js": "^2.0.6"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.4.0",
+    "@types/electron": "^1.4.38",
     "@types/jquery": "^3.5.32",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
