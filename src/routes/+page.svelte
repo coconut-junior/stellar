@@ -8,7 +8,7 @@
    let submitError = '';
 
    async function runScript() {
-      await invoke('run_script', { filename: 'hello' });
+      await invoke('run_script', { filename: 'cleanup.jsx' });
    }
 </script>
 
