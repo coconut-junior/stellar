@@ -8,7 +8,13 @@
    let submitError = '';
 
    async function runScript() {
-      await invoke('run_script', { filename: 'cleanup.jsx' });
+      try {
+         const result = await invoke<string>('run_script', { filename: 'cleanup.jsx' });
+         console.log('script path:', result);
+      } catch (err) {
+         console.error('run_script failed:', err);
+         submitError = err instanceof Error ? err.message : String(err);
+      }
    }
 </script>
 
