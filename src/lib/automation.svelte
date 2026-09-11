@@ -44,9 +44,10 @@
 
    type Props = {
       onStatusChange: (status: DownloadStatus) => void;
+      minimizeAfterLaunch: boolean;
    };
 
-   let { onStatusChange }: Props = $props();
+   let { onStatusChange, minimizeAfterLaunch }: Props = $props();
 
    let scripts = $state<ScriptDependency[]>([]);
    let downloading = $state(true);
@@ -116,7 +117,7 @@
 
    async function runScript(filename: string) {
       try {
-         await invoke('run_script', { filename });
+         await invoke('run_script', { filename, minimizeAfterLaunch });
       } catch (error) {
          const message = String(error);
          if (message.toLowerCase().includes('automation permission')) {

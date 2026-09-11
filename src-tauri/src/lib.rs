@@ -125,10 +125,11 @@ fn run_script(
     app: tauri::AppHandle,
     filename: String,
     args: Option<Vec<String>>,
+    minimize_after_launch: Option<bool>,
 ) -> Result<String, String> {
     #[cfg(not(target_os = "macos"))]
     {
-        let _ = (app, filename, args);
+        let _ = (app, filename, args, minimize_after_launch);
         return Err("Running InDesign scripts is only supported on macOS.".to_string());
     }
 
@@ -171,6 +172,13 @@ fn run_script(
                 );
             }
             return Err(error_message);
+        }
+
+        if minimize_after_launch.unwrap_or(false) {
+            app.get_window("main")
+                .ok_or_else(|| "Could not find the main window.".to_string())?
+                .minimize()
+                .map_err(|error| format!("Could not minimize the window: {error}"))?;
         }
 
         Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
