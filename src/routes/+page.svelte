@@ -12,15 +12,10 @@
       script_path: string;
    };
 
-   let inputValue = $state('');
    let indesign = $state<InDesign | null>(null);
 
    onMount(async () => {
-      try {
-         indesign = await invoke<InDesign>('get_id_info');
-      } catch (err) {
-         console.error('get_id_info failed:', err);
-      }
+      indesign = await invoke<InDesign>('get_id_info');
    });
 
    async function runScript() {
