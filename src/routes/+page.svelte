@@ -4,6 +4,7 @@
    import { invoke } from '@tauri-apps/api/tauri';
    import { onMount } from 'svelte';
    import * as Card from "$lib/components/ui/card/index.js";
+   import * as Item from "$lib/components/ui/item/index.js";
 
    type InDesign = {
       version: number;
@@ -33,13 +34,35 @@
 </script>
 
 <main class="dark text-foreground grid place-items-center h-full w-full bg-neutral-950">
-   <section class="flex flex-col justify-center rounded-lg space-y-3 p-6 bg-neutral-900 w-[30rem]">
-      <Input bind:value={inputValue} placeholder="Your name" />
-      <Button onclick={runScript}>Submit</Button>
+   <Card.Root class="w-full max-w-lg">
+      <Card.Header>
+         <Card.Title>InDesign</Card.Title>
+         <Card.Description>Application information</Card.Description>
+      </Card.Header>
 
-      {#if indesign}
-         <p>InDesign Release Year: {indesign.year}</p>
-         <p>{indesign.script_path}</p>
-      {/if}
-   </section>
+      <Card.Content>
+         <Item.Root size="sm" variant="outline" class="mb-1">
+            <Item.Content>
+               <Item.Title>Release year</Item.Title>
+            </Item.Content>
+            <Item.Description class="ml-auto text-right">
+               {indesign?.year ?? "Unavailable"}
+            </Item.Description>
+         </Item.Root>
+
+         <Item.Root size="sm" variant="outline" class="mb-1">
+            <Item.Content>
+               <Item.Title>Version number</Item.Title>
+            </Item.Content>
+            <Item.Description class="ml-auto text-right">
+               {indesign?.version ?? "Unavailable"}
+            </Item.Description>
+         </Item.Root>
+      </Card.Content>
+
+      <Card.Footer>
+         <Button size="sm" onclick={runScript}>Run cleanup script</Button>
+      </Card.Footer>
+   </Card.Root>
+
 </main>

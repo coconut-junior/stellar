@@ -1,7 +1,7 @@
 {
   "$schema": "https://shadcn-svelte.com/schema.json",
   "tailwind": {
-    "css": "/Users/jblanck/Documents/GitHub/pickup_tool/src",
+    "css": "src/app.css",
     "baseColor": "neutral"
   },
   "aliases": {
