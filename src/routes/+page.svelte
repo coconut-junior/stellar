@@ -1,26 +1,68 @@
 <script lang="ts">
-   import Info from "$lib/info.svelte";
+   import Info from "$lib/settings.svelte";
    import Automation from "$lib/automation.svelte";
    import * as Tabs from "$lib/components/ui/tabs/index.js";
+   import { Spinner } from "$lib/components/ui/spinner/index.js";
+   import Bot from '@lucide/svelte/icons/bot';
+   import SettingsIcon from '@lucide/svelte/icons/settings';
+
+   type DownloadProgress = {
+      name: string;
+      filename: string;
+      url: string;
+      hidden: boolean;
+      version: number;
+      description: string;
+      current: number;
+      total: number;
+      downloaded: number;
+      size?: number;
+   };
+
+   type DownloadStatus = {
+      progress: DownloadProgress | null;
+      message: string | null;
+      downloading: boolean;
+   };
 
    let activeTab = $state("automation");
    let darkMode = $state(true);
+   let downloadStatus = $state<DownloadStatus>({
+      progress: null,
+      message: null,
+      downloading: true
+   });
 </script>
 
-<main class="{darkMode ? 'dark bg-neutral-950' : ""} text-foreground flex h-full w-full flex-col items-center gap-4 overflow-y-auto p-4">
-   <Tabs.Root bind:value={activeTab} class="flex-col w-full">
+<main class="{darkMode ? 'dark bg-neutral-950' : ""} text-foreground flex h-full w-full flex-col items-center gap-4 overflow-hidden pb-12">
+   <img src="/logo-horizontal.svg" alt="logo" class="h-10 mt-6 w-auto" />
+   
+   <Tabs.Root bind:value={activeTab} class="min-h-0 flex-1 flex-col w-full p-6">
       <Tabs.List class="grid  grid-cols-2">
-         <Tabs.Trigger value="automation">Automation</Tabs.Trigger>
-         <Tabs.Trigger value="info">Info</Tabs.Trigger>
+         <Tabs.Trigger value="automation"><Bot/>Automation</Tabs.Trigger>
+         <Tabs.Trigger value="info"><SettingsIcon/>Settings</Tabs.Trigger>
       </Tabs.List>
 
-      <Tabs.Content value="automation" class="mt-4 w-full">
-         <Automation />
+      <Tabs.Content value="automation" class="min-h-0 w-full flex-1 overflow-y-auto mt-4">
+         <Automation onStatusChange={(status) => (downloadStatus = status)} />
       </Tabs.Content>
 
-      <Tabs.Content value="info" class="mt-4 w-full">
+      <Tabs.Content value="info" class="min-h-0 w-full flex-1 overflow-y-auto mt-4">
          <Info />
       </Tabs.Content>
 
    </Tabs.Root>
+
+   <div class="fixed bottom-0 left-0 flex h-10 w-full items-center gap-2 overflow-hidden bg-black p-2">
+      {#if downloadStatus.downloading}
+         <Spinner />
+      {/if}
+      {#if downloadStatus.message}
+         <p class="text-sm text-muted-foreground">{downloadStatus.message}</p>
+      {:else if downloadStatus.progress && downloadStatus.downloading}
+         <span class="text-sm text-muted-foreground">
+            {downloadStatus.progress.filename} ({downloadStatus.progress.current}/{downloadStatus.progress.total})
+         </span>
+      {/if}
+   </div>
 </main>

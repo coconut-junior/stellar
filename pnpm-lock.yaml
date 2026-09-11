@@ -27,6 +27,9 @@ importers:
       '@internationalized/date':
         specifier: ^3.12.4
         version: 3.12.4
+      '@lucide/svelte':
+        specifier: ^1.44.0
+        version: 1.44.0(svelte@5.57.0(@typescript-eslint/types@8.6.0))
       '@sveltejs/adapter-auto':
         specifier: ^3.0.0
         version: 3.2.5(@sveltejs/kit@2.5.28(@sveltejs/vite-plugin-svelte@4.0.4(supports-color@7.2.0)(svelte@5.57.0(@typescript-eslint/types@8.6.0))(vite@5.4.7(lightningcss@1.32.0)))(svelte@5.57.0(@typescript-eslint/types@8.6.0))(vite@5.4.7(lightningcss@1.32.0)))
@@ -301,6 +304,11 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@lucide/svelte@1.44.0':
+    resolution: {integrity: sha512-67510ne/YowceSyN9BECQaWfp5Ed446X6xpUE5C0e4rRV0e1jRj1KzIlKJCXcGc21hgr/VBDkqQXY7v4VQDeBw==}
+    peerDependencies:
+      svelte: ^5
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1695,6 +1703,10 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@lucide/svelte@1.44.0(svelte@5.57.0(@typescript-eslint/types@8.6.0))':
+    dependencies:
+      svelte: 5.57.0(@typescript-eslint/types@8.6.0)
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
