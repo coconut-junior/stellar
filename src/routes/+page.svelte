@@ -18,7 +18,7 @@
       try {
          indesign = await invoke<InDesign>('get_id_info');
       } catch (error) {
-         console.error('get_id_info failed:', error);
+         alert(String(error));
       }
    });
 
@@ -26,7 +26,12 @@
       try {
          await invoke('run_script', { filename });
       } catch (error) {
-         console.error('run_script failed:', error);
+         const message = String(error);
+         if (message.toLowerCase().includes('automation permission')) {
+            console.error(message);
+         } else {
+            alert(message);
+         }
       }
    }
 

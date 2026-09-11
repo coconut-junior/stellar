@@ -5,10 +5,14 @@ use tauri::api::dialog::{blocking::message as blocking_message, message};
 use tauri::Manager;
 
 #[tauri::command]
-fn run_script(filename: String, args: Option<Vec<String>>) -> Result<String, String> {
+fn run_script(
+    app: tauri::AppHandle,
+    filename: String,
+    args: Option<Vec<String>>,
+) -> Result<String, String> {
     #[cfg(not(target_os = "macos"))]
     {
-        let _ = (filename, args);
+        let _ = (app, filename, args);
         return Err("Running InDesign scripts is only supported on macOS.".to_string());
     }
 
@@ -34,14 +38,23 @@ fn run_script(filename: String, args: Option<Vec<String>>) -> Result<String, Str
 
         if !output.status.success() {
             let error = String::from_utf8_lossy(&output.stderr).trim().to_string();
-            let message = if error.contains("not authorized") || error.contains("authorize") {
+            let error_message = if error.contains("not authorized") || error.contains("authorize") {
                 format!(
                     "Automation permission is required for Stellar to control InDesign. {error}"
                 )
             } else {
                 error
             };
-            return Err(message);
+
+            if error_message.contains("Automation permission") {
+                let window = app.get_window("main");
+                message(
+                    window.as_ref(),
+                    "Automation permission required. Please give Stellar permission under System Settings > Privacy & Security > Automation in your System Settings.",
+                    &error_message,
+                );
+            }
+            return Err(error_message);
         }
 
         Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
