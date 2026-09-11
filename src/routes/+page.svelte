@@ -2,6 +2,7 @@
    import { Button } from '$lib/components/ui/button';
    import { Input } from '$lib/components/ui/input';
    import { invoke } from '@tauri-apps/api/tauri';
+   import { listen } from '@tauri-apps/api/event';
    import { onMount } from 'svelte';
    import * as Card from "$lib/components/ui/card/index.js";
    import * as Item from "$lib/components/ui/item/index.js";
@@ -13,13 +14,43 @@
    };
 
    let indesign = $state<InDesign | null>(null);
+   let downloading = $state(false);
+   let downloadProgress = $state<DownloadProgress | null>(null);
+   let downloadMessage = $state<string | null>(null);
+
+   type DownloadProgress = {
+      filename: string;
+      current: number;
+      total: number;
+      downloaded: number;
+      size?: number;
+   };
 
    onMount(async () => {
+      const unlistenProgress = await listen<DownloadProgress>('scripts-download-progress', (event) => {
+         downloadProgress = event.payload;
+      });
+      const unlistenComplete = await listen<string>('scripts-download-complete', (event) => {
+         downloading = false;
+         downloadMessage = event.payload;
+      });
+      const unlistenError = await listen<string>('scripts-download-error', (event) => {
+         downloading = false;
+         downloadMessage = null;
+         alert(event.payload);
+      });
+
       try {
          indesign = await invoke<InDesign>('get_id_info');
       } catch (error) {
          alert(String(error));
       }
+
+      return () => {
+         unlistenProgress();
+         unlistenComplete();
+         unlistenError();
+      };
    });
 
    async function runScript(filename: string) {
@@ -32,6 +63,18 @@
          } else {
             alert(message);
          }
+      }
+   }
+
+   async function downloadScripts() {
+      downloading = true;
+      downloadProgress = null;
+      downloadMessage = null;
+      try {
+         await invoke<string>('download_scripts');
+      } catch (error) {
+         downloading = false;
+         alert(String(error));
       }
    }
 
@@ -69,8 +112,32 @@
             <Button size="sm" onclick={() => runScript("cleanup.jsx")}>
                Run cleanup script
             </Button>
+            <Button size="sm" variant="outline" disabled={downloading} onclick={downloadScripts}>
+               {downloading ? "Downloading..." : "Download scripts"}
+            </Button>
          {/if}
       </Card.Footer>
+
+      {#if downloadProgress}
+         <Card.Content>
+            <p class="text-sm">
+               Downloading {downloadProgress.filename} ({downloadProgress.current}/{downloadProgress.total})
+            </p>
+            {#if downloadProgress.size}
+               <progress
+                  class="w-full"
+                  max={downloadProgress.size}
+                  value={downloadProgress.downloaded}
+               ></progress>
+            {/if}
+         </Card.Content>
+      {/if}
+
+      {#if downloadMessage}
+         <Card.Content>
+            <p class="text-sm text-muted-foreground">{downloadMessage}</p>
+         </Card.Content>
+      {/if}
    </Card.Root>
 
 </main>

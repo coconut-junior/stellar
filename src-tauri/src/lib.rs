@@ -1,8 +1,117 @@
 use serde::Serialize;
-use std::fs;
+use std::fs::{self, File};
+use std::io::{Read, Write};
+use std::path::Path;
 use std::process::Command;
 use tauri::api::dialog::{blocking::message as blocking_message, message};
 use tauri::Manager;
+
+const SCRIPTS_MANIFEST_URL: &str =
+    "https://raw.githubusercontent.com/coconut-junior/personal-site/refs/heads/master/stellar/dependencies.json";
+
+#[derive(serde::Deserialize)]
+struct ScriptDependency {
+    filename: String,
+    url: String,
+}
+
+#[derive(Clone, Serialize)]
+struct DownloadProgress {
+    filename: String,
+    current: usize,
+    total: usize,
+    downloaded: u64,
+    size: Option<u64>,
+}
+
+#[tauri::command]
+fn download_scripts(app: tauri::AppHandle) -> Result<String, String> {
+    std::thread::spawn(move || {
+        let result = download_scripts_in_background(&app);
+        let event = match result {
+            Ok(message) => ("scripts-download-complete", message),
+            Err(error) => ("scripts-download-error", error),
+        };
+        let _ = app.emit_all(event.0, event.1);
+    });
+
+    Ok("Script download started".to_string())
+}
+
+fn download_scripts_in_background(app: &tauri::AppHandle) -> Result<String, String> {
+    let client = reqwest::blocking::Client::new();
+    let dependencies = client
+        .get(SCRIPTS_MANIFEST_URL)
+        .send()
+        .map_err(|error| format!("Could not download script manifest: {error}"))?
+        .error_for_status()
+        .map_err(|error| format!("Could not download script manifest: {error}"))?
+        .json::<serde_json::Value>()
+        .map_err(|error| format!("Could not parse script manifest: {error}"))?;
+    let dependencies: Vec<ScriptDependency> = serde_json::from_value(
+        dependencies
+            .get("scripts")
+            .cloned()
+            .ok_or_else(|| "Script manifest does not contain a scripts array".to_string())?,
+    )
+    .map_err(|error| format!("Invalid script manifest: {error}"))?;
+    let info = detect_id_info()?;
+    fs::create_dir_all(&info.script_path)
+        .map_err(|error| format!("Could not create Scripts Panel directory: {error}"))?;
+
+    let dependencies: Vec<_> = dependencies
+        .into_iter()
+        .filter(|script| !script.filename.to_ascii_lowercase().ends_with(".zip"))
+        .collect();
+    let total = dependencies.len();
+
+    for (index, script) in dependencies.iter().enumerate() {
+        let filename = Path::new(&script.filename)
+            .file_name()
+            .and_then(|name| name.to_str())
+            .filter(|name| !name.is_empty())
+            .ok_or_else(|| format!("Invalid script filename: {}", script.filename))?;
+        let destination = Path::new(&info.script_path).join(filename);
+        let mut response = client
+            .get(&script.url)
+            .send()
+            .map_err(|error| format!("Could not download {filename}: {error}"))?
+            .error_for_status()
+            .map_err(|error| format!("Could not download {filename}: {error}"))?;
+        let size = response.content_length();
+        let mut file = File::create(&destination)
+            .map_err(|error| format!("Could not create {filename}: {error}"))?;
+        let mut downloaded = 0;
+        let mut buffer = [0; 16 * 1024];
+        loop {
+            let bytes_read = response
+                .read(&mut buffer)
+                .map_err(|error| format!("Could not download {filename}: {error}"))?;
+            if bytes_read == 0 {
+                break;
+            }
+            file.write_all(&buffer[..bytes_read])
+                .map_err(|error| format!("Could not save {filename}: {error}"))?;
+            downloaded += bytes_read as u64;
+            app.emit_all(
+                "scripts-download-progress",
+                DownloadProgress {
+                    filename: filename.to_string(),
+                    current: index + 1,
+                    total,
+                    downloaded,
+                    size,
+                },
+            )
+            .map_err(|error| format!("Could not report download progress: {error}"))?;
+        }
+    }
+
+    Ok(format!(
+        "Downloaded {total} scripts to {}",
+        info.script_path
+    ))
+}
 
 #[tauri::command]
 fn run_script(
@@ -144,7 +253,11 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![run_script, get_id_info])
+        .invoke_handler(tauri::generate_handler![
+            run_script,
+            get_id_info,
+            download_scripts
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
