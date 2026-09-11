@@ -57,6 +57,8 @@
       {
         "fullscreen": false,
         "height": 600,
+        "minHeight": 600,
+        "minWidth": 600,
         "resizable": true,
         "theme": "Dark",
         "titleBarStyle": "Transparent",

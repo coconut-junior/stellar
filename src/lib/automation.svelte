@@ -4,8 +4,6 @@
    import { listen } from '@tauri-apps/api/event';
    import { onMount } from 'svelte';
    import * as Card from "$lib/components/ui/card/index.js";
-   import { Spinner } from "$lib/components/ui/spinner/index.js";
-   import Zap from '@lucide/svelte/icons/zap';
    import Download from '@lucide/svelte/icons/download';
 
    type ScriptDependency = {
