@@ -1,0 +1,66 @@
+[
+	{
+		"name": "hello-world",
+		"title": "Hello World",
+		"type": "registry:component",
+		"description": "A simple hello world component",
+		"registryDependencies": [
+			"button"
+		],
+		"meta": {
+			"author": "huntabyte"
+		},
+		"relativeUrl": "hello-world.json"
+	},
+	{
+		"name": "example-form",
+		"title": "Example Form",
+		"type": "registry:component",
+		"description": "A contact form with Zod validation.",
+		"dependencies": [
+			"zod"
+		],
+		"registryDependencies": [
+			"button",
+			"input",
+			"label",
+			"textarea",
+			"card"
+		],
+		"relativeUrl": "example-form.json"
+	},
+	{
+		"name": "complex-component",
+		"title": "Complex Component",
+		"type": "registry:component",
+		"description": "A complex component showing hooks, libs and components.",
+		"registryDependencies": [
+			"card"
+		],
+		"relativeUrl": "complex-component.json"
+	},
+	{
+		"name": "example-with-css",
+		"title": "Example with CSS",
+		"type": "registry:component",
+		"description": "A login form with a CSS file.",
+		"registryDependencies": [],
+		"relativeUrl": "example-with-css.json"
+	},
+	{
+		"name": "stepper",
+		"type": "registry:ui",
+		"registryDependencies": [],
+		"relativeUrl": "stepper.json"
+	},
+	{
+		"name": "checkout-steps",
+		"title": "Checkout Steps",
+		"type": "registry:component",
+		"description": "A checkout steps component.",
+		"registryDependencies": [
+			"local:stepper"
+		],
+		"relativeUrl": "checkout-steps.json"
+	}
+]

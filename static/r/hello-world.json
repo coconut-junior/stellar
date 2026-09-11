@@ -1,0 +1,20 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "hello-world",
+	"title": "Hello World",
+	"type": "registry:component",
+	"description": "A simple hello world component",
+	"registryDependencies": [
+		"button"
+	],
+	"meta": {
+		"author": "huntabyte"
+	},
+	"files": [
+		{
+			"content": "<h1 class=\"text-2xl font-bold\">Hello world</h1>\n",
+			"type": "registry:component",
+			"target": "hello-world.svelte"
+		}
+	]
+}

@@ -1,0 +1,17 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "checkout-steps",
+	"title": "Checkout Steps",
+	"type": "registry:component",
+	"description": "A checkout steps component.",
+	"registryDependencies": [
+		"./stepper.json"
+	],
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n\t// We are using one of our custom/local `ui` components here\n\timport * as Stepper from \"$UI$/stepper/index.js\";\n</script>\n\n<Stepper.Root>\n\t{#each { length: 5 } as _, i (i)}\n\t\t<Stepper.Item step={i + 1} />\n\t{/each}\n</Stepper.Root>\n",
+			"type": "registry:component",
+			"target": "checkout-steps.svelte"
+		}
+	]
+}

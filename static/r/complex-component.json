@@ -1,0 +1,40 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "complex-component",
+	"title": "Complex Component",
+	"type": "registry:component",
+	"description": "A complex component showing hooks, libs and components.",
+	"devDependencies": [
+		"zod@^4.4.3"
+	],
+	"registryDependencies": [
+		"card"
+	],
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n\timport PokemonCard from \"./components/pokemon-card.svelte\";\n\timport { getPokemonList } from \"./lib/pokemon.js\";\n</script>\n\n{#await getPokemonList({ limit: 12 })}\n\t<div>Loading pokemons...</div>\n{:then pokemons}\n\t{#if pokemons}\n\t\t<div class=\"mx-auto w-full max-w-2xl px-4\">\n\t\t\t<div class=\"grid grid-cols-2 gap-4 py-10 sm:grid-cols-3 md:grid-cols-4\">\n\t\t\t\t{#each pokemons.results as pokemon (pokemon.name)}\n\t\t\t\t\t<PokemonCard name={pokemon.name} />\n\t\t\t\t{/each}\n\t\t\t</div>\n\t\t</div>\n\t{/if}\n{:catch}\n\t<div class=\"mx-auto w-full max-w-2xl px-4\">\n\t\t<p>Error loading pokemons</p>\n\t</div>\n{/await}\n",
+			"type": "registry:page",
+			"target": "src/routes/pokemon/+page.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n\timport { getPokemon } from \"$lib/registry/blocks/complex-component/lib/pokemon.js\";\n\timport * as Card from \"$UI$/card/index.js\";\n\timport PokemonImage from \"$lib/registry/blocks/complex-component/components/pokemon-image.svelte\";\n\n\tlet { name }: { name: string } = $props();\n</script>\n\n{#await getPokemon(name)}\n\t<div>Loading...</div>\n{:then pokemon}\n\t{#if pokemon}\n\t\t<Card.Root>\n\t\t\t<Card.Content class=\"flex flex-col items-center p-2\">\n\t\t\t\t<div>\n\t\t\t\t\t<PokemonImage name={pokemon.name} number={pokemon.id} />\n\t\t\t\t</div>\n\t\t\t\t<div class=\"text-center font-medium\">{pokemon.name}</div>\n\t\t\t</Card.Content>\n\t\t</Card.Root>\n\t{/if}\n{:catch}\n\t<div>Error loading pokemon</div>\n{/await}\n",
+			"type": "registry:component",
+			"target": "pokemon-card.svelte"
+		},
+		{
+			"content": "<script lang=\"ts\">\n\timport { usePokemonImage } from \"$lib/registry/blocks/complex-component/hooks/use-pokemon.svelte\";\n\n\tlet { number, name }: { number: number; name: string } = $props();\n\n\tconst imageUrl = usePokemonImage(number);\n</script>\n\n{#if imageUrl}\n\t<img src={imageUrl} alt={name} />\n{/if}\n",
+			"type": "registry:component",
+			"target": "pokemon-image.svelte"
+		},
+		{
+			"content": "import { z } from \"zod\";\n\nexport async function getPokemonList({ limit = 10 }: { limit?: number }) {\n\ttry {\n\t\tconst response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}`);\n\t\treturn z\n\t\t\t.object({\n\t\t\t\tresults: z.array(z.object({ name: z.string() })),\n\t\t\t})\n\t\t\t.parse(await response.json());\n\t} catch (error) {\n\t\tconsole.error(error);\n\t\treturn null;\n\t}\n}\n\nexport async function getPokemon(name: string) {\n\ttry {\n\t\tconst response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);\n\t\tif (!response.ok) throw new Error(\"Failed to fetch pokemon\");\n\n\t\treturn z\n\t\t\t.object({\n\t\t\t\tname: z.string(),\n\t\t\t\tid: z.number(),\n\t\t\t\tsprites: z.object({\n\t\t\t\t\tfront_default: z.string(),\n\t\t\t\t}),\n\t\t\t\tstats: z.array(\n\t\t\t\t\tz.object({\n\t\t\t\t\t\tbase_stat: z.number(),\n\t\t\t\t\t\tstat: z.object({\n\t\t\t\t\t\t\tname: z.string(),\n\t\t\t\t\t\t}),\n\t\t\t\t\t})\n\t\t\t\t),\n\t\t\t})\n\t\t\t.parse(await response.json());\n\t} catch (error) {\n\t\tconsole.error(error);\n\t\treturn null;\n\t}\n}\n",
+			"type": "registry:lib",
+			"target": "pokemon.ts"
+		},
+		{
+			"content": "// Unnecessary hook, but an example of how to add a hook to a custom registry.\n\nexport function usePokemonImage(number: number) {\n\treturn `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${number}.png`;\n}\n",
+			"type": "registry:hook",
+			"target": "use-pokemon.svelte.ts"
+		}
+	]
+}

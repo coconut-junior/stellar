@@ -1,0 +1,22 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "stepper",
+	"type": "registry:ui",
+	"files": [
+		{
+			"content": "<!--\nThis is a custom `ui` component that is not a part of the shadcn-svelte registry.\n-->\n\n<script lang=\"ts\">\n\timport { cn } from \"$UTILS$.js\";\n\timport type { HTMLAttributes } from \"svelte/elements\";\n\n\tlet { class: className, children, ...restProps }: HTMLAttributes<HTMLDivElement> = $props();\n</script>\n\n<div class={cn(\"bg-background\", className)} {...restProps}>\n\t{@render children?.()}\n</div>\n",
+			"type": "registry:file",
+			"target": "stepper/stepper.svelte"
+		},
+		{
+			"content": "<!--\nThis is a custom `ui` component that is not a part of the shadcn-svelte registry.\n-->\n\n<script lang=\"ts\">\n\timport { cn } from \"$UTILS$\";\n\timport type { HTMLButtonAttributes } from \"svelte/elements\";\n\n\tlet { class: className, step, ...props }: HTMLButtonAttributes & { step: number } = $props();\n</script>\n\n<button class={cn(\"bg-blue-500\", className)} {...props}> {step} </button>\n",
+			"type": "registry:file",
+			"target": "stepper/stepper-item.svelte"
+		},
+		{
+			"content": "// This is a custom `ui` component that is not a part of the shadcn-svelte registry.\nimport Stepper from \"./stepper.svelte\";\nimport StepperItem from \"./stepper-item.svelte\";\n\nexport { Stepper, StepperItem, Stepper as Root, StepperItem as Item };\n",
+			"type": "registry:file",
+			"target": "stepper/index.ts"
+		}
+	]
+}

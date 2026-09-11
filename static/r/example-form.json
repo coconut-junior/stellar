@@ -1,0 +1,27 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "example-form",
+	"title": "Example Form",
+	"type": "registry:component",
+	"description": "A contact form with Zod validation.",
+	"dependencies": [
+		"zod"
+	],
+	"devDependencies": [
+		"zod@^4.4.3"
+	],
+	"registryDependencies": [
+		"button",
+		"input",
+		"label",
+		"textarea",
+		"card"
+	],
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n\timport * as Card from \"$UI$/card/index.js\";\n\timport { Input } from \"$UI$/input/index.js\";\n\timport { Label } from \"$UI$/label/index.js\";\n\timport { Button } from \"$UI$/button/index.js\";\n\timport { Textarea } from \"$UI$/textarea/index.js\";\n\timport { z } from \"zod\";\n\timport type { FormEventHandler } from \"svelte/elements\";\n\n\tconst exampleFormSchema = z.object({\n\t\tname: z.string().min(1),\n\t\temail: z.string().email(),\n\t\tmessage: z.string().min(1),\n\t});\n\n\tlet pending = $state(false);\n\tlet formState = $state({\n\t\tdefaultValues: {\n\t\t\tname: \"\",\n\t\t\temail: \"\",\n\t\t\tmessage: \"\",\n\t\t},\n\t\tsuccess: false,\n\t\terrors: {\n\t\t\tname: \"\",\n\t\t\temail: \"\",\n\t\t\tmessage: \"\",\n\t\t},\n\t});\n\n\tconst handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {\n\t\te.preventDefault();\n\t\tpending = true;\n\t\tconst formData = new FormData(e.currentTarget);\n\t\tconst data = Object.fromEntries(formData);\n\t\tconst result = exampleFormSchema.safeParse(data);\n\n\t\tif (!result.success) {\n\t\t\tformState = {\n\t\t\t\t...formState,\n\t\t\t\terrors: Object.fromEntries(\n\t\t\t\t\tObject.entries(result.error.flatten().fieldErrors).map(([key, value]) => [\n\t\t\t\t\t\tkey,\n\t\t\t\t\t\tvalue?.[0] ?? \"\",\n\t\t\t\t\t])\n\t\t\t\t) as Record<keyof typeof formState.errors, string>,\n\t\t\t};\n\t\t\tpending = false;\n\t\t\treturn;\n\t\t}\n\n\t\tpending = false;\n\t};\n</script>\n\n<form onsubmit={handleSubmit} class=\"w-full max-w-sm\">\n\t<Card.Root>\n\t\t<Card.Header>\n\t\t\t<Card.Title>How can we help?</Card.Title>\n\t\t\t<Card.Description>\n\t\t\t\tNeed help with your project? We&apos;re here to assist you.\n\t\t\t</Card.Description>\n\t\t</Card.Header>\n\t\t<Card.Content class=\"flex flex-col gap-6\">\n\t\t\t<div class=\"group/field grid gap-2\" data-invalid={!!formState.errors?.name}>\n\t\t\t\t<Label for=\"name\" class=\"group-data-[invalid=true]/field:text-destructive\">\n\t\t\t\t\tName <span aria-hidden=\"true\">*</span>\n\t\t\t\t</Label>\n\t\t\t\t<Input\n\t\t\t\t\tid=\"name\"\n\t\t\t\t\tname=\"name\"\n\t\t\t\t\tplaceholder=\"Lee Robinson\"\n\t\t\t\t\tclass=\"group-data-[invalid=true]/field:border-destructive focus-visible:group-data-[invalid=true]/field:ring-destructive\"\n\t\t\t\t\tdisabled={pending}\n\t\t\t\t\taria-invalid={!!formState.errors?.name}\n\t\t\t\t\taria-errormessage=\"error-name\"\n\t\t\t\t\tdefaultValue={formState.defaultValues.name}\n\t\t\t\t/>\n\t\t\t\t{#if formState.errors.name}\n\t\t\t\t\t<p id=\"error-name\" class=\"text-destructive text-sm\">\n\t\t\t\t\t\t{formState.errors.name}\n\t\t\t\t\t</p>\n\t\t\t\t{/if}\n\t\t\t</div>\n\t\t\t<div class=\"group/field grid gap-2\" data-invalid={!!formState.errors?.email}>\n\t\t\t\t<Label for=\"email\" class=\"group-data-[invalid=true]/field:text-destructive\">\n\t\t\t\t\tEmail <span aria-hidden=\"true\">*</span>\n\t\t\t\t</Label>\n\t\t\t\t<Input\n\t\t\t\t\tid=\"email\"\n\t\t\t\t\tname=\"email\"\n\t\t\t\t\tplaceholder=\"leerob@acme.com\"\n\t\t\t\t\tclass=\"group-data-[invalid=true]/field:border-destructive focus-visible:group-data-[invalid=true]/field:ring-destructive\"\n\t\t\t\t\tdisabled={pending}\n\t\t\t\t\taria-invalid={!!formState.errors?.email}\n\t\t\t\t\taria-errormessage=\"error-email\"\n\t\t\t\t\tdefaultValue={formState.defaultValues.email}\n\t\t\t\t/>\n\t\t\t\t{#if formState.errors.email}\n\t\t\t\t\t<p id=\"error-email\" class=\"text-destructive text-sm\">\n\t\t\t\t\t\t{formState.errors.email}\n\t\t\t\t\t</p>\n\t\t\t\t{/if}\n\t\t\t</div>\n\t\t\t<div class=\"group/field grid gap-2\" data-invalid={!!formState.errors?.message}>\n\t\t\t\t<Label for=\"message\" class=\"group-data-[invalid=true]/field:text-destructive\">\n\t\t\t\t\tMessage <span aria-hidden=\"true\">*</span>\n\t\t\t\t</Label>\n\t\t\t\t<Textarea\n\t\t\t\t\tid=\"message\"\n\t\t\t\t\tname=\"message\"\n\t\t\t\t\tplaceholder=\"Type your message here...\"\n\t\t\t\t\tclass=\"group-data-[invalid=true]/field:border-destructive focus-visible:group-data-[invalid=true]/field:ring-destructive\"\n\t\t\t\t\tdisabled={pending}\n\t\t\t\t\taria-invalid={!!formState.errors?.message}\n\t\t\t\t\taria-errormessage=\"error-message\"\n\t\t\t\t\tdefaultValue={formState.defaultValues.message}\n\t\t\t\t/>\n\t\t\t\t{#if formState.errors.message}\n\t\t\t\t\t<p id=\"error-message\" class=\"text-destructive text-sm\">\n\t\t\t\t\t\t{formState.errors.message}\n\t\t\t\t\t</p>\n\t\t\t\t{/if}\n\t\t\t</div>\n\t\t</Card.Content>\n\t\t<Card.Footer>\n\t\t\t<Button type=\"submit\" size=\"sm\" disabled={pending}>\n\t\t\t\t{pending ? \"Sending...\" : \"Send Message\"}\n\t\t\t</Button>\n\t\t</Card.Footer>\n\t</Card.Root>\n</form>\n",
+			"type": "registry:component",
+			"target": "example-form.svelte"
+		}
+	]
+}

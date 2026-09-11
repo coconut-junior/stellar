@@ -1,0 +1,19 @@
+{
+	"$schema": "https://shadcn-svelte.com/schema/registry-item.json",
+	"name": "example-with-css",
+	"title": "Example with CSS",
+	"type": "registry:component",
+	"description": "A login form with a CSS file.",
+	"files": [
+		{
+			"content": "<script lang=\"ts\">\n\timport \"./example-card.css\";\n</script>\n\n<div class=\"login-container\">\n\t<div class=\"login-card\">\n\t\t<h1 class=\"login-title\">Login</h1>\n\t\t<p class=\"login-subtitle\">Please enter your credentials to continue</p>\n\t\t<form class=\"login-form\">\n\t\t\t<div class=\"form-group\">\n\t\t\t\t<label for=\"field-email\">Email</label>\n\t\t\t\t<input id=\"field-email\" type=\"email\" placeholder=\"Enter your email\" required />\n\t\t\t</div>\n\t\t\t<div class=\"form-group\">\n\t\t\t\t<label for=\"field-password\">Password</label>\n\t\t\t\t<input id=\"field-password\" type=\"password\" placeholder=\"Enter your password\" required />\n\t\t\t</div>\n\t\t\t<div class=\"form-actions\">\n\t\t\t\t<button type=\"submit\" class=\"login-button\"> Sign In </button>\n\t\t\t</div>\n\t\t\t<div class=\"form-footer\">\n\t\t\t\t<a href=\"##\" class=\"forgot-password\"> Forgot password? </a>\n\t\t\t</div>\n\t\t</form>\n\t</div>\n</div>\n",
+			"type": "registry:component",
+			"target": "example-card.svelte"
+		},
+		{
+			"content": ".login-container {\n\t--primary-color: #111111;\n\t--primary-hover: #484747;\n\t--error-color: #ef4444;\n\t--text-color: #1f2937;\n\t--text-light: #6b7280;\n\t--border-color: #e5e7eb;\n\t--background-light: #f9fafb;\n\t--card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);\n\n\tdisplay: flex;\n\tjustify-content: center;\n\talign-items: center;\n\tpadding: 1rem;\n\tbackground-color: var(--background-light);\n\twidth: 100%;\n}\n\n.login-card {\n\twidth: 100%;\n\tmax-width: 400px;\n\tpadding: 2rem;\n\tbackground-color: white;\n\tborder-radius: 8px;\n\tbox-shadow: var(--card-shadow);\n}\n\n.login-title {\n\tmargin: 0 0 0.5rem 0;\n\tfont-size: 1.5rem;\n\tfont-weight: 600;\n\tcolor: var(--text-color);\n}\n\n.login-subtitle {\n\tmargin: 0 0 1.5rem 0;\n\tfont-size: 0.875rem;\n\tcolor: var(--text-light);\n}\n\n.login-form {\n\tdisplay: flex;\n\tflex-direction: column;\n\tgap: 1.25rem;\n}\n\n.login-error {\n\tpadding: 0.75rem;\n\tmargin-bottom: 0.5rem;\n\tbackground-color: rgba(239, 68, 68, 0.1);\n\tborder-left: 3px solid var(--error-color);\n\tcolor: var(--error-color);\n\tfont-size: 0.875rem;\n\tborder-radius: 4px;\n}\n\n.form-group {\n\tdisplay: flex;\n\tflex-direction: column;\n\tgap: 0.5rem;\n}\n\n.form-group label {\n\tfont-size: 0.875rem;\n\tfont-weight: 500;\n\tcolor: var(--text-color);\n}\n\n.form-group input {\n\tpadding: 0.75rem;\n\tborder: 1px solid var(--border-color);\n\tborder-radius: 4px;\n\tfont-size: 1rem;\n\ttransition: border-color 0.15s ease;\n}\n\n.form-group input:focus {\n\toutline: none;\n\tborder-color: var(--primary-color);\n\tbox-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);\n}\n\n.form-group input::placeholder {\n\tcolor: var(--text-light);\n}\n\n.form-actions {\n\tmargin-top: 0.5rem;\n}\n\n.login-button {\n\twidth: 100%;\n\tpadding: 0.75rem;\n\tbackground-color: var(--primary-color);\n\tcolor: white;\n\tborder: none;\n\tborder-radius: 4px;\n\tfont-size: 1rem;\n\tfont-weight: 500;\n\tcursor: pointer;\n\ttransition: background-color 0.15s ease;\n}\n\n.login-button:hover {\n\tbackground-color: var(--primary-hover);\n}\n\n.login-button:focus {\n\toutline: none;\n\tbox-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);\n}\n\n.form-footer {\n\tdisplay: flex;\n\tjustify-content: center;\n\tmargin-top: 1rem;\n}\n\n.forgot-password {\n\tfont-size: 0.875rem;\n\tcolor: var(--primary-color);\n\ttext-decoration: none;\n}\n\n.forgot-password:hover {\n\ttext-decoration: underline;\n}\n\n@media (max-width: 480px) {\n\t.login-card {\n\t\tpadding: 1.5rem;\n\t}\n}\n",
+			"type": "registry:component",
+			"target": "example-card.css"
+		}
+	]
+}
