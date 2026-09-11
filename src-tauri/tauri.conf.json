@@ -58,6 +58,8 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
+        "theme": "Dark",
+        "titleBarStyle": "Transparent",
         "title": "Stellar",
         "width": 800,
         "visible": false
