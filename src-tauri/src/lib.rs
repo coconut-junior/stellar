@@ -11,13 +11,22 @@ const SCRIPTS_MANIFEST_URL: &str =
 
 #[derive(serde::Deserialize)]
 struct ScriptDependency {
+    name: String,
     filename: String,
     url: String,
+    hidden: bool,
+    version: f64,
+    description: String,
 }
 
 #[derive(Clone, Serialize)]
 struct DownloadProgress {
+    name: String,
     filename: String,
+    url: String,
+    hidden: bool,
+    version: f64,
+    description: String,
     current: usize,
     total: usize,
     downloaded: u64,
@@ -40,14 +49,7 @@ fn download_scripts(app: tauri::AppHandle) -> Result<String, String> {
 
 fn download_scripts_in_background(app: &tauri::AppHandle) -> Result<String, String> {
     let client = reqwest::blocking::Client::new();
-    let dependencies = client
-        .get(SCRIPTS_MANIFEST_URL)
-        .send()
-        .map_err(|error| format!("Could not download script manifest: {error}"))?
-        .error_for_status()
-        .map_err(|error| format!("Could not download script manifest: {error}"))?
-        .json::<serde_json::Value>()
-        .map_err(|error| format!("Could not parse script manifest: {error}"))?;
+    let dependencies = fetch_dependencies(&client)?;
     let dependencies: Vec<ScriptDependency> = serde_json::from_value(
         dependencies
             .get("scripts")
@@ -96,7 +98,12 @@ fn download_scripts_in_background(app: &tauri::AppHandle) -> Result<String, Stri
             app.emit_all(
                 "scripts-download-progress",
                 DownloadProgress {
+                    name: script.name.clone(),
                     filename: filename.to_string(),
+                    url: script.url.clone(),
+                    hidden: script.hidden,
+                    version: script.version,
+                    description: script.description.clone(),
                     current: index + 1,
                     total,
                     downloaded,
@@ -182,6 +189,12 @@ struct InDesign {
     script_path: String,
 }
 
+#[derive(Serialize)]
+struct InDesignResponse {
+    info: InDesign,
+    dependencies: serde_json::Value,
+}
+
 const INDESIGN_NOT_FOUND: &str =
     "Cannot find any InDesign installations. Please install InDesign, then relaunch Stellar.";
 
@@ -225,10 +238,25 @@ fn detect_id_info() -> Result<InDesign, String> {
     })
 }
 
+fn fetch_dependencies(client: &reqwest::blocking::Client) -> Result<serde_json::Value, String> {
+    client
+        .get(SCRIPTS_MANIFEST_URL)
+        .send()
+        .map_err(|error| format!("Could not download script manifest: {error}"))?
+        .error_for_status()
+        .map_err(|error| format!("Could not download script manifest: {error}"))?
+        .json()
+        .map_err(|error| format!("Could not parse script manifest: {error}"))
+}
+
 #[tauri::command]
-fn get_id_info(app: tauri::AppHandle) -> Result<InDesign, String> {
+fn get_id_info(app: tauri::AppHandle) -> Result<InDesignResponse, String> {
     match detect_id_info() {
-        Ok(info) => Ok(info),
+        Ok(info) => {
+            let client = reqwest::blocking::Client::new();
+            let dependencies = fetch_dependencies(&client)?;
+            Ok(InDesignResponse { info, dependencies })
+        }
         Err(error) => {
             let window = app.get_window("main");
             message(window.as_ref(), "InDesign not found", &error);
