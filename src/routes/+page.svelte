@@ -15,17 +15,21 @@
    let indesign = $state<InDesign | null>(null);
 
    onMount(async () => {
-      indesign = await invoke<InDesign>('get_id_info');
+      try {
+         indesign = await invoke<InDesign>('get_id_info');
+      } catch (error) {
+         console.error('get_id_info failed:', error);
+      }
    });
 
-   async function runScript() {
+   async function runScript(filename: string) {
       try {
-         const result = await invoke<string>('run_script', { filename: 'cleanup.jsx' });
-         console.log('script path:', result);
-      } catch (err) {
-         console.error('run_script failed:', err);
+         await invoke('run_script', { filename });
+      } catch (error) {
+         console.error('run_script failed:', error);
       }
    }
+
 </script>
 
 <main class="dark text-foreground grid place-items-center h-full w-full bg-neutral-950">
@@ -56,7 +60,11 @@
       </Card.Content>
 
       <Card.Footer>
-         <Button size="sm" onclick={runScript}>Run cleanup script</Button>
+         {#if indesign}
+            <Button size="sm" onclick={() => runScript("cleanup.jsx")}>
+               Run cleanup script
+            </Button>
+         {/if}
       </Card.Footer>
    </Card.Root>
 

@@ -1,15 +1,56 @@
 use serde::Serialize;
 use std::fs;
+use std::process::Command;
 use tauri::api::dialog::{blocking::message as blocking_message, message};
 use tauri::Manager;
 
 #[tauri::command]
-fn run_script(filename: String) -> Result<String, String> {
-    println!(
-        "I was invoked from JavaScript, with this message: {}",
-        filename
-    );
-    Ok("successful run".to_string())
+fn run_script(filename: String, args: Option<Vec<String>>) -> Result<String, String> {
+    #[cfg(not(target_os = "macos"))]
+    {
+        let _ = (filename, args);
+        return Err("Running InDesign scripts is only supported on macOS.".to_string());
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        let info = detect_id_info()?;
+        let script_path = format!("{}/{}", info.script_path, filename);
+        let arguments = args.unwrap_or_default();
+        let argument_list = arguments
+            .iter()
+            .map(|argument| format!("\"{}\"", escape_applescript(argument)))
+            .collect::<Vec<_>>()
+            .join(", ");
+        let script = format!(
+            "tell application id \"com.adobe.indesign\"\nactivate\nset args to {{{argument_list}}}\ndo script \"{}\" language javascript with arguments args\nend tell",
+            escape_applescript(&script_path)
+        );
+
+        let output = Command::new("osascript")
+            .args(["-e", &script])
+            .output()
+            .map_err(|error| format!("Could not start osascript: {error}"))?;
+
+        if !output.status.success() {
+            let error = String::from_utf8_lossy(&output.stderr).trim().to_string();
+            let message = if error.contains("not authorized") || error.contains("authorize") {
+                format!(
+                    "Automation permission is required for Stellar to control InDesign. {error}"
+                )
+            } else {
+                error
+            };
+            return Err(message);
+        }
+
+        Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
+    }
+}
+
+#[cfg(target_os = "macos")]
+fn escape_applescript(value: &str) -> String {
+    value.replace('\\', "\\\\").replace('"', "\\\"")
 }
 
 #[derive(Serialize)]
