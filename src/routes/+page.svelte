@@ -6,6 +6,7 @@
    import { onMount } from "svelte";
    import Bot from '@lucide/svelte/icons/bot';
    import SettingsIcon from '@lucide/svelte/icons/settings';
+   import LightRays from '$lib/components/LightRays.svelte';
 
    type DownloadProgress = {
       name: string;
@@ -71,16 +72,18 @@
    });
 </script>
 
-<main style={`zoom: ${uiScale[0] / 100}`} class="{darkMode ? 'dark' : ''} bg-background text-foreground flex h-full w-full flex-col items-center gap-4 overflow-hidden pb-12">
-   <img src="/logo-horizontal.svg" alt="logo" class="h-10 mt-6 w-auto" />
+<LightRays class = "absolute inset-0 opacity-30" raysOrigin="top-right" raysColor="blue" saturation={10} raysSpeed={1} />
+
+<main style={`zoom: ${uiScale[0] / 100}`} class="{darkMode ? 'dark' : ''} bg-background text-foreground flex h-full w-full flex-col items-center gap-4 overflow-hidden absolute inset-0">
+   <img src={darkMode ? "/logo-horizontal.svg" : "/logo-horizontal-light.svg"} alt="logo" class="h-10 mt-6 w-auto" />
    
-   <Tabs.Root bind:value={activeTab} class="min-h-0 flex-1 flex-col w-full p-6">
+   <Tabs.Root bind:value={activeTab} class="min-h-0 flex-1 flex-col w-full p-6 pb-0 mb-10">
       <Tabs.List class="grid  grid-cols-2">
          <Tabs.Trigger value="automation"><Bot/>Automation</Tabs.Trigger>
          <Tabs.Trigger value="info"><SettingsIcon/>Settings</Tabs.Trigger>
       </Tabs.List>
 
-      <Tabs.Content value="automation" class="min-h-0 w-full flex-1 overflow-y-auto mt-4 p-1">
+      <Tabs.Content value="automation" class="w-full flex-1 overflow-y-auto  p-1">
          <Automation
             onStatusChange={(status) => (downloadStatus = status)}
             minimizeAfterLaunch={minimizeAfterLaunch}
@@ -97,7 +100,7 @@
 
    </Tabs.Root>
 
-   <div class="fixed bottom-0 left-0 flex h-10 w-full items-center gap-2 overflow-hidden bg-black p-2">
+   <div class="fixed bottom-0 left-0 flex h-10 w-full items-center p-2 gap-2 overflow-hidden border-solid border-t bg-background p-2">
       {#if downloadStatus.downloading}
          <Spinner />
       {/if}

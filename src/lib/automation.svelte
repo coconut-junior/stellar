@@ -5,7 +5,11 @@
    import { onMount } from 'svelte';
    import * as Card from "$lib/components/ui/card/index.js";
    import Download from '@lucide/svelte/icons/download';
-
+   import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
+   import { Input } from "$lib/components/ui/input/index.js";
+   import SearchIcon from "@lucide/svelte/icons/search";
+   import * as InputGroup from "$lib/components/ui/input-group/index.js";
+  
    type ScriptDependency = {
       name: string;
       filename: string;
@@ -51,6 +55,7 @@
    let downloading = $state(true);
    let downloadProgress = $state<DownloadProgress | null>(null);
    let downloadMessage = $state<string | null>(null);
+   let searchText = $state("");
 
    onMount(() => {
       let disposed = false;
@@ -131,26 +136,39 @@
    <Card.Header class="flex flex-row items-center justify-between gap-4">
       <div>
          <Card.Title>Automations</Card.Title>
-         <Card.Description>Speed up your InDesign workflow with powerful automations.</Card.Description>
       </div>
-      <Button variant="outline" class="gap-2" disabled={downloading} onclick={downloadScripts}>
-         {#if downloading}
-            <span>Installing...</span>
-         {:else}
-            <Download class="size-3" aria-hidden="true"/>
-            <span>Download latest</span>
-         {/if}
-      </Button>
+
+      <div class="flex gap-2">
+         <InputGroup.Root>
+            <InputGroup.Input placeholder="Search..." bind:value={searchText} />
+            <InputGroup.Addon>
+               <SearchIcon />
+            </InputGroup.Addon>
+         </InputGroup.Root>
+
+         <Button variant="outline" class="gap-2" disabled={downloading} onclick={downloadScripts}>
+            {#if downloading}
+               <span>Installing...</span>
+            {:else}
+               <Download class="size-3" aria-hidden="true"/>
+               <span>Download latest</span>
+            {/if}
+         </Button>
+      </div>
+      
    </Card.Header>
+   
 </Card.Root>
 
 <Card.Root>
    <Card.Content>
-      <div class="flex flex-wrap gap-2">
+      <div class="flex flex-wrap gap-3">
          {#each scripts.filter((script) => !script.hidden) as script (script.filename)}
-            <Card.Root class="w-54 max-w-lg">
+   
+         <Card.Root size="sm" class="w-54" hidden={!script.name.toLowerCase().match(searchText.toLowerCase())}>
                <Card.Header>
                   <Card.Title>{script.name.length < 20 ? script.name : script.name.slice(0,20) + "..."}</Card.Title>
+                  <Card.Description>Version {script.version}</Card.Description>
                </Card.Header>
                <Card.Footer>
                   <Button size="sm" variant="outline" onclick={() => runScript(script.filename)}>
@@ -161,6 +179,7 @@
             </Card.Root>
          {/each}
       </div>
+      
    </Card.Content>
 </Card.Root>
 

@@ -44,7 +44,7 @@
    <Card.Root class="w-full max-w-lg">
       <Card.Header>
          <Card.Title>Preferences</Card.Title>
-         <Card.Description>Customize Stellar behavior</Card.Description>
+         <Card.Description>Customize Stellar's appearance and behavior</Card.Description>
       </Card.Header>
 
       <Card.Content>
