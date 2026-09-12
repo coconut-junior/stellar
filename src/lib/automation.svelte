@@ -162,10 +162,10 @@
 
 <Card.Root>
    <Card.Content>
-      <div class="flex flex-wrap gap-3">
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
          {#each scripts.filter((script) => !script.hidden) as script (script.filename)}
    
-         <Card.Root size="sm" class="w-54" hidden={!script.name.toLowerCase().match(searchText.toLowerCase())}>
+         <Card.Root size="sm" class="" hidden={!script.name.toLowerCase().match(searchText.toLowerCase())}>
                <Card.Header>
                   <Card.Title>{script.name.length < 20 ? script.name : script.name.slice(0,20) + "..."}</Card.Title>
                   <Card.Description>Version {script.version}</Card.Description>
