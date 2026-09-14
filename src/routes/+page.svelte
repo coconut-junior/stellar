@@ -72,10 +72,10 @@
    });
 </script>
 
-<LightRays class = "absolute inset-0 opacity-30" raysOrigin="top-right" raysColor="blue" saturation={10} raysSpeed={1} />
+
+<LightRays class = "absolute inset-0 opacity-60" raysOrigin="top-right" raysColor={darkMode ? "" : "#000000"} saturation={darkMode ? 10 : 0} raysSpeed={1} />
 
 <main style={`zoom: ${uiScale[0] / 100}`} class="{darkMode ? 'dark' : ''} bg-background text-foreground flex h-full w-full flex-col items-center gap-4 overflow-hidden absolute inset-0">
-   
    <Tabs.Root bind:value={activeTab} class="min-h-0 flex-1 flex-col w-full p-6">
 
       <div class="w-full flex justify-left gap-6 pb-3">
