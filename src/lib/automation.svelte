@@ -178,9 +178,11 @@
                <Card.Header>
                   <Card.Title>
                      <span class="text-ellipsis truncate">{script.name}</span>
-                     <Badge variant="outline">{script.filename.split('.')[1].toUpperCase()}</Badge>
                   </Card.Title>
-                  <Card.Description>Version {script.version}</Card.Description>
+                  <Card.Description>
+                     <Badge variant="outline">{script.filename.split('.')[1].toUpperCase()}</Badge>
+                     Version {script.version}
+                  </Card.Description>
                </Card.Header>
                <Card.Footer class="gap-1">
                   <Button variant="outline" onclick={() => runScript(script.filename)}>
@@ -190,7 +192,7 @@
                   <Tooltip.Root>
                      <Tooltip.Trigger>
                         <Button size="icon" variant="outline" onclick={()=>editCode(script.filename)}>
-                           <CodeXML color="#ffffff" />
+                           <CodeXML/>
                         </Button></Tooltip.Trigger>
                      <Tooltip.Content>
                         Edit code
