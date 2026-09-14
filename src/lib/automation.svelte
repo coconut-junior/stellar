@@ -142,7 +142,7 @@
 
 <Tooltip.Provider>
 <Card.Root class="mb-4 w-full">
-   <Card.Header class="flex flex-row items-center justify-between gap-4">
+   <Card.Header class="flex wrap items-center flex-col sm:flex-row sm:justify-between gap-4">
       <div>
          <Card.Title>Automations</Card.Title>
       </div>
