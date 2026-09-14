@@ -75,13 +75,17 @@
 <LightRays class = "absolute inset-0 opacity-30" raysOrigin="top-right" raysColor="blue" saturation={10} raysSpeed={1} />
 
 <main style={`zoom: ${uiScale[0] / 100}`} class="{darkMode ? 'dark' : ''} bg-background text-foreground flex h-full w-full flex-col items-center gap-4 overflow-hidden absolute inset-0">
-   <img src={darkMode ? "/logo-horizontal.svg" : "/logo-horizontal-light.svg"} alt="logo" class="h-10 mt-6 w-auto" />
    
-   <Tabs.Root bind:value={activeTab} class="min-h-0 flex-1 flex-col w-full p-6 pb-0 mb-10">
-      <Tabs.List class="grid  grid-cols-2">
-         <Tabs.Trigger value="automation"><Bot/>Automation</Tabs.Trigger>
-         <Tabs.Trigger value="info"><SettingsIcon/>Settings</Tabs.Trigger>
-      </Tabs.List>
+   <Tabs.Root bind:value={activeTab} class="min-h-0 flex-1 flex-col w-full p-6">
+
+      <div class="w-full flex justify-left gap-6 pb-3">
+         <img src={darkMode ? "/logo-horizontal.svg" : "/logo-horizontal-light.svg"} alt="logo" class="h-10 w-auto ml-4" />
+
+         <Tabs.List class="grid grid-cols-2">
+            <Tabs.Trigger value="automation"><Bot/>Automation</Tabs.Trigger>
+            <Tabs.Trigger value="info"><SettingsIcon/>Settings</Tabs.Trigger>
+         </Tabs.List>
+      </div>
 
       <Tabs.Content value="automation" class="w-full flex-1 overflow-y-auto  p-1">
          <Automation

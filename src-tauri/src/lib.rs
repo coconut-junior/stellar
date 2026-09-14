@@ -121,6 +121,14 @@ fn download_scripts_in_background(app: &tauri::AppHandle) -> Result<String, Stri
 }
 
 #[tauri::command]
+fn edit_code(filename: String) {
+    let info = detect_id_info().unwrap();
+    let path = format!("{}/{}", info.script_path, filename);
+    println!("editing {}", path);
+    let _ = Command::new("open").args([path]).output();
+}
+
+#[tauri::command]
 fn run_script(
     app: tauri::AppHandle,
     filename: String,
@@ -292,7 +300,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             run_script,
             get_id_info,
-            download_scripts
+            download_scripts,
+            edit_code
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

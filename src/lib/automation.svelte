@@ -5,10 +5,14 @@
    import { onMount } from 'svelte';
    import * as Card from "$lib/components/ui/card/index.js";
    import Download from '@lucide/svelte/icons/download';
+   import CodeXML from '@lucide/svelte/icons/code-xml';
    import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
    import { Input } from "$lib/components/ui/input/index.js";
    import SearchIcon from "@lucide/svelte/icons/search";
    import * as InputGroup from "$lib/components/ui/input-group/index.js";
+   import { Skeleton } from "$lib/components/ui/skeleton/index.js";
+   import * as Tooltip from "$lib/components/ui/tooltip/index.js";
+   import { Badge } from "$lib/components/ui/badge/index.js";
   
    type ScriptDependency = {
       name: string;
@@ -118,6 +122,10 @@
       }
    }
 
+   async function editCode(filename: string) {
+      await invoke('edit_code', {filename});
+   }
+
    async function runScript(filename: string) {
       try {
          await invoke('run_script', { filename, minimizeAfterLaunch });
@@ -132,6 +140,7 @@
    }
 </script>
 
+<Tooltip.Provider>
 <Card.Root class="mb-4 w-full">
    <Card.Header class="flex flex-row items-center justify-between gap-4">
       <div>
@@ -162,19 +171,32 @@
 
 <Card.Root>
    <Card.Content>
-      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
          {#each scripts.filter((script) => !script.hidden) as script (script.filename)}
    
-         <Card.Root size="sm" class="" hidden={!script.name.toLowerCase().match(searchText.toLowerCase())}>
+         <Card.Root size="sm" hidden={!script.name.toLowerCase().match(searchText.toLowerCase())}>
                <Card.Header>
-                  <Card.Title>{script.name.length < 20 ? script.name : script.name.slice(0,20) + "..."}</Card.Title>
+                  <Card.Title>
+                     <span class="text-ellipsis truncate">{script.name}</span>
+                     <Badge variant="outline">{script.filename.split('.')[1].toUpperCase()}</Badge>
+                  </Card.Title>
                   <Card.Description>Version {script.version}</Card.Description>
                </Card.Header>
-               <Card.Footer>
-                  <Button size="sm" variant="outline" onclick={() => runScript(script.filename)}>
+               <Card.Footer class="gap-1">
+                  <Button variant="outline" onclick={() => runScript(script.filename)}>
                      ⚡️
                      Launch
                   </Button>
+                  <Tooltip.Root>
+                     <Tooltip.Trigger>
+                        <Button size="icon" variant="outline" onclick={()=>editCode(script.filename)}>
+                           <CodeXML color="#ffffff" />
+                        </Button></Tooltip.Trigger>
+                     <Tooltip.Content>
+                        Edit code
+                     </Tooltip.Content>
+                  </Tooltip.Root>
+                  
                </Card.Footer>
             </Card.Root>
          {/each}
@@ -182,4 +204,4 @@
       
    </Card.Content>
 </Card.Root>
-
+</Tooltip.Provider>
