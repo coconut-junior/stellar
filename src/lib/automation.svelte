@@ -1,6 +1,6 @@
 <script lang="ts">
    import { Button } from '$lib/components/ui/button';
-   import { invoke } from '@tauri-apps/api/tauri';
+   import { invoke } from '@tauri-apps/api/core';
    import { listen } from '@tauri-apps/api/event';
    import { onMount } from 'svelte';
    import * as Card from "$lib/components/ui/card/index.js";

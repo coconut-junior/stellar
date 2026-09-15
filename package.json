@@ -21,7 +21,7 @@
     "@sveltejs/vite-plugin-svelte": "^4.0.0",
     "@tailwindcss/typography": "^0.5.14",
     "@tailwindcss/vite": "^4.3.0",
-    "@tauri-apps/cli": "^1.6.2",
+    "@tauri-apps/cli": "^2.11.4",
     "@types/eslint": "^9.6.0",
     "clsx": "^2.1.1",
     "eslint": "^9.0.0",
@@ -41,7 +41,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@tauri-apps/api": "^1.6.0",
+    "@tauri-apps/api": "^2.11.1",
     "bits-ui": "^2.19.2",
     "clsx": "^2.1.1",
     "gsap": "^3.15.0",

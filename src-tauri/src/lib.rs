@@ -3,11 +3,11 @@ use std::fs::{self, File};
 use std::io::{Read, Write};
 use std::path::Path;
 use std::process::Command;
-use tauri::api::dialog::{blocking::message as blocking_message, message};
+use tauri::Emitter;
 use tauri::Manager;
+use tauri_plugin_dialog::{DialogExt,MessageDialogKind};
 
-const SCRIPTS_MANIFEST_URL: &str =
-    "https://raw.githubusercontent.com/coconut-junior/personal-site/refs/heads/master/stellar/dependencies.json";
+const SCRIPTS_MANIFEST_URL: &str = "https://raw.githubusercontent.com/coconut-junior/personal-site/refs/heads/master/stellar/dependencies.json";
 
 #[derive(serde::Deserialize)]
 struct ScriptDependency {
@@ -41,7 +41,7 @@ fn download_scripts(app: tauri::AppHandle) -> Result<String, String> {
             Ok(message) => ("scripts-download-complete", message),
             Err(error) => ("scripts-download-error", error),
         };
-        let _ = app.emit_all(event.0, event.1);
+        let _ = app.emit(event.0, event.1);
     });
 
     Ok("Script download started".to_string())
@@ -95,7 +95,7 @@ fn download_scripts_in_background(app: &tauri::AppHandle) -> Result<String, Stri
             file.write_all(&buffer[..bytes_read])
                 .map_err(|error| format!("Could not save {filename}: {error}"))?;
             downloaded += bytes_read as u64;
-            app.emit_all(
+            app.emit(
                 "scripts-download-progress",
                 DownloadProgress {
                     name: script.name.clone(),
@@ -172,18 +172,13 @@ fn run_script(
             };
 
             if error_message.contains("Automation permission") {
-                let window = app.get_window("main");
-                message(
-                    window.as_ref(),
-                    "Automation permission required. Please give Stellar permission under System Settings > Privacy & Security > Automation in your System Settings.",
-                    &error_message,
-                );
+                app.dialog().message("Automation permission required. Please give Stellar permission under System Settings > Privacy & Security > Automation in your System Settings.");
             }
             return Err(error_message);
         }
 
         if minimize_after_launch.unwrap_or(false) {
-            app.get_window("main")
+            app.get_webview_window("main")
                 .ok_or_else(|| "Could not find the main window.".to_string())?
                 .minimize()
                 .map_err(|error| format!("Could not minimize the window: {error}"))?;
@@ -266,7 +261,7 @@ fn fetch_dependencies(client: &reqwest::blocking::Client) -> Result<serde_json::
 }
 
 #[tauri::command]
-fn get_id_info(app: tauri::AppHandle) -> Result<InDesignResponse, String> {
+fn get_id_info(_app: tauri::AppHandle) -> Result<InDesignResponse, String> {
     match detect_id_info() {
         Ok(info) => {
             let client = reqwest::blocking::Client::new();
@@ -274,8 +269,6 @@ fn get_id_info(app: tauri::AppHandle) -> Result<InDesignResponse, String> {
             Ok(InDesignResponse { info, dependencies })
         }
         Err(error) => {
-            let window = app.get_window("main");
-            message(window.as_ref(), "InDesign not found", &error);
             Err(error)
         }
     }
@@ -284,14 +277,12 @@ fn get_id_info(app: tauri::AppHandle) -> Result<InDesignResponse, String> {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
-            if let Err(error) = detect_id_info() {
-                let window = app.get_window("main");
-                std::thread::spawn(move || {
-                    blocking_message(window.as_ref(), "InDesign not found", &error);
-                    std::process::exit(1);
-                });
-            } else if let Some(window) = app.get_window("main") {
+            if let Err(_error) = detect_id_info() {
+                app.dialog().message("InDesign not found. Please install it, then relaunch Stellar.").kind(MessageDialogKind::Error).blocking_show();
+                std::process::exit(1);
+            } else if let Some(window) = app.get_webview_window("main") {
                 window.show()?;
             }
 

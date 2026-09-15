@@ -1,5 +1,5 @@
 <script lang="ts">
-   import { invoke } from '@tauri-apps/api/tauri';
+   import { invoke } from '@tauri-apps/api/core';
    import { onMount } from 'svelte';
    import * as Card from "$lib/components/ui/card/index.js";
    import * as Item from "$lib/components/ui/item/index.js";
