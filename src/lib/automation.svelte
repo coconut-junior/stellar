@@ -144,7 +144,7 @@
 <Card.Root class="mb-4 w-full">
    <Card.Header class="flex wrap items-center flex-col sm:flex-row sm:justify-between gap-4">
       <div>
-         <Card.Title>Automations</Card.Title>
+         <Card.Title>Automation Library</Card.Title>
       </div>
 
       <div class="flex gap-2">
@@ -174,6 +174,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
          {#each scripts.filter((script) => !script.hidden) as script (script.filename)}
    
+         //Automation card
          <Card.Root size="sm" hidden={!script.name.toLowerCase().match(searchText.toLowerCase())}>
                <Card.Header>
                   <Card.Title>

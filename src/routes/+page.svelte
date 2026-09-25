@@ -79,10 +79,10 @@
    <Tabs.Root bind:value={activeTab} class="min-h-0 flex-1 flex-col w-full p-6">
 
       <div class="w-full flex justify-left gap-6 pb-3">
-         <img src={darkMode ? "/logo-horizontal.svg" : "/logo-horizontal-light.svg"} alt="logo" class="h-10 w-auto ml-4" />
+         <img src={darkMode ? "/logo-horizontal.svg" : "/logo-horizontal-light.svg"} alt="logo" class="h-8 w-auto ml-4" />
 
          <Tabs.List class="grid grid-cols-2">
-            <Tabs.Trigger value="automation"><Bot/>Automation</Tabs.Trigger>
+            <Tabs.Trigger value="automation"><Bot/>Automation Library</Tabs.Trigger>
             <Tabs.Trigger value="info"><SettingsIcon/>Settings</Tabs.Trigger>
          </Tabs.List>
       </div>
