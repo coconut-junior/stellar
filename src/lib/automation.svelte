@@ -186,13 +186,13 @@
                   </Card.Description>
                </Card.Header>
                <Card.Footer class="gap-1">
-                  <Button variant="outline" onclick={() => runScript(script.filename)}>
+                  <Button variant="outline" disabled={false} onclick={() => runScript(script.filename)}>
                      ⚡️
                      Launch
                   </Button>
                   <Tooltip.Root>
                      <Tooltip.Trigger>
-                        <Button size="icon" variant="outline" onclick={()=>editCode(script.filename)}>
+                        <Button size="icon" variant="outline" disabled={false} onclick={()=>editCode(script.filename)}>
                            <CodeXML/>
                         </Button></Tooltip.Trigger>
                      <Tooltip.Content>
