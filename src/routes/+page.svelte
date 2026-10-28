@@ -4,9 +4,10 @@
    import * as Tabs from "$lib/components/ui/tabs/index.js";
    import { Spinner } from "$lib/components/ui/spinner/index.js";
    import { onMount } from "svelte";
-   import Bot from '@lucide/svelte/icons/bot';
+   import Library from '@lucide/svelte/icons/library-big';
    import SettingsIcon from '@lucide/svelte/icons/settings';
    import LightRays from '$lib/components/LightRays.svelte';
+  	import { Progress } from "$lib/components/ui/progress/index.js";
 
    type DownloadProgress = {
       name: string;
@@ -76,14 +77,15 @@
 <LightRays class = "absolute inset-0 opacity-60" raysOrigin="top-right" raysColor={darkMode ? "" : "#000000"} saturation={darkMode ? 10 : 0} raysSpeed={1} />
 
 <main style={`zoom: ${uiScale[0] / 100}`} class="{darkMode ? 'dark' : ''} bg-background text-foreground flex h-full w-full flex-col items-center gap-4 overflow-hidden absolute inset-0">
-   <Tabs.Root bind:value={activeTab} class="min-h-0 flex-1 flex-col w-full p-6">
+   <Tabs.Root bind:value={activeTab} class="flex min-h-0 flex-1 flex-col w-full p-6">
 
-      <div class="w-full flex justify-left gap-6 pb-3">
+      <div class="w-full flex items-center justify-left gap-6 pb-3">
          <img src={darkMode ? "/logo-horizontal.svg" : "/logo-horizontal-light.svg"} alt="logo" class="h-8 w-auto ml-4" />
 
+         <!-- Tab Labels -->
          <Tabs.List class="grid grid-cols-2">
-            <Tabs.Trigger value="automation"><Bot/>Automation Library</Tabs.Trigger>
-            <Tabs.Trigger value="info"><SettingsIcon/>Settings</Tabs.Trigger>
+            <Tabs.Trigger class = 'p-2' value="automation"><Library/>Library</Tabs.Trigger>
+            <Tabs.Trigger value="info"><SettingsIcon/>Preferences</Tabs.Trigger>
          </Tabs.List>
       </div>
 
@@ -104,7 +106,7 @@
 
    </Tabs.Root>
 
-   <div class="fixed bottom-0 left-0 flex h-10 w-full items-center p-2 gap-2 overflow-hidden border-solid border-t bg-background p-2">
+   <div class="flex justify-center fixed bottom-0 left-0 flex h-10 w-full items-center gap-2 overflow-hidden border-solid border-t bg-background p-2">
       {#if downloadStatus.downloading}
          <Spinner />
       {/if}
@@ -114,6 +116,7 @@
          <span class="text-sm text-muted-foreground">
             {downloadStatus.progress.filename} ({downloadStatus.progress.current}/{downloadStatus.progress.total})
          </span>
+         <Progress class="ml-auto w-[60%]" value = {downloadStatus.progress.current} max = {downloadStatus.progress.total}></Progress>
       {/if}
    </div>
 </main>

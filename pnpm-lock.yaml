@@ -12,8 +12,8 @@ importers:
         specifier: ^2.11.1
         version: 2.11.1
       bits-ui:
-        specifier: ^2.19.2
-        version: 2.19.2(@internationalized/date@3.12.4)(@sveltejs/kit@2.5.28(@sveltejs/vite-plugin-svelte@4.0.4(supports-color@7.2.0)(svelte@5.57.0(@typescript-eslint/types@8.6.0))(vite@5.4.7(lightningcss@1.32.0)))(svelte@5.57.0(@typescript-eslint/types@8.6.0))(vite@5.4.7(lightningcss@1.32.0)))(svelte@5.57.0(@typescript-eslint/types@8.6.0))
+        specifier: ^2.20.2
+        version: 2.20.2(@internationalized/date@3.12.4)(@sveltejs/kit@2.5.28(@sveltejs/vite-plugin-svelte@4.0.4(supports-color@7.2.0)(svelte@5.57.0(@typescript-eslint/types@8.6.0))(vite@5.4.7(lightningcss@1.32.0)))(svelte@5.57.0(@typescript-eslint/types@8.6.0))(vite@5.4.7(lightningcss@1.32.0)))(svelte@5.57.0(@typescript-eslint/types@8.6.0))
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -96,12 +96,6 @@ importers:
       zod:
         specifier: ^4.4.3
         version: 4.6.1
-
-  src-tauri:
-    dependencies:
-      '@tauri-apps/cli':
-        specifier: ^2.11.4
-        version: 2.11.4
 
 packages:
 
@@ -752,8 +746,8 @@ packages:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
 
-  bits-ui@2.19.2:
-    resolution: {integrity: sha512-W9upilTmLTIWjuVAD6Ta7XoS6gxRflmCQnXamj+WN1eYxZecghqGENpuSMAKQmVENMLXhh85BZb04LCrBd2+Ng==}
+  bits-ui@2.20.2:
+    resolution: {integrity: sha512-cb1eQD1wZEhJWb1dTLiAdYWqeUI5v7f+7EAHmetxBuELI9lo4cpAIfGEjald/PR4wTR80Fu5DFH+IaY1OKn+tg==}
     engines: {node: '>=20'}
     peerDependencies:
       '@internationalized/date': ^3.8.1
@@ -1441,8 +1435,8 @@ packages:
     resolution: {integrity: sha512-NdbDn7fl4be1ViUG0oq/lvG6OZy3oENolV2ONjiqqsfVoeAfzaQAKUcEX3MrQod/Bebv1PgwET9rfXhgn9s4Kg==}
     engines: {node: '>=18'}
 
-  tabbable@6.2.0:
-    resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
+  tabbable@6.5.1:
+    resolution: {integrity: sha512-dMCuwDUY6Noz3zVKLefBC4wq+aJV20yc7vWmM7uTNGwtQSFF5kX7OUIUsxuVajz/bdt5Xqdah3/0NLjth+cM5A==}
 
   tailwind-merge@2.5.2:
     resolution: {integrity: sha512-kjEBm+pvD+6eAwzJL2Bi+02/9LFLal1Gs61+QB7HvTfQQ0aXwC5LGT8PEt1gS0CWKktKe6ysPTAy3cBC5MeiIg==}
@@ -2108,7 +2102,7 @@ snapshots:
 
   binary-extensions@2.3.0: {}
 
-  bits-ui@2.19.2(@internationalized/date@3.12.4)(@sveltejs/kit@2.5.28(@sveltejs/vite-plugin-svelte@4.0.4(supports-color@7.2.0)(svelte@5.57.0(@typescript-eslint/types@8.6.0))(vite@5.4.7(lightningcss@1.32.0)))(svelte@5.57.0(@typescript-eslint/types@8.6.0))(vite@5.4.7(lightningcss@1.32.0)))(svelte@5.57.0(@typescript-eslint/types@8.6.0)):
+  bits-ui@2.20.2(@internationalized/date@3.12.4)(@sveltejs/kit@2.5.28(@sveltejs/vite-plugin-svelte@4.0.4(supports-color@7.2.0)(svelte@5.57.0(@typescript-eslint/types@8.6.0))(vite@5.4.7(lightningcss@1.32.0)))(svelte@5.57.0(@typescript-eslint/types@8.6.0))(vite@5.4.7(lightningcss@1.32.0)))(svelte@5.57.0(@typescript-eslint/types@8.6.0)):
     dependencies:
       '@floating-ui/core': 1.8.0
       '@floating-ui/dom': 1.8.0
@@ -2117,7 +2111,7 @@ snapshots:
       runed: 0.35.1(@sveltejs/kit@2.5.28(@sveltejs/vite-plugin-svelte@4.0.4(supports-color@7.2.0)(svelte@5.57.0(@typescript-eslint/types@8.6.0))(vite@5.4.7(lightningcss@1.32.0)))(svelte@5.57.0(@typescript-eslint/types@8.6.0))(vite@5.4.7(lightningcss@1.32.0)))(svelte@5.57.0(@typescript-eslint/types@8.6.0))
       svelte: 5.57.0(@typescript-eslint/types@8.6.0)
       svelte-toolbelt: 0.10.6(@sveltejs/kit@2.5.28(@sveltejs/vite-plugin-svelte@4.0.4(supports-color@7.2.0)(svelte@5.57.0(@typescript-eslint/types@8.6.0))(vite@5.4.7(lightningcss@1.32.0)))(svelte@5.57.0(@typescript-eslint/types@8.6.0))(vite@5.4.7(lightningcss@1.32.0)))(svelte@5.57.0(@typescript-eslint/types@8.6.0))
-      tabbable: 6.2.0
+      tabbable: 6.5.1
     transitivePeerDependencies:
       - '@sveltejs/kit'
 
@@ -2785,7 +2779,7 @@ snapshots:
     transitivePeerDependencies:
       - '@typescript-eslint/types'
 
-  tabbable@6.2.0: {}
+  tabbable@6.5.1: {}
 
   tailwind-merge@2.5.2: {}
 

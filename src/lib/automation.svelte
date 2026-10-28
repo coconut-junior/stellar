@@ -4,7 +4,7 @@
    import { listen } from '@tauri-apps/api/event';
    import { onMount } from 'svelte';
    import * as Card from "$lib/components/ui/card/index.js";
-   import Download from '@lucide/svelte/icons/download';
+   import Update from '@lucide/svelte/icons/rotate-cw';
    import CodeXML from '@lucide/svelte/icons/code-xml';
    import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
    import { Input } from "$lib/components/ui/input/index.js";
@@ -159,8 +159,8 @@
             {#if downloading}
                <span>Installing...</span>
             {:else}
-               <Download class="size-3" aria-hidden="true"/>
-               <span>Download latest</span>
+               <Update class="size-3" aria-hidden="true"/>
+               <span>Update Now</span>
             {/if}
          </Button>
       </div>
@@ -174,7 +174,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
          {#each scripts.filter((script) => !script.hidden) as script (script.filename)}
    
-         //Automation card
+         <!-- Automation card -->
          <Card.Root size="sm" hidden={!script.name.toLowerCase().match(searchText.toLowerCase())}>
                <Card.Header>
                   <Card.Title>

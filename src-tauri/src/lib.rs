@@ -115,8 +115,7 @@ fn download_scripts_in_background(app: &tauri::AppHandle) -> Result<String, Stri
     }
 
     Ok(format!(
-        "Downloaded {total} scripts to {}",
-        info.script_path
+        "Downloaded {total} scripts"
     ))
 }
 
