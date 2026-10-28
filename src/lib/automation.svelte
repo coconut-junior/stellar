@@ -151,9 +151,10 @@
       await invoke('edit_code', {filename});
    }
 
-   async function runScript(filename: string) {
+   async function runScript(script: ScriptDependency) {
       try {
-         await invoke('run_script', { filename, minimizeAfterLaunch });
+         const url = script.filename.toLowerCase().endsWith('.html') ? script.url : undefined;
+         await invoke('run_script', { filename: script.filename, url, minimizeAfterLaunch });
       } catch (error) {
          const message = String(error);
          if (message.toLowerCase().includes('automation permission')) {
@@ -224,7 +225,7 @@
                   </Card.Description>
                </Card.Header>
                <Card.Footer class="gap-1">
-                  <Button variant="outline" disabled={false} onclick={() => runScript(script.filename)}>
+                  <Button variant="outline" disabled={false} onclick={() => runScript(script)}>
                      ⚡️
                      Launch
                   </Button>

@@ -150,19 +150,83 @@ fn edit_code(filename: String) {
 fn run_script(
     app: tauri::AppHandle,
     filename: String,
+    url: Option<String>,
     args: Option<Vec<String>>,
     minimize_after_launch: Option<bool>,
 ) -> Result<String, String> {
+    let info = detect_id_info()?;
+    let script_path = Path::new(&info.script_path).join(&filename);
+
+    let is_html_file = Path::new(&filename)
+        .extension()
+        .and_then(|extension| extension.to_str())
+        .is_some_and(|extension| extension.eq_ignore_ascii_case("html"));
+
+    if url.is_some() || is_html_file {
+        let webview_url = if let Some(url) = url {
+            let url = tauri::Url::parse(&url)
+                .map_err(|error| format!("Invalid webview URL: {error}"))?;
+            if !matches!(url.scheme(), "http" | "https") {
+                return Err("Webview URL must use HTTP or HTTPS.".to_string());
+            }
+            url
+        } else {
+            let script_directory = Path::new(&info.script_path)
+                .canonicalize()
+                .map_err(|error| format!("Could not find Scripts Panel directory: {error}"))?;
+            let html_path = script_path
+                .canonicalize()
+                .map_err(|error| format!("Could not open HTML file {filename}: {error}"))?;
+            if !html_path.starts_with(&script_directory) || !html_path.is_file() {
+                return Err(format!("Invalid HTML file: {filename}"));
+            }
+
+            tauri::Url::from_file_path(&html_path)
+                .map_err(|_| format!("Could not create a webview URL for {filename}"))?
+        };
+        let label = format!(
+            "html-{}",
+            filename
+                .chars()
+                .map(|character| {
+                    if character.is_ascii_alphanumeric() {
+                        character.to_ascii_lowercase()
+                    } else {
+                        '-'
+                    }
+                })
+                .collect::<String>()
+        );
+
+        if let Some(window) = app.get_webview_window(&label) {
+            window
+                .set_focus()
+                .map_err(|error| format!("Could not focus HTML webview: {error}"))?;
+        } else {
+            tauri::WebviewWindowBuilder::new(&app, label, tauri::WebviewUrl::External(webview_url))
+                .title(&filename)
+                .inner_size(1000.0, 700.0)
+                .on_document_title_changed(|window, title| {
+                    if let Err(error) = window.set_title(&title) {
+                        eprintln!("Could not update HTML webview title: {error}");
+                    }
+                })
+                .build()
+                .map_err(|error| format!("Could not open HTML webview: {error}"))?;
+        }
+
+        return Ok(format!("Opened {filename}"));
+    }
+
     #[cfg(not(target_os = "macos"))]
     {
-        let _ = (app, filename, args, minimize_after_launch);
+        let _ = (app, script_path, url, args, minimize_after_launch);
         return Err("Running InDesign scripts is only supported on macOS.".to_string());
     }
 
     #[cfg(target_os = "macos")]
     {
-        let info = detect_id_info()?;
-        let script_path = format!("{}/{}", info.script_path, filename);
+        let script_path = script_path.to_string_lossy().into_owned();
         let arguments = args.unwrap_or_default();
         let argument_list = arguments
             .iter()
