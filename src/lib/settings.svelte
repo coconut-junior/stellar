@@ -69,7 +69,7 @@
                </Item.Content>
                <Item.Description>{uiScale[0]}%</Item.Description>
             </div>
-            <Slider bind:value={uiScale} min={80} max={120} step={5} aria-label="UI scale" />
+            <Slider class= 'mb-2' bind:value={uiScale} min={80} max={120} step={5} aria-label="UI scale" />
          </Item.Root>
       </Card.Content>
    </Card.Root>

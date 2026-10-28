@@ -108,7 +108,7 @@
          <div aria-hidden="true" class="absolute bottom-0 left-[-5rem] right-0 h-px bg-border"></div>
       </div>
 
-      <Tabs.Content value="automation" class="w-full flex-1 overflow-y-auto  p-1">
+      <Tabs.Content value="automation" class="w-full flex-1 overflow-y-auto mt-4  p-1">
          <Automation
             onStatusChange={(status) => (downloadStatus = status)}
             minimizeAfterLaunch={minimizeAfterLaunch}
