@@ -106,7 +106,7 @@
 
    </Tabs.Root>
 
-   <div class="flex justify-center fixed bottom-0 left-0 flex h-10 w-full items-center gap-2 overflow-hidden border-solid border-t bg-background p-2">
+   <div class="flex justify-center fixed bottom-0 left-0 flex h-10 w-full items-center gap-2 overflow-hidden border-solid border-t bg-background p-4">
       {#if downloadStatus.downloading}
          <Spinner />
       {/if}

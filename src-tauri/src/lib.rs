@@ -61,10 +61,6 @@ fn download_scripts_in_background(app: &tauri::AppHandle) -> Result<String, Stri
     fs::create_dir_all(&info.script_path)
         .map_err(|error| format!("Could not create Scripts Panel directory: {error}"))?;
 
-    let dependencies: Vec<_> = dependencies
-        .into_iter()
-        .filter(|script| !script.filename.to_ascii_lowercase().ends_with(".zip"))
-        .collect();
     let total = dependencies.len();
 
     for (index, script) in dependencies.iter().enumerate() {
@@ -111,6 +107,29 @@ fn download_scripts_in_background(app: &tauri::AppHandle) -> Result<String, Stri
                 },
             )
             .map_err(|error| format!("Could not report download progress: {error}"))?;
+        }
+
+        if filename.to_ascii_lowercase().ends_with(".zip") {
+            file.flush()
+                .map_err(|error| format!("Could not save {filename}: {error}"))?;
+            drop(file);
+
+            let folder_name = Path::new(filename)
+                .file_stem()
+                .and_then(|name| name.to_str())
+                .filter(|name| !name.is_empty())
+                .ok_or_else(|| format!("Invalid ZIP filename: {filename}"))?;
+            let extract_path = Path::new(&info.script_path).join(folder_name);
+            let mut archive = zip::ZipArchive::new(
+                File::open(&destination)
+                    .map_err(|error| format!("Could not open {filename}: {error}"))?,
+            )
+            .map_err(|error| format!("Could not read {filename}: {error}"))?;
+            archive
+                .extract(&extract_path)
+                .map_err(|error| format!("Could not extract {filename}: {error}"))?;
+            fs::remove_file(&destination)
+                .map_err(|error| format!("Could not remove extracted archive {filename}: {error}"))?;
         }
     }
 
