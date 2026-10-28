@@ -75,6 +75,7 @@
 
    async function startWindowDrag(event: MouseEvent) {
       if (event.button !== 0) return;
+      event.preventDefault();
 
       try {
          await getCurrentWindow().startDragging();
@@ -134,7 +135,7 @@
 </main>
 
 <div
-   class="fixed left-20 top-0 z-50 h-11 right-0"
+   class="fixed left-20 top-0 z-50 h-11 right-0 cursor-default select-none"
    role="presentation"
    onmousedown={startWindowDrag}
 ></div>

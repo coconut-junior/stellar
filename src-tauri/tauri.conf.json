@@ -56,7 +56,7 @@
         "resizable": true,
         "theme": "Dark",
         "titleBarStyle": "Overlay",
-        "title": "Stellar",
+        "title": "",
         "width": 800,
         "visible": false,
         "useHttpsScheme": true
