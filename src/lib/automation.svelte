@@ -6,8 +6,6 @@
    import * as Card from "$lib/components/ui/card/index.js";
    import Update from '@lucide/svelte/icons/rotate-cw';
    import CodeXML from '@lucide/svelte/icons/code-xml';
-   import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
-   import { Input } from "$lib/components/ui/input/index.js";
    import SearchIcon from "@lucide/svelte/icons/search";
    import * as InputGroup from "$lib/components/ui/input-group/index.js";
    import { Skeleton } from "$lib/components/ui/skeleton/index.js";
@@ -60,6 +58,8 @@
    let downloadProgress = $state<DownloadProgress | null>(null);
    let downloadMessage = $state<string | null>(null);
    let searchText = $state("");
+   let completedDownloads = $state<string[]>([]);
+   let activeDownloadFilename = $state<string | null>(null);
 
    onMount(() => {
       let disposed = false;
@@ -69,10 +69,19 @@
          const listeners = await Promise.all([
             listen<DownloadProgress>('scripts-download-progress', (event) => {
                downloadProgress = event.payload;
+               if (activeDownloadFilename && activeDownloadFilename !== event.payload.filename) {
+                  markDownloaded(activeDownloadFilename);
+               }
+               activeDownloadFilename = event.payload.filename;
+               if (event.payload.size !== undefined && event.payload.downloaded >= event.payload.size) {
+                  markDownloaded(event.payload.filename);
+               }
                onStatusChange({ progress: downloadProgress, message: downloadMessage, downloading });
             }),
             listen<string>('scripts-download-complete', (event) => {
                downloading = false;
+               completedDownloads = scripts.map((script) => getFilename(script.filename));
+               activeDownloadFilename = null;
                downloadMessage = event.payload;
                onStatusChange({ progress: downloadProgress, message: downloadMessage, downloading });
             }),
@@ -112,6 +121,8 @@
       downloading = true;
       downloadProgress = null;
       downloadMessage = null;
+      completedDownloads = [];
+      activeDownloadFilename = null;
       onStatusChange({ progress: downloadProgress, message: downloadMessage, downloading });
       try {
          await invoke<string>('download_scripts');
@@ -120,6 +131,20 @@
          onStatusChange({ progress: downloadProgress, message: downloadMessage, downloading });
          alert(String(error));
       }
+   }
+
+   function getFilename(filename: string) {
+      return filename.split(/[\\/]/).at(-1) ?? filename;
+   }
+
+   function markDownloaded(filename: string) {
+      if (!completedDownloads.includes(filename)) {
+         completedDownloads = [...completedDownloads, filename];
+      }
+   }
+
+   function isDownloaded(filename: string) {
+      return completedDownloads.includes(getFilename(filename));
    }
 
    async function editCode(filename: string) {
@@ -173,8 +198,21 @@
    <Card.Content>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
          {#each scripts.filter((script) => !script.hidden) as script (script.filename)}
-   
-         <!-- Automation card -->
+         {#if !isDownloaded(script.filename)}
+            <Card.Root size="sm" hidden={!script.name.toLowerCase().match(searchText.toLowerCase())} aria-label={`Downloading ${script.name}`} aria-busy="true">
+               <Card.Header>
+                  <Skeleton class="h-5 w-3/4" />
+                  <div class="flex items-center gap-2">
+                     <Skeleton class="h-4 w-10" />
+                     <Skeleton class="h-4 w-20" />
+                  </div>
+               </Card.Header>
+               <Card.Footer class="gap-1">
+                  <Skeleton class="h-9 w-20" />
+                  <Skeleton class="h-9 w-9" />
+               </Card.Footer>
+            </Card.Root>
+         {:else}
          <Card.Root size="sm" hidden={!script.name.toLowerCase().match(searchText.toLowerCase())}>
                <Card.Header>
                   <Card.Title>
@@ -202,6 +240,7 @@
                   
                </Card.Footer>
             </Card.Root>
+         {/if}
          {/each}
       </div>
       
