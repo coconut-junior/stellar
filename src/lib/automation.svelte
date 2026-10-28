@@ -3,6 +3,7 @@
    import { invoke } from '@tauri-apps/api/core';
    import { listen } from '@tauri-apps/api/event';
    import { onMount } from 'svelte';
+   import { fly } from 'svelte/transition';
    import * as Card from "$lib/components/ui/card/index.js";
    import Update from '@lucide/svelte/icons/rotate-cw';
    import CodeXML from '@lucide/svelte/icons/code-xml';
@@ -60,10 +61,17 @@
    let searchText = $state("");
    let completedDownloads = $state<string[]>([]);
    let activeDownloadFilename = $state<string | null>(null);
+   let prefersReducedMotion = $state(false);
 
    onMount(() => {
       let disposed = false;
       let unlisten: (() => void)[] = [];
+      const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const updateReducedMotion = (event: MediaQueryListEvent) => {
+         prefersReducedMotion = event.matches;
+      };
+      prefersReducedMotion = reducedMotionQuery.matches;
+      reducedMotionQuery.addEventListener('change', updateReducedMotion);
 
       const setup = async () => {
          const listeners = await Promise.all([
@@ -120,6 +128,7 @@
       return () => {
          disposed = true;
          unlisten.forEach((stopListening) => stopListening());
+         reducedMotionQuery.removeEventListener('change', updateReducedMotion);
       };
    });
 
@@ -172,6 +181,7 @@
    }
 </script>
 
+<div class:automation-downloading={downloading}>
 <Tooltip.Provider>
 <Card.Root class="mb-4 w-full">
    <Card.Header class="flex wrap items-center flex-col sm:flex-row sm:justify-between gap-4">
@@ -221,7 +231,11 @@
                </Card.Footer>
             </Card.Root>
          {:else}
-         <Card.Root size="sm" hidden={!script.name.toLowerCase().match(searchText.toLowerCase())}>
+         <div
+            in:fly={{ y: 28, duration: prefersReducedMotion ? 0 : 420 }}
+            hidden={!script.name.toLowerCase().match(searchText.toLowerCase())}
+         >
+         <Card.Root size="sm">
                <Card.Header>
                   <Card.Title>
                      <span class="text-ellipsis truncate">{script.name}</span>
@@ -248,10 +262,19 @@
                   
                </Card.Footer>
             </Card.Root>
+         </div>
          {/if}
          {/each}
       </div>
       
    </Card.Content>
-</Card.Root>
-</Tooltip.Provider>
+   </Card.Root>
+   </Tooltip.Provider>
+</div>
+
+<style>
+   :global(.automation-downloading),
+   :global(.automation-downloading *) {
+      cursor: wait !important;
+   }
+</style>

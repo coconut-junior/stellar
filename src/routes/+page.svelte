@@ -95,7 +95,7 @@
          <img src={darkMode ? "/logo-horizontal.svg" : "/logo-horizontal-light.svg"} alt="logo" class="h-8 w-auto" />
 
          <!-- Tab Labels -->
-         <Tabs.List class="grid grid-cols-2 bg-transparent">
+         <Tabs.List class="grid grid-cols-2 bg-transparent gap-2">
             <Tabs.Trigger class = 'p-2' value="automation"><Library/>Library</Tabs.Trigger>
             <Tabs.Trigger value="info"><SettingsIcon/>Preferences</Tabs.Trigger>
          </Tabs.List>
