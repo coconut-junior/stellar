@@ -55,7 +55,7 @@
         "minWidth": 480,
         "resizable": true,
         "theme": "Dark",
-        "titleBarStyle": "Transparent",
+        "titleBarStyle": "Overlay",
         "title": "Stellar",
         "width": 800,
         "visible": false,
