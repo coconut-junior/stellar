@@ -174,9 +174,9 @@
 
 <Tooltip.Provider>
 <Card.Root class="mb-4 mt-4 w-full">
-   <Card.Header class="flex wrap items-center flex-col sm:flex-row sm:justify-between">
+   <Card.Header class="flex wrap items-center flex-col sm:flex-row sm:justify-between gap-4">
       
-      <div>
+      <div class = "flex">
          <Card.Title>Automation Library</Card.Title>
       </div>
 
