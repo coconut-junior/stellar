@@ -90,6 +90,12 @@
                downloadMessage = null;
                onStatusChange({ progress: downloadProgress, message: downloadMessage, downloading });
                alert(event.payload);
+            }),
+            listen<{ previous: number; current: number }>('indesign-version-changed', (event) => {
+               alert(
+                  `A new version of InDesign (${event.payload.current}) was installed since Stellar last ran (version ${event.payload.previous}). Stellar needs to reinstall its automations.`
+               );
+               void downloadScripts(true);
             })
          ]);
 
@@ -117,7 +123,7 @@
       };
    });
 
-   async function downloadScripts() {
+   async function downloadScripts(updateVersionMarker = false) {
       downloading = true;
       downloadProgress = null;
       downloadMessage = null;
@@ -125,7 +131,7 @@
       activeDownloadFilename = null;
       onStatusChange({ progress: downloadProgress, message: downloadMessage, downloading });
       try {
-         await invoke<string>('download_scripts');
+         await invoke<string>('download_scripts', { updateVersionMarker });
       } catch (error) {
          downloading = false;
          onStatusChange({ progress: downloadProgress, message: downloadMessage, downloading });
@@ -181,7 +187,7 @@
             </InputGroup.Addon>
          </InputGroup.Root>
 
-         <Button variant="outline" class="gap-2" disabled={downloading} onclick={downloadScripts}>
+         <Button variant="outline" class="gap-2" disabled={downloading} onclick={() => downloadScripts()}>
             {#if downloading}
                <span>Installing...</span>
             {:else}

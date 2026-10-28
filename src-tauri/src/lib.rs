@@ -34,9 +34,12 @@ struct DownloadProgress {
 }
 
 #[tauri::command]
-fn download_scripts(app: tauri::AppHandle) -> Result<String, String> {
+fn download_scripts(
+    app: tauri::AppHandle,
+    update_version_marker: Option<bool>,
+) -> Result<String, String> {
     std::thread::spawn(move || {
-        let result = download_scripts_in_background(&app);
+        let result = download_scripts_in_background(&app, update_version_marker.unwrap_or(false));
         let event = match result {
             Ok(message) => ("scripts-download-complete", message),
             Err(error) => ("scripts-download-error", error),
@@ -47,7 +50,10 @@ fn download_scripts(app: tauri::AppHandle) -> Result<String, String> {
     Ok("Script download started".to_string())
 }
 
-fn download_scripts_in_background(app: &tauri::AppHandle) -> Result<String, String> {
+fn download_scripts_in_background(
+    app: &tauri::AppHandle,
+    update_version_marker: bool,
+) -> Result<String, String> {
     let client = reqwest::blocking::Client::new();
     let dependencies = fetch_dependencies(&client)?;
     let dependencies: Vec<ScriptDependency> = serde_json::from_value(
@@ -133,9 +139,45 @@ fn download_scripts_in_background(app: &tauri::AppHandle) -> Result<String, Stri
         }
     }
 
+    if update_version_marker || last_installed_indesign_version(app)?.is_none() {
+        save_last_installed_indesign_version(app, info.year)?;
+    }
+
     Ok(format!(
         "Downloaded {total} scripts"
     ))
+}
+
+fn last_installed_indesign_version(app: &tauri::AppHandle) -> Result<Option<i32>, String> {
+    let path = app
+        .path()
+        .app_config_dir()
+        .map_err(|error| format!("Could not find Stellar config directory: {error}"))?
+        .join("last_indesign_version");
+
+    match fs::read_to_string(path) {
+        Ok(version) => version
+            .trim()
+            .parse::<i32>()
+            .map(Some)
+            .map_err(|error| format!("Could not read saved InDesign version: {error}")),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(None),
+        Err(error) => Err(format!("Could not read saved InDesign version: {error}")),
+    }
+}
+
+fn save_last_installed_indesign_version(
+    app: &tauri::AppHandle,
+    version: i32,
+) -> Result<(), String> {
+    let config_dir = app
+        .path()
+        .app_config_dir()
+        .map_err(|error| format!("Could not find Stellar config directory: {error}"))?;
+    fs::create_dir_all(&config_dir)
+        .map_err(|error| format!("Could not create Stellar config directory: {error}"))?;
+    fs::write(config_dir.join("last_indesign_version"), version.to_string())
+        .map_err(|error| format!("Could not save installed InDesign version: {error}"))
 }
 
 #[tauri::command]
@@ -155,6 +197,24 @@ fn run_script(
     minimize_after_launch: Option<bool>,
 ) -> Result<String, String> {
     let info = detect_id_info()?;
+    if let Some(previous_version) = last_installed_indesign_version(&app)? {
+        if previous_version != info.year {
+            app.emit(
+                "indesign-version-changed",
+                serde_json::json!({
+                    "previous": previous_version,
+                    "current": info.year,
+                }),
+            )
+            .map_err(|error| {
+                format!("Could not notify the app about the InDesign update: {error}")
+            })?;
+            return Ok(
+                "InDesign version changed; automations need to be reinstalled".to_string(),
+            );
+        }
+    }
+
     let script_path = Path::new(&info.script_path).join(&filename);
 
     let is_html_file = Path::new(&filename)
