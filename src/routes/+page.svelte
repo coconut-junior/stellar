@@ -88,7 +88,7 @@
 
 <LightRays class = "absolute inset-0 opacity-30" raysOrigin="top-right" raysColor={darkMode ? "" : "#000000"} saturation={darkMode ? 10 : 5} raysSpeed={1} />
 
-<main style={`zoom: ${uiScale[0] / 100}`} class="{darkMode ? 'dark' : ''} bg-background text-foreground flex h-full w-full flex-col items-center gap-4 overflow-hidden absolute inset-0">
+<main style={`zoom: ${uiScale[0] / 100}`} class="{darkMode ? 'dark' : 'light'} bg-background text-foreground flex h-full w-full flex-col items-center gap-4 overflow-hidden absolute inset-0">
    <Tabs.Root bind:value={activeTab} class="relative flex min-h-0 flex-1 flex-col w-full px-6 pt-16 pb-6">
 
       <div class="absolute left-20 right-0 top-0 z-50 flex h-16 items-center gap-6 px-4">
@@ -105,7 +105,7 @@
             role="presentation"
             onmousedown={startWindowDrag}
          ></div>
-         <div aria-hidden="true" class="absolute bottom-0 left-[-5rem] right-0 h-px bg-border"></div>
+         <div aria-hidden="true" class="absolute bottom-0 left-[-5rem] right-0 h-px border-b-1 border-b-input"></div>
       </div>
 
       <Tabs.Content value="automation" class="w-full flex-1 overflow-y-auto mt-4 p-1 pb-10">
