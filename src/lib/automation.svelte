@@ -214,7 +214,7 @@
 
 <Card.Root>
    <Card.Content>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 pb-4">
          {#each scripts.filter((script) => !script.hidden) as script (script.filename)}
          {#if !isDownloaded(script.filename)}
             <Card.Root size="sm" hidden={!script.name.toLowerCase().match(searchText.toLowerCase())} aria-label={`Downloading ${script.name}`} aria-busy="true">
