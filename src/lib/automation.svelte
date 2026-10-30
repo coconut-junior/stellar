@@ -8,6 +8,7 @@
    import Update from '@lucide/svelte/icons/rotate-cw';
    import CodeXML from '@lucide/svelte/icons/code-xml';
    import SearchIcon from "@lucide/svelte/icons/search";
+   import FolderIcon from "@lucide/svelte/icons/folder";
    import * as InputGroup from "$lib/components/ui/input-group/index.js";
    import { Skeleton } from "$lib/components/ui/skeleton/index.js";
    import * as Tooltip from "$lib/components/ui/tooltip/index.js";
@@ -148,6 +149,10 @@
       }
    }
 
+   async function openScriptFolder() {
+      await invoke<string>('open_script_folder');
+   }
+
    function getFilename(filename: string) {
       return filename.split(/[\\/]/).at(-1) ?? filename;
    }
@@ -197,6 +202,15 @@
                <SearchIcon />
             </InputGroup.Addon>
          </InputGroup.Root>
+
+         <Tooltip.Root>
+            <Tooltip.Trigger>
+               <Button variant="outline" size="icon" onclick= {() => openScriptFolder()}><FolderIcon/></Button>
+            </Tooltip.Trigger>
+            <Tooltip.Content>
+               Open script folder
+            </Tooltip.Content>
+         </Tooltip.Root>
 
          <Button variant="outline" class="gap-2" disabled={downloading} onclick={() => downloadScripts()}>
             {#if downloading}

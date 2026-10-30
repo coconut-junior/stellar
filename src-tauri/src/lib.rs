@@ -50,6 +50,12 @@ fn download_scripts(
     Ok("Script download started".to_string())
 }
 
+#[tauri::command]
+fn open_script_folder(){
+    println!("Opening {}", info.script_path);
+    let _ = Command::new("open").args([info.script_path]).output();
+}
+
 fn download_scripts_in_background(
     app: &tauri::AppHandle,
     update_version_marker: bool,
@@ -434,7 +440,8 @@ pub fn run() {
             run_script,
             get_id_info,
             download_scripts,
-            edit_code
+            edit_code,
+            open_script_folder
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
