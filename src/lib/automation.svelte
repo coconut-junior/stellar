@@ -66,6 +66,7 @@
    let activeDownloadFilename = $state<string | null>(null);
    let prefersReducedMotion = $state(false);
    let bookmarkedScripts = $state<string[]>([]);
+   let scriptsLoaded = $state(false);
 
    onMount(() => {
       let disposed = false;
@@ -135,6 +136,7 @@
          try {
             const response = await invoke<InDesignResponse>('get_id_info');
             scripts = response.dependencies.scripts;
+            scriptsLoaded = true;
             void downloadScripts();
          } catch (error) {
             alert(String(error));
@@ -263,22 +265,32 @@
 
 <Card.Root>
    <Card.Content>
-      {#if scripts.some((script) => !script.hidden && isBookmarked(script.filename) && isDownloaded(script.filename))}
-         <section class="mb-5">
-            <h3 class="mb-3 text-lg font-semibold">Bookmarked</h3>
-            <div class="flex flex-wrap gap-2">
-               {#each scripts.filter((script) => !script.hidden && isBookmarked(script.filename) && isDownloaded(script.filename)) as script (script.filename)}
-                  <Button
-                     variant="secondary"
-                     class="max-w-full"
-                     aria-label={`Launch ${script.name}`}
-                     hidden={!script.name.toLowerCase().match(searchText.toLowerCase())}
-                     onclick={() => runScript(script)}
-                  >
-                     <span class="truncate">{script.name}</span>
-                  </Button>
-               {/each}
-            </div>
+      {#if scriptsLoaded}
+         <section class="flex flex-col gap-4 mb-4">
+            <h3 class="text-lg font-semibold">Favorites</h3>
+            {#if scripts.some((script) => !script.hidden && isBookmarked(script.filename))}
+               <div class="flex flex-wrap gap-2">
+                  {#each scripts.filter((script) => !script.hidden && isBookmarked(script.filename) && isDownloaded(script.filename)) as script (script.filename)}
+                     <Button
+                        variant="secondary"
+                        class="max-w-full"
+                        aria-label={`Launch ${script.name}`}
+                        hidden={!script.name.toLowerCase().match(searchText.toLowerCase())}
+                        onclick={() => runScript(script)}
+                     >
+                        <span class="truncate">{script.name}</span>
+                     </Button>
+                  {/each}
+               </div>
+            {:else}
+               <div class="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed px-6 py-8 text-center">
+                  <Star class="size-6 text-muted-foreground" aria-hidden="true" />
+                  <p class="font-medium">No favorites yet</p>
+                  <p class="text-sm text-muted-foreground">
+                     Click the star on an automation to add it to your favorites.
+                  </p>
+               </div>
+            {/if}
             <Separator/>
          </section>
       {/if}
@@ -323,7 +335,7 @@
                         <Button
                            size="icon"
                            variant="outline"
-                           aria-label={isBookmarked(script.filename) ? `Remove ${script.name} bookmark` : `Bookmark ${script.name}`}
+                           aria-label={isBookmarked(script.filename) ? `Remove ${script.name} favorite` : `Favorite ${script.name}`}
                            aria-pressed={isBookmarked(script.filename)}
                            class={isBookmarked(script.filename) ? "text-amber-500" : ""}
                            onclick={() => toggleBookmark(script.filename)}
@@ -332,7 +344,7 @@
                         </Button>
                      </Tooltip.Trigger>
                      <Tooltip.Content>
-                        {isBookmarked(script.filename) ? "Remove bookmark" : "Bookmark automation"}
+                        {isBookmarked(script.filename) ? "Remove favorite" : "Favorite automation"}
                      </Tooltip.Content>
                   </Tooltip.Root>
                   <Tooltip.Root>
