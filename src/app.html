@@ -18,7 +18,8 @@
         place-items: center;
         width: 100%;
         height: 100%;
-        color: #fafafa;
+        color: var(--loading-spinner-color, #4b73ff);
+        background: var(--loading-background, oklch(0.145 0 0));
       }
 
       #app-loading::after {
@@ -37,10 +38,24 @@
         }
       }
     </style>
+    <script>
+      try {
+        const primaryColor = localStorage.getItem('stellar-primary-color');
+        const darkMode = localStorage.getItem('stellar-dark-mode');
+        if (primaryColor && /^#[\da-f]{6}$/i.test(primaryColor)) {
+          document.documentElement.style.setProperty('--loading-spinner-color', primaryColor);
+        }
+        if (darkMode === 'false') {
+          document.documentElement.style.setProperty('--loading-background', 'oklch(1 0 0)');
+        }
+      } catch (error) {
+        console.error('Unable to load saved startup theme:', error);
+      }
+    </script>
     %sveltekit.head%
   </head>
   <body data-sveltekit-preload-data="hover">
-    <div id="app-loading" aria-label="Loading"></div>
+    <div id="app-loading" role="status" aria-label="Loading"></div>
     <div id="app-root" style="display: contents">%sveltekit.body%</div>
   </body>
 </html>
