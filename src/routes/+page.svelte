@@ -33,6 +33,7 @@
    let darkMode = $state(true);
    let minimizeAfterLaunch = $state(false);
    let uiScale = $state([100]);
+   let primaryColor = $state("#4b73ff");
    let settingsLoaded = $state(false);
    let downloadStatus = $state<DownloadStatus>({
       progress: null,
@@ -44,6 +45,7 @@
       const storedDarkMode = localStorage.getItem("stellar-dark-mode");
       const storedMinimizeAfterLaunch = localStorage.getItem("stellar-minimize-after-launch");
       const storedUiScale = localStorage.getItem("stellar-ui-scale");
+      const storedPrimaryColor = localStorage.getItem("stellar-primary-color");
 
       if (storedDarkMode !== null) {
          darkMode = storedDarkMode === "true";
@@ -61,6 +63,9 @@
             uiScale = [100];
          }
       }
+      if (storedPrimaryColor !== null && /^#[\da-f]{6}$/i.test(storedPrimaryColor)) {
+         primaryColor = storedPrimaryColor;
+      }
 
       settingsLoaded = true;
    });
@@ -71,6 +76,7 @@
       localStorage.setItem("stellar-dark-mode", String(darkMode));
       localStorage.setItem("stellar-minimize-after-launch", String(minimizeAfterLaunch));
       localStorage.setItem("stellar-ui-scale", JSON.stringify(uiScale));
+      localStorage.setItem("stellar-primary-color", primaryColor);
    });
 
    async function startWindowDrag(event: MouseEvent) {
@@ -86,9 +92,9 @@
 </script>
 
 
-<LightRays class = "absolute inset-0 opacity-30" raysOrigin="top-right" raysColor={darkMode ? "" : "#000000"} saturation={darkMode ? 10 : 5} raysSpeed={1} />
+<LightRays class = "absolute inset-0 opacity-40" raysOrigin="top-right" raysColor={primaryColor} saturation={darkMode ? 10 : 5} raysSpeed={1} />
 
-<main style={`zoom: ${uiScale[0] / 100}`} class="{darkMode ? 'dark' : 'light'} bg-background text-foreground flex h-full w-full flex-col items-center gap-4 overflow-hidden absolute inset-0">
+<main style={`zoom: ${uiScale[0] / 100}; --primary: ${primaryColor}`} class="{darkMode ? 'dark' : 'light'} bg-background text-foreground flex h-full w-full flex-col items-center gap-4 overflow-hidden absolute inset-0">
    <Tabs.Root bind:value={activeTab} class="relative flex min-h-0 flex-1 flex-col w-full px-6 pt-16 pb-6">
 
       <div class="absolute left-20 right-0 top-0 z-50 flex h-16 items-center gap-6 px-4">
@@ -120,6 +126,7 @@
             bind:darkMode
             bind:minimizeAfterLaunch
             bind:uiScale
+            bind:primaryColor
          />
       </Tabs.Content>
 

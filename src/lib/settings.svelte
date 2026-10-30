@@ -20,12 +20,14 @@
       darkMode?: boolean;
       minimizeAfterLaunch?: boolean;
       uiScale?: number[];
+      primaryColor?: string;
    };
 
    let {
       darkMode = $bindable(true),
       minimizeAfterLaunch = $bindable(false),
-      uiScale = $bindable([100])
+      uiScale = $bindable([100]),
+      primaryColor = $bindable("#4b73ff")
    }: Props = $props();
 
    let indesign = $state<InDesign | null>(null);
@@ -60,6 +62,21 @@
                <Item.Title>Dark mode</Item.Title>
             </Item.Content>
             <Switch bind:checked={darkMode} aria-label="Dark mode" />
+         </Item.Root>
+
+         <Item.Root size="sm" variant="outline" class="mt-1">
+            <Item.Content>
+               <Item.Title>Primary color</Item.Title>
+            </Item.Content>
+            <div class="flex items-center gap-2">
+               <span class="text-sm text-muted-foreground">{primaryColor.toUpperCase()}</span>
+               <input
+                  type="color"
+                  bind:value={primaryColor}
+                  aria-label="Primary color"
+                  class="size-8 cursor-pointer rounded-md border border-border bg-transparent p-0.5"
+               />
+            </div>
          </Item.Root>
 
          <Item.Root size="sm" variant="outline" class="mt-1 flex-col items-stretch gap-3">
