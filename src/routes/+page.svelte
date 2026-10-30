@@ -98,7 +98,9 @@
    <Tabs.Root bind:value={activeTab} class="relative flex min-h-0 flex-1 flex-col w-full px-6 pt-16 pb-6">
 
       <div class="absolute left-20 right-0 top-0 z-50 flex h-16 items-center gap-6 px-4">
-         <img src={darkMode ? "/logo-horizontal.svg" : "/logo-horizontal-light.svg"} alt="logo" class="h-8 w-auto" />
+         <div role="presentation" onmousedown={startWindowDrag}>
+            <img src={darkMode ? "/logo-horizontal.svg" : "/logo-horizontal-light.svg"} alt="logo" class="h-8 w-auto" />
+         </div>
 
          <!-- Tab Labels -->
          <Tabs.List class="grid grid-cols-2 bg-transparent gap-2">
@@ -118,6 +120,8 @@
          <Automation
             onStatusChange={(status) => (downloadStatus = status)}
             minimizeAfterLaunch={minimizeAfterLaunch}
+            darkMode={darkMode}
+            primaryColor={primaryColor}
          />
       </Tabs.Content>
 

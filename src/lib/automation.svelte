@@ -5,8 +5,9 @@
    import { onMount } from 'svelte';
    import { fly } from 'svelte/transition';
    import * as Card from "$lib/components/ui/card/index.js";
+   import ScriptDetailsDrawer from "$lib/components/script-details-drawer.svelte";
+   import AutomationCard from "$lib/components/automation-card.svelte";
    import Update from '@lucide/svelte/icons/rotate-cw';
-   import CodeXML from '@lucide/svelte/icons/code-xml';
    import Star from '@lucide/svelte/icons/star';
    import SearchIcon from "@lucide/svelte/icons/search";
    import FolderIcon from "@lucide/svelte/icons/folder";
@@ -14,8 +15,7 @@
    import * as InputGroup from "$lib/components/ui/input-group/index.js";
    import { Skeleton } from "$lib/components/ui/skeleton/index.js";
    import * as Tooltip from "$lib/components/ui/tooltip/index.js";
-   import { Badge } from "$lib/components/ui/badge/index.js";
-  import Separator from './components/ui/separator/separator.svelte';
+   import Separator from './components/ui/separator/separator.svelte';
   
    type ScriptDependency = {
       name: string;
@@ -54,9 +54,11 @@
    type Props = {
       onStatusChange: (status: DownloadStatus) => void;
       minimizeAfterLaunch: boolean;
+      darkMode: boolean;
+      primaryColor: string;
    };
 
-   let { onStatusChange, minimizeAfterLaunch }: Props = $props();
+   let { onStatusChange, minimizeAfterLaunch, darkMode, primaryColor }: Props = $props();
 
    let scripts = $state<ScriptDependency[]>([]);
    let downloading = $state(true);
@@ -68,6 +70,8 @@
    let prefersReducedMotion = $state(false);
    let bookmarkedScripts = $state<string[]>([]);
    let scriptsLoaded = $state(false);
+   let selectedScript = $state<ScriptDependency | null>(null);
+   let scriptDetailsOpen = $state(false);
 
    onMount(() => {
       let disposed = false;
@@ -273,12 +277,12 @@
                <div class="flex flex-wrap gap-2">
                   {#each scripts.filter((script) => !script.hidden && isBookmarked(script.filename) && isDownloaded(script.filename)) as script (script.filename)}
                      <Button
-                        variant="secondary"
                         class="max-w-full"
                         aria-label={`Launch ${script.name}`}
                         hidden={!script.name.toLowerCase().match(searchText.toLowerCase())}
                         onclick={() => runScript(script)}
                      >
+                        <Zap/>
                         <span class="truncate">{script.name}</span>
                      </Button>
                   {/each}
@@ -316,50 +320,17 @@
             in:fly={{ y: 28, duration: prefersReducedMotion ? 0 : 420 }}
             hidden={!script.name.toLowerCase().match(searchText.toLowerCase())}
          >
-         <Card.Root size="sm">
-               <Card.Header>
-                  <Card.Title class="w-full min-w-0">
-                     <div class="flex w-full min-w-0 items-center gap-2">
-                        <span class="min-w-0 flex-1 truncate">{script.name}</span>
-                        <Badge class="shrink-0" variant="outline">{script.filename.split('.')[1].toUpperCase()}</Badge>
-                     </div>
-                  </Card.Title>
-
-               </Card.Header>
-               <Card.Footer class="gap-1">
-                  <Button variant="outline" disabled={false} onclick={() => runScript(script)}>
-                     <Zap class="text-amber-500"/>
-                     Launch
-                  </Button>
-                  <Tooltip.Root>
-                     <Tooltip.Trigger>
-                        <Button
-                           size="icon"
-                           variant="outline"
-                           aria-label={isBookmarked(script.filename) ? `Remove ${script.name} favorite` : `Favorite ${script.name}`}
-                           aria-pressed={isBookmarked(script.filename)}
-                           class={isBookmarked(script.filename) ? "text-amber-500" : ""}
-                           onclick={() => toggleBookmark(script.filename)}
-                        >
-                           <Star fill={isBookmarked(script.filename) ? "currentColor" : "none"} />
-                        </Button>
-                     </Tooltip.Trigger>
-                     <Tooltip.Content>
-                        {isBookmarked(script.filename) ? "Remove favorite" : "Favorite automation"}
-                     </Tooltip.Content>
-                  </Tooltip.Root>
-                  <Tooltip.Root>
-                     <Tooltip.Trigger>
-                        <Button size="icon" variant="outline" disabled={false} onclick={()=>editCode(script.filename)}>
-                           <CodeXML/>
-                        </Button></Tooltip.Trigger>
-                     <Tooltip.Content>
-                        Edit code
-                     </Tooltip.Content>
-                  </Tooltip.Root>
-                  
-               </Card.Footer>
-            </Card.Root>
+            <AutomationCard
+               {script}
+               bookmarked={isBookmarked(script.filename)}
+               onLaunch={() => runScript(script)}
+               onToggleBookmark={() => toggleBookmark(script.filename)}
+               onEdit={() => editCode(script.filename)}
+               onShowDetails={() => {
+                  selectedScript = script;
+                  scriptDetailsOpen = true;
+               }}
+            />
          </div>
          {/if}
          {/each}
@@ -367,6 +338,13 @@
       
    </Card.Content>
    </Card.Root>
+
+   <ScriptDetailsDrawer
+      bind:open={scriptDetailsOpen}
+      script={selectedScript}
+      {darkMode}
+      {primaryColor}
+   />
    </Tooltip.Provider>
 </div>
 
