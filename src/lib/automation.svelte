@@ -10,6 +10,7 @@
    import Star from '@lucide/svelte/icons/star';
    import SearchIcon from "@lucide/svelte/icons/search";
    import FolderIcon from "@lucide/svelte/icons/folder";
+   import Zap from "@lucide/svelte/icons/zap";
    import * as InputGroup from "$lib/components/ui/input-group/index.js";
    import { Skeleton } from "$lib/components/ui/skeleton/index.js";
    import * as Tooltip from "$lib/components/ui/tooltip/index.js";
@@ -317,17 +318,17 @@
          >
          <Card.Root size="sm">
                <Card.Header>
-                  <Card.Title>
-                     <span class="text-ellipsis truncate">{script.name}</span>
+                  <Card.Title class="w-full min-w-0">
+                     <div class="flex w-full min-w-0 items-center gap-2">
+                        <span class="min-w-0 flex-1 truncate">{script.name}</span>
+                        <Badge class="shrink-0" variant="outline">{script.filename.split('.')[1].toUpperCase()}</Badge>
+                     </div>
                   </Card.Title>
-                  <Card.Description>
-                     <Badge variant="outline">{script.filename.split('.')[1].toUpperCase()}</Badge>
-                     Version {script.version}
-                  </Card.Description>
+
                </Card.Header>
                <Card.Footer class="gap-1">
                   <Button variant="outline" disabled={false} onclick={() => runScript(script)}>
-                     ⚡️
+                     <Zap class="text-amber-500"/>
                      Launch
                   </Button>
                   <Tooltip.Root>
