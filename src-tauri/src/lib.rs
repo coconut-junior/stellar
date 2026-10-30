@@ -52,6 +52,7 @@ fn download_scripts(
 
 #[tauri::command]
 fn open_script_folder(){
+    let info = detect_id_info().unwrap();
     println!("Opening {}", info.script_path);
     let _ = Command::new("open").args([info.script_path]).output();
 }

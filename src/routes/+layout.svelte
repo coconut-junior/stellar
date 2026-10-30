@@ -1,5 +1,6 @@
 <script lang="ts">
 	import "../app.css";
+	import "./layout.css";
 	import { onMount } from "svelte";
 
 	interface Props { children?: import('svelte').Snippet }

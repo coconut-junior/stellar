@@ -7,12 +7,14 @@
    import * as Card from "$lib/components/ui/card/index.js";
    import Update from '@lucide/svelte/icons/rotate-cw';
    import CodeXML from '@lucide/svelte/icons/code-xml';
+   import Star from '@lucide/svelte/icons/star';
    import SearchIcon from "@lucide/svelte/icons/search";
    import FolderIcon from "@lucide/svelte/icons/folder";
    import * as InputGroup from "$lib/components/ui/input-group/index.js";
    import { Skeleton } from "$lib/components/ui/skeleton/index.js";
    import * as Tooltip from "$lib/components/ui/tooltip/index.js";
    import { Badge } from "$lib/components/ui/badge/index.js";
+  import Separator from './components/ui/separator/separator.svelte';
   
    type ScriptDependency = {
       name: string;
@@ -63,10 +65,25 @@
    let completedDownloads = $state<string[]>([]);
    let activeDownloadFilename = $state<string | null>(null);
    let prefersReducedMotion = $state(false);
+   let bookmarkedScripts = $state<string[]>([]);
 
    onMount(() => {
       let disposed = false;
       let unlisten: (() => void)[] = [];
+      try {
+         const storedBookmarks = localStorage.getItem('stellar-bookmarked-scripts');
+         if (storedBookmarks) {
+            const parsedBookmarks: unknown = JSON.parse(storedBookmarks);
+            if (Array.isArray(parsedBookmarks) && parsedBookmarks.every((filename) => typeof filename === 'string')) {
+               bookmarkedScripts = parsedBookmarks;
+            } else {
+               console.error('Stored automation bookmarks have an invalid format.');
+            }
+         }
+      } catch (error) {
+         console.error('Unable to load automation bookmarks:', error);
+      }
+
       const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
       const updateReducedMotion = (event: MediaQueryListEvent) => {
          prefersReducedMotion = event.matches;
@@ -167,6 +184,24 @@
       return completedDownloads.includes(getFilename(filename));
    }
 
+   function isBookmarked(filename: string) {
+      return bookmarkedScripts.includes(filename);
+   }
+
+   function toggleBookmark(filename: string) {
+      const updatedBookmarks = isBookmarked(filename)
+         ? bookmarkedScripts.filter((bookmarkedFilename) => bookmarkedFilename !== filename)
+         : [...bookmarkedScripts, filename];
+
+      try {
+         localStorage.setItem('stellar-bookmarked-scripts', JSON.stringify(updatedBookmarks));
+         bookmarkedScripts = updatedBookmarks;
+      } catch (error) {
+         console.error('Unable to save automation bookmarks:', error);
+         alert(`Unable to save automation bookmarks: ${String(error)}`);
+      }
+   }
+
    async function editCode(filename: string) {
       await invoke('edit_code', {filename});
    }
@@ -228,6 +263,25 @@
 
 <Card.Root>
    <Card.Content>
+      {#if scripts.some((script) => !script.hidden && isBookmarked(script.filename) && isDownloaded(script.filename))}
+         <section class="mb-5">
+            <h3 class="mb-3 text-lg font-semibold">Bookmarked</h3>
+            <div class="flex flex-wrap gap-2">
+               {#each scripts.filter((script) => !script.hidden && isBookmarked(script.filename) && isDownloaded(script.filename)) as script (script.filename)}
+                  <Button
+                     variant="secondary"
+                     class="max-w-full"
+                     aria-label={`Launch ${script.name}`}
+                     hidden={!script.name.toLowerCase().match(searchText.toLowerCase())}
+                     onclick={() => runScript(script)}
+                  >
+                     <span class="truncate">{script.name}</span>
+                  </Button>
+               {/each}
+            </div>
+            <Separator/>
+         </section>
+      {/if}
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 pb-4">
          {#each scripts.filter((script) => !script.hidden) as script (script.filename)}
          {#if !isDownloaded(script.filename)}
@@ -264,6 +318,23 @@
                      ⚡️
                      Launch
                   </Button>
+                  <Tooltip.Root>
+                     <Tooltip.Trigger>
+                        <Button
+                           size="icon"
+                           variant="outline"
+                           aria-label={isBookmarked(script.filename) ? `Remove ${script.name} bookmark` : `Bookmark ${script.name}`}
+                           aria-pressed={isBookmarked(script.filename)}
+                           class={isBookmarked(script.filename) ? "text-amber-500" : ""}
+                           onclick={() => toggleBookmark(script.filename)}
+                        >
+                           <Star fill={isBookmarked(script.filename) ? "currentColor" : "none"} />
+                        </Button>
+                     </Tooltip.Trigger>
+                     <Tooltip.Content>
+                        {isBookmarked(script.filename) ? "Remove bookmark" : "Bookmark automation"}
+                     </Tooltip.Content>
+                  </Tooltip.Root>
                   <Tooltip.Root>
                      <Tooltip.Trigger>
                         <Button size="icon" variant="outline" disabled={false} onclick={()=>editCode(script.filename)}>
