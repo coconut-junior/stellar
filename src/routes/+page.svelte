@@ -114,14 +114,14 @@
          <div aria-hidden="true" class="absolute bottom-0 left-[-5rem] right-0 h-px border-b-1 border-border"></div>
       </div>
 
-      <Tabs.Content value="automation" class="w-full flex-1 overflow-y-auto mt-4 p-1 pb-10">
+      <Tabs.Content value="automation" class="w-full flex-1 overflow-y-auto p-1 pb-10">
          <Automation
             onStatusChange={(status) => (downloadStatus = status)}
             minimizeAfterLaunch={minimizeAfterLaunch}
          />
       </Tabs.Content>
 
-      <Tabs.Content value="info" class="min-h-0 w-full flex-1 overflow-y-auto mt-4 p-1 pb-10">
+      <Tabs.Content value="info" class="min-h-0 w-full flex-1 overflow-y-auto p-1 pb-10">
          <Info
             bind:darkMode
             bind:minimizeAfterLaunch

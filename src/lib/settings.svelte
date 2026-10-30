@@ -42,7 +42,7 @@
    });
 </script>
 
-<div class="flex w-full flex-col items-center gap-4">
+<div class="flex w-full flex-col items-center gap-4 mt-4">
    <Card.Root class="w-full max-w-lg">
       <Card.Header>
          <Card.Title>Preferences</Card.Title>
