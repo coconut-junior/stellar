@@ -7,3 +7,5 @@ release
 *.map
 .env
 .DS_Store
+.svelte-kit
+src-tauri
