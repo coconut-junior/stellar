@@ -15,7 +15,7 @@ interface Asset {
 
 var apiKey: string = wFs.readFileSync(
   wPath.join(__dirname, 'lytho_api.key'),
-  'utf8'
+  'utf8',
 );
 
 function timeout(ms) {
@@ -28,7 +28,7 @@ function timeout(ms) {
 
 const requestOverloadMsg =
   'Looks like Lytho is overloaded at the moment! Please try again in a few minutes.';
-const cooldown = 50;
+const cooldown = 100;
 
 const host = 'openapi.us-1.lytho.us';
 var headers = {
@@ -182,9 +182,9 @@ function findMatch(brand) {
   return new Promise(async (resolve, reject) => {
     //replace with new function to get assets by tags
     let logoTagId = await getTagId('logo');
-    timeout(100); //if we dont wait here, server will respond with "too many requests"
+    timeout(cooldown); //if we dont wait here, server will respond with "too many requests"
     let brandTagId = await getTagId(brand);
-    timeout(100);
+    timeout(cooldown);
 
     getAssetsByTags(`${logoTagId},${brandTagId}`).then((assets: any[]) => {
       if (brandTagId && assets && assets.length != 0) {
@@ -279,7 +279,7 @@ function downloadLogos(rows, logoPath) {
             assetDict[logoKeyText] = asset; //catalog logo
             wFs.writeFileSync(
               `${logoPath}/assets.json`,
-              JSON.stringify(assetDict)
+              JSON.stringify(assetDict),
             );
             download(link, `${logoPath}/${fileName}`, brands.length);
           } catch (e) {
