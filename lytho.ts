@@ -31,6 +31,11 @@ export default function buildFlyer() {
   var total = 0;
 
   worker.onmessage = (e) => {
+    if (e.data?.type === 'status') {
+      $('.statusBar').text(e.data.message);
+      return;
+    }
+
     if (typeof e.data[0] === 'string' && e.data[0].match('error')) {
       showError(e.data[1]);
       worker.terminate();

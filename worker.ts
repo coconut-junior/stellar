@@ -29,7 +29,11 @@ var headers = {
   'x-api-key': apiKey,
 };
 
-function waitForLythoRequest(): Promise<void> {
+function reportStatus(message: string) {
+  postMessage({ type: 'status', message });
+}
+
+function waitForLythoRequest(statusMessage: string): Promise<void> {
   const wait = lythoRequestQueue.then(async () => {
     const delay = Math.max(
       0,
@@ -38,6 +42,7 @@ function waitForLythoRequest(): Promise<void> {
     if (delay > 0) {
       await new Promise((resolve) => setTimeout(resolve, delay));
     }
+    reportStatus(statusMessage);
     lastLythoRequestAt = Date.now();
   });
   lythoRequestQueue = wait;
@@ -59,12 +64,16 @@ onmessage = (e) => {
 
 var failed = 0;
 
-function download(url, dest, total, cb?) {
+function download(url, dest, total, cb?, assetLabel?) {
   let settings = { method: 'Get', cache: 'no-store', keepalive: false };
 
   if (!url) {
     postMessage([failed, total]);
     return;
+  }
+
+  if (assetLabel) {
+    reportStatus(`Downloading ${assetLabel}...`);
   }
 
   wFetch(url, settings).then((res) => {
@@ -93,8 +102,8 @@ function download(url, dest, total, cb?) {
   });
 }
 
-async function getTagId(tagName) {
-  await waitForLythoRequest();
+async function getTagId(tagName, assetLabel) {
+  await waitForLythoRequest(`Looking up ${assetLabel} in Lytho...`);
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
   var path = `/v1/tags/by-name`;
 
@@ -129,8 +138,8 @@ async function getTagId(tagName) {
   });
 }
 
-async function getAssetsByTags(tagIds) {
-  await waitForLythoRequest();
+async function getAssetsByTags(tagIds, assetLabel) {
+  await waitForLythoRequest(`Looking up ${assetLabel} in Lytho...`);
   var path = `/v1/assets?size=1&tagIds=${tagIds}`;
 
   let options = {
@@ -162,7 +171,7 @@ async function getAssetsByTags(tagIds) {
 }
 
 async function searchAssets(query) {
-  await waitForLythoRequest();
+  await waitForLythoRequest(`Searching Lytho for ${query}...`);
   query = query.replaceAll(' ', '%20').replaceAll('&', '').replaceAll('#', '');
 
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
@@ -191,26 +200,30 @@ async function searchAssets(query) {
   });
 }
 
+let logoTagIdPromise: Promise<any>;
+
 function findMatch(brand) {
   return new Promise(async (resolve, reject) => {
-    //replace with new function to get assets by tags
-    let logoTagId = await getTagId('logo');
-    let brandTagId = await getTagId(brand);
+    logoTagIdPromise ??= getTagId('logo', brand);
+    let logoTagId = await logoTagIdPromise;
+    let brandTagId = await getTagId(brand, brand);
 
-    getAssetsByTags(`${logoTagId},${brandTagId}`).then((assets: any[]) => {
-      if (brandTagId && assets && assets.length != 0) {
-        let id = assets[0].id;
-        let fileName = assets[0].fileName;
-        resolve(getAssetLink(id, fileName)); //return asset id
-      } else {
-        resolve(brand); //if match not found, return brand name instead
-      }
-    });
+    getAssetsByTags(`${logoTagId},${brandTagId}`, brand).then(
+      (assets: any[]) => {
+        if (brandTagId && assets && assets.length != 0) {
+          let id = assets[0].id;
+          let fileName = assets[0].fileName;
+          resolve(getAssetLink(id, fileName, brand)); //return asset id
+        } else {
+          resolve(brand); //if match not found, return brand name instead
+        }
+      },
+    );
   });
 }
 
-async function getAssetLink(assetID, fileName) {
-  await waitForLythoRequest();
+async function getAssetLink(assetID, fileName, assetLabel) {
+  await waitForLythoRequest(`Preparing ${assetLabel} download...`);
   var path = '/v1/assets/' + assetID + '/embeddedlink-original';
 
   let options = {
@@ -293,7 +306,13 @@ function downloadLogos(rows, logoPath) {
               `${logoPath}/assets.json`,
               JSON.stringify(assetDict),
             );
-            download(link, `${logoPath}/${fileName}`, brands.length);
+            download(
+              link,
+              `${logoPath}/${fileName}`,
+              brands.length,
+              undefined,
+              brand,
+            );
           } catch (e) {
             postMessage([failed, brands.length]);
           }
