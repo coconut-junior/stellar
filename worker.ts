@@ -148,7 +148,7 @@ async function getAssetsByTags(tagIds, assetLabel) {
     headers: headers,
   };
 
-  return new Promise((resolve, reject) => {
+  return new Promise<any[]>((resolve, reject) => {
     try {
       https.get(options, function (response) {
         response.on('data', function (data) {
@@ -201,25 +201,30 @@ async function searchAssets(query) {
 }
 
 let logoTagIdPromise: Promise<any>;
+const matchPromises = new Map<string, Promise<any>>();
 
 function findMatch(brand) {
-  return new Promise(async (resolve, reject) => {
+  let matchPromise = matchPromises.get(brand);
+  if (matchPromise) {
+    return matchPromise;
+  }
+
+  matchPromise = (async () => {
     logoTagIdPromise ??= getTagId('logo', brand);
     let logoTagId = await logoTagIdPromise;
     let brandTagId = await getTagId(brand, brand);
 
-    getAssetsByTags(`${logoTagId},${brandTagId}`, brand).then(
-      (assets: any[]) => {
-        if (brandTagId && assets && assets.length != 0) {
-          let id = assets[0].id;
-          let fileName = assets[0].fileName;
-          resolve(getAssetLink(id, fileName, brand)); //return asset id
-        } else {
-          resolve(brand); //if match not found, return brand name instead
-        }
-      },
-    );
-  });
+    let assets = await getAssetsByTags(`${logoTagId},${brandTagId}`, brand);
+    if (brandTagId && assets && assets.length != 0) {
+      let id = assets[0].id;
+      let fileName = assets[0].fileName;
+      return getAssetLink(id, fileName, brand);
+    }
+    return brand;
+  })();
+  matchPromises.set(brand, matchPromise);
+  matchPromise.catch(() => matchPromises.delete(brand));
+  return matchPromise;
 }
 
 async function getAssetLink(assetID, fileName, assetLabel) {
@@ -321,5 +326,9 @@ function downloadLogos(rows, logoPath) {
         }
       });
     }
+  }
+
+  if (brands.length === 0) {
+    reportStatus('Downloads complete.');
   }
 }

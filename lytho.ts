@@ -54,6 +54,7 @@ export default function buildFlyer() {
       ipcRenderer.send('setProgress', progress);
     } else if (progress == 1) {
       console.log('setting progress to complete');
+      $('.statusBar').text('Downloads complete.');
       ipcRenderer.send('setProgress', -1);
       $(`#buildFlyerButton`).css('background-color', 'var(--primary4)');
       $(`#buildFlyerButton`).css('background-size', `0px 60px`);
