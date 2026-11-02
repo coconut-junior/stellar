@@ -34,12 +34,12 @@ export default function buildFlyer() {
     if (typeof e.data[0] === 'string' && e.data[0].match('error')) {
       showError(e.data[1]);
       worker.terminate();
+      return;
     }
 
     ++finished;
-    let failed = e.data[0];
     total = e.data[1];
-    let progress = (finished + failed) / total;
+    let progress = finished / total;
 
     if (progress < 1) {
       $(`#buildFlyerButton`).css(

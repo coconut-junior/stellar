@@ -18,22 +18,31 @@ var apiKey: string = wFs.readFileSync(
   'utf8',
 );
 
-function timeout(ms) {
-  var start = new Date().getTime();
-  var end = start;
-  while (end < start + ms) {
-    end = new Date().getTime();
-  }
-}
-
 const requestOverloadMsg =
   'Looks like Lytho is overloaded at the moment! Please try again in a few minutes.';
-const cooldown = 200;
+const lythoRequestInterval = 150;
+let lastLythoRequestAt = 0;
+let lythoRequestQueue = Promise.resolve();
 
 const host = 'openapi.us-1.lytho.us';
 var headers = {
   'x-api-key': apiKey,
 };
+
+function waitForLythoRequest(): Promise<void> {
+  const wait = lythoRequestQueue.then(async () => {
+    const delay = Math.max(
+      0,
+      lastLythoRequestAt + lythoRequestInterval - Date.now(),
+    );
+    if (delay > 0) {
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+    lastLythoRequestAt = Date.now();
+  });
+  lythoRequestQueue = wait;
+  return wait;
+}
 
 onmessage = (e) => {
   if (e.data[0] == 'downloadFile') {
@@ -78,12 +87,14 @@ function download(url, dest, total, cb?) {
 
     file.on('error', function () {
       console.log('file write error');
+      ++failed;
+      postMessage([failed, total]);
     });
-    postMessage([failed, total]);
   });
 }
 
-function getTagId(tagName) {
+async function getTagId(tagName) {
+  await waitForLythoRequest();
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
   var path = `/v1/tags/by-name`;
 
@@ -118,7 +129,8 @@ function getTagId(tagName) {
   });
 }
 
-function getAssetsByTags(tagIds) {
+async function getAssetsByTags(tagIds) {
+  await waitForLythoRequest();
   var path = `/v1/assets?size=1&tagIds=${tagIds}`;
 
   let options = {
@@ -149,7 +161,8 @@ function getAssetsByTags(tagIds) {
   });
 }
 
-function searchAssets(query) {
+async function searchAssets(query) {
+  await waitForLythoRequest();
   query = query.replaceAll(' ', '%20').replaceAll('&', '').replaceAll('#', '');
 
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
@@ -182,9 +195,7 @@ function findMatch(brand) {
   return new Promise(async (resolve, reject) => {
     //replace with new function to get assets by tags
     let logoTagId = await getTagId('logo');
-    timeout(cooldown); //if we dont wait here, server will respond with "too many requests"
     let brandTagId = await getTagId(brand);
-    timeout(cooldown);
 
     getAssetsByTags(`${logoTagId},${brandTagId}`).then((assets: any[]) => {
       if (brandTagId && assets && assets.length != 0) {
@@ -198,7 +209,8 @@ function findMatch(brand) {
   });
 }
 
-function getAssetLink(assetID, fileName) {
+async function getAssetLink(assetID, fileName) {
+  await waitForLythoRequest();
   var path = '/v1/assets/' + assetID + '/embeddedlink-original';
 
   let options = {
