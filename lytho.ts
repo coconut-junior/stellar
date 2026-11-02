@@ -31,15 +31,20 @@ export default function buildFlyer() {
   var total = 0;
 
   worker.onmessage = (e) => {
+    if (e.data?.type === 'status') {
+      $('.statusBar').text(e.data.message);
+      return;
+    }
+
     if (typeof e.data[0] === 'string' && e.data[0].match('error')) {
       showError(e.data[1]);
       worker.terminate();
+      return;
     }
 
     ++finished;
-    let failed = e.data[0];
     total = e.data[1];
-    let progress = (finished + failed) / total;
+    let progress = finished / total;
 
     if (progress < 1) {
       $(`#buildFlyerButton`).css(
@@ -49,6 +54,7 @@ export default function buildFlyer() {
       ipcRenderer.send('setProgress', progress);
     } else if (progress == 1) {
       console.log('setting progress to complete');
+      $('.statusBar').text('Downloads complete.');
       ipcRenderer.send('setProgress', -1);
       $(`#buildFlyerButton`).css('background-color', 'var(--primary4)');
       $(`#buildFlyerButton`).css('background-size', `0px 60px`);

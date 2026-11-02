@@ -20,22 +20,36 @@ var apiKey: string = wFs.readFileSync(
   'utf8',
 );
 
-function timeout(ms: number) {
-  var start = new Date().getTime();
-  var end = start;
-  while (end < start + ms) {
-    end = new Date().getTime();
-  }
-}
-
 const requestOverloadMsg =
   'Looks like Lytho is overloaded at the moment! Please try again in a few minutes.';
-const cooldown = 50;
+const lythoRequestInterval = 150;
+let lastLythoRequestAt = 0;
+let lythoRequestQueue = Promise.resolve();
 
 const host = 'openapi.us-1.lytho.us';
 var headers = {
   'x-api-key': apiKey,
 };
+
+function reportStatus(message: string) {
+  postMessage({ type: 'status', message });
+}
+
+function waitForLythoRequest(statusMessage: string): Promise<void> {
+  const wait = lythoRequestQueue.then(async () => {
+    const delay = Math.max(
+      0,
+      lastLythoRequestAt + lythoRequestInterval - Date.now(),
+    );
+    if (delay > 0) {
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+    reportStatus(statusMessage);
+    lastLythoRequestAt = Date.now();
+  });
+  lythoRequestQueue = wait;
+  return wait;
+}
 
 onmessage = (e) => {
   if (e.data[0] == 'downloadFile') {
@@ -52,7 +66,7 @@ onmessage = (e) => {
 
 var failed = 0;
 
-function download(url: string, dest: string, total: number, cb?: any) {
+function download(url, dest, total, cb?, assetLabel?) {
   let settings = { method: 'Get', cache: 'no-store', keepalive: false };
 
   if (!url) {
@@ -60,7 +74,11 @@ function download(url: string, dest: string, total: number, cb?: any) {
     return;
   }
 
-  wFetch(url, settings).then((res: any) => {
+  if (assetLabel) {
+    reportStatus(`Downloading ${assetLabel}...`);
+  }
+
+  wFetch(url, settings).then((res) => {
     var file = wFs.createWriteStream(dest);
     res.body.pipe(file);
     file.on('finish', function () {
@@ -80,12 +98,14 @@ function download(url: string, dest: string, total: number, cb?: any) {
 
     file.on('error', function () {
       console.log('file write error');
+      ++failed;
+      postMessage([failed, total]);
     });
-    postMessage([failed, total]);
   });
 }
 
-function getTagId(tagName: string) {
+async function getTagId(tagName, assetLabel) {
+  await waitForLythoRequest(`Looking up ${assetLabel} in Lytho...`);
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
   var path = `/v1/tags/by-name`;
 
@@ -120,7 +140,8 @@ function getTagId(tagName: string) {
   });
 }
 
-function getAssetsByTags(tagIds: string) {
+async function getAssetsByTags(tagIds, assetLabel) {
+  await waitForLythoRequest(`Looking up ${assetLabel} in Lytho...`);
   var path = `/v1/assets?size=1&tagIds=${tagIds}`;
 
   let options = {
@@ -129,7 +150,7 @@ function getAssetsByTags(tagIds: string) {
     headers: headers,
   };
 
-  return new Promise((resolve, reject) => {
+  return new Promise<any[]>((resolve, reject) => {
     try {
       https.get(options, function (response: any) {
         response.on('data', function (data: any) {
@@ -151,7 +172,8 @@ function getAssetsByTags(tagIds: string) {
   });
 }
 
-function searchAssets(query: string) {
+async function searchAssets(query) {
+  await waitForLythoRequest(`Searching Lytho for ${query}...`);
   query = query.replaceAll(' ', '%20').replaceAll('&', '').replaceAll('#', '');
 
   var size = 1; //for now, keep size to 1, otherwise json parser will shit itself
@@ -180,28 +202,35 @@ function searchAssets(query: string) {
   });
 }
 
-function findMatch(brand: string) {
-  return new Promise(async (resolve, reject) => {
-    //replace with new function to get assets by tags
-    let logoTagId = await getTagId('logo');
-    timeout(100); //if we dont wait here, server will respond with "too many requests"
-    let brandTagId = await getTagId(brand);
-    timeout(100);
+let logoTagIdPromise: Promise<any>;
+const matchPromises = new Map<string, Promise<any>>();
 
-    getAssetsByTags(`${logoTagId},${brandTagId}`).then((response: unknown) => {
-      let assets = response as Asset[];
-      if (brandTagId && assets && assets.length != 0) {
-        let id = assets[0].id as string;
-        let fileName = assets[0].fileName as string;
-        resolve(getAssetLink(id, fileName)); //return asset id
-      } else {
-        resolve(brand); //if match not found, return brand name instead
-      }
-    });
-  });
+function findMatch(brand) {
+  let matchPromise = matchPromises.get(brand);
+  if (matchPromise) {
+    return matchPromise;
+  }
+
+  matchPromise = (async () => {
+    logoTagIdPromise ??= getTagId('logo', brand);
+    let logoTagId = await logoTagIdPromise;
+    let brandTagId = await getTagId(brand, brand);
+
+    let assets = await getAssetsByTags(`${logoTagId},${brandTagId}`, brand);
+    if (brandTagId && assets && assets.length != 0) {
+      let id = assets[0].id;
+      let fileName = assets[0].fileName;
+      return getAssetLink(id, fileName, brand);
+    }
+    return brand;
+  })();
+  matchPromises.set(brand, matchPromise);
+  matchPromise.catch(() => matchPromises.delete(brand));
+  return matchPromise;
 }
 
-function getAssetLink(assetID: string, fileName: string) {
+async function getAssetLink(assetID, fileName, assetLabel) {
+  await waitForLythoRequest(`Preparing ${assetLabel} download...`);
   var path = '/v1/assets/' + assetID + '/embeddedlink-original';
 
   let options = {
@@ -287,7 +316,13 @@ function downloadLogos(
               `${logoPath}/assets.json`,
               JSON.stringify(assetDict),
             );
-            download(link, `${logoPath}/${fileName}`, brands.length);
+            download(
+              link,
+              `${logoPath}/${fileName}`,
+              brands.length,
+              undefined,
+              brand,
+            );
           } catch (e) {
             postMessage([failed, brands.length]);
           }
@@ -296,5 +331,9 @@ function downloadLogos(
         }
       });
     }
+  }
+
+  if (brands.length === 0) {
+    reportStatus('Downloads complete.');
   }
 }

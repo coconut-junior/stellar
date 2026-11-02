@@ -1,17 +1,16 @@
-/**
- * The preload script runs before. It has access to web APIs
- * as well as Electron's renderer process modules and some
- * polyfilled Node.js functions.
- *
- * https://www.electronjs.org/docs/latest/tutorial/sandbox
- */
-window.addEventListener('DOMContentLoaded', () => {
-  const replaceText = (selector: any, text: string) => {
-    const element = document.getElementById(selector);
-    if (element) element.innerText = text;
-  };
+import { contextBridge, ipcRenderer } from 'electron';
 
-  for (const type of ['chrome', 'node', 'electron']) {
-    replaceText(`${type}-version`, process.versions[type] as string);
-  }
+contextBridge.exposeInMainWorld('electronAPI', {
+  sendMessage: (channel: string, data: unknown) => {
+    const validChannels = ['message-from-renderer'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
+  onMessage: (channel: string, callback: (...args: unknown[]) => void) => {
+    const validChannels = ['message-from-main'];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.on(channel, (_event, ...args) => callback(...args));
+    }
+  },
 });
