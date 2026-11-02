@@ -151,7 +151,7 @@ async function downloadDependencies() {
 
   $(`#buildFlyerInfo`).on('click', function (event) {
     alert(
-      `Build Flyer \n\n When prompted, select the Feature View spreadsheet that was exported from Badger. Then, wait for the logos to finish downloading. You will be prompted again to select the flyer dimensions.`
+      `Build Flyer \n\n When prompted, select the Feature View spreadsheet that was exported from Badger. Then, wait for the logos to finish downloading. You will be prompted again to select the flyer dimensions.`,
     );
   });
   $(`#buildFlyerButton`).on('click', function (event) {
@@ -191,9 +191,8 @@ var launch = function (button, fileName, url, args) {
     transformOrigin: 'center',
     scale: 1,
     onComplete: function () {
-      party.resolvableShapes[
-        'star'
-      ] = `<img height = "20px" width = "20px" src="images/star.png"/>`;
+      party.resolvableShapes['star'] =
+        `<img height = "20px" width = "20px" src="images/star.png"/>`;
       party.sparkles(
         //@ts-expect-error
         document.querySelector(button, {
@@ -203,7 +202,7 @@ var launch = function (button, fileName, url, args) {
           speed: 1000,
           lifetime: party.variation.range(0.5, 1),
           rotation: 0,
-        })
+        }),
       );
     },
   });
@@ -237,7 +236,7 @@ async function getDependencies() {
       switch (status) {
         case 403:
           showError(
-            'Error 403: Tried to reach the database, but the request was blocked.'
+            'Error 403: Tried to reach the database, but the request was blocked.',
           );
         case 404:
           showError("Error 404: Couldn't reach the database.");
@@ -251,7 +250,7 @@ async function getDependencies() {
     })
     .catch((err) => {
       showError(
-        'You are offline. Please connect to the internet to access all automations.'
+        'You are offline. Please connect to the internet to access all automations.',
       );
       $(`.statusBar`).html('You are offline.');
       $(`#automationTasks`).attr('status', 'offline');
@@ -271,7 +270,7 @@ function getScriptPathMac() {
     if (error) {
       console.log(`error: ${error.message}`);
       showError(
-        `Couldn't retrieve latest InDesign version. Please reinstall InDesign and try running the software again.`
+        `Couldn't retrieve latest InDesign version. Please reinstall InDesign and try running the software again.`,
       );
       return;
     }
@@ -286,7 +285,7 @@ function getScriptPathMac() {
     //convert to integer array
     for (let i = 0; i < versions.length; ++i) {
       let n = parseInt(
-        versions[i].split('Adobe')[1].replace(/^\D+/g, '').replaceAll(':', '')
+        versions[i].split('Adobe')[1].replace(/^\D+/g, '').replaceAll(':', ''),
       );
       //detect incomplete installation
       let IDAppPath = `/Applications/Adobe InDesign ${n}/Adobe InDesign ${n}.app`;
@@ -302,7 +301,7 @@ function getScriptPathMac() {
 
     if (max == 0) {
       alert(
-        'Cannot find any InDesign installations. Please install InDesign, then relaunch Stellar.'
+        'Cannot find any InDesign installations. Please install InDesign, then relaunch Stellar.',
       );
       quitApp();
     }
@@ -346,7 +345,7 @@ function getScriptPathWin() {
       console.log(scriptPath);
       getDependencies();
       Quickmarks.load(); //untested on windows
-    }
+    },
   );
 }
 
@@ -370,7 +369,7 @@ function runPy(fileName: string, args?: string) {
     }
 
     console.log('requirements installed, launching');
-    exec(runCmd, (error, stdout, stderr) => {
+    exec(runCmd, (error: string, stdout: string, stderr: string) => {
       console.log(runCmd);
       if (stdout) {
         console.log(stdout);
@@ -403,10 +402,10 @@ function runJSX(scriptName: string, arguments: string) {
       console.log(`error: ${error.message}`);
       if (error.message.includes('authorize')) {
         showError(
-          `Looks like you're missing automation permissions. Please allow Stellar to control InDesign by granting it permission in the Settings app on your Mac.`
+          `Looks like you're missing automation permissions. Please allow Stellar to control InDesign by granting it permission in the Settings app on your Mac.`,
         );
         window.open(
-          'https://support.apple.com/en-is/guide/mac-help/mchl07817563/mac'
+          'https://support.apple.com/en-is/guide/mac-help/mchl07817563/mac',
         );
       }
       return;

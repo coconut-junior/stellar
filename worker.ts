@@ -5,12 +5,14 @@ const { settings } = require('party-js');
 const https = require('https');
 const wPath = require('path');
 const { hostname } = require('os');
-const decompress = require('decompress');
+const decompress = require('@xhmikosr/decompress');
 
-var assetDict = new Object();
+var assetDict: Record<string, Asset> = {};
 
 interface Asset {
-  logo: string;
+  logo?: string;
+  id?: string;
+  fileName?: string;
 }
 
 var apiKey: string = wFs.readFileSync(
@@ -117,8 +119,8 @@ async function getTagId(tagName, assetLabel) {
   return new Promise((resolve, reject) => {
     var postData = JSON.stringify({ name: tagName });
     try {
-      var req = https.request(options, function (response) {
-        response.on('data', function (data) {
+      var req = https.request(options, function (response: any) {
+        response.on('data', function (data: any) {
           let content = JSON.parse(data);
           if (JSON.stringify(content).match('Too Many Requests')) {
             console.log('Too many requests!');
@@ -150,8 +152,8 @@ async function getAssetsByTags(tagIds, assetLabel) {
 
   return new Promise<any[]>((resolve, reject) => {
     try {
-      https.get(options, function (response) {
-        response.on('data', function (data) {
+      https.get(options, function (response: any) {
+        response.on('data', function (data: any) {
           let json = JSON.parse(data);
           if (JSON.stringify(json).match('Too Many Requests')) {
             console.log('Too many requests!');
@@ -185,8 +187,8 @@ async function searchAssets(query) {
   };
 
   return new Promise((resolve, reject) => {
-    https.get(options, function (response) {
-      response.on('data', function (data) {
+    https.get(options, function (response: any) {
+      response.on('data', function (data: any) {
         try {
           let json = JSON.parse(data);
           assets = json.content;
@@ -239,8 +241,8 @@ async function getAssetLink(assetID, fileName, assetLabel) {
   };
 
   return new Promise((resolve, reject) => {
-    const req = https.request(options, function (response) {
-      response.on('data', function (data) {
+    const req = https.request(options, function (response: any) {
+      response.on('data', function (data: any) {
         let json = JSON.parse(data);
         let link = json.link;
         if (link) {
@@ -257,25 +259,28 @@ async function getAssetLink(assetID, fileName, assetLabel) {
   });
 }
 
-function formatForURL(text) {
+function formatForURL(text: string) {
   return text
     .trim()
-    .replaceAll("',")
+    .replaceAll(`'`, ``)
     .replaceAll(/\//g, ' ')
     .replaceAll(' ', ' ')
     .replace(/[\r\n]+/g, ' ');
 }
 
-function cleanString(str) {
+function cleanString(str: string) {
   return str
     .split('')
     .filter((char) => char.toLowerCase() !== char.toUpperCase())
     .join('');
 }
 
-function downloadLogos(rows, logoPath) {
+function downloadLogos(
+  rows: Array<{ [key: string]: string }>,
+  logoPath: string,
+) {
   assetDict = {};
-  var brands = []; //valid logos only
+  var brands: string[] = []; //valid logos only
 
   //parse excel sheet
   for (let i = 0; i < rows.length; ++i) {
