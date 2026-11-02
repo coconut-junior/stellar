@@ -1,24 +1,8 @@
 import { existsSync, mkdirSync } from 'fs';
 
-type Quickmark = {
-  qmID: string;
-  note: string;
-  color: string;
-  path: string;
-  id: string;
-  createTime: number;
-  position?: string;
-  x?: string;
-  y?: string;
-};
-
 const interact = require('interactjs');
-var quickmarks: Quickmark[] = [];
+var quickmarks = [];
 var colors = ['#FFB800', '#B0FF8B', '#CC8BFF', '#FFA5A5', '#EAE8E3'];
-
-const quickmarkListParent: HTMLElement =
-  (document.getElementById('quickmarkList')?.parentElement as HTMLElement) ||
-  document.body;
 
 interact('.draggable')
   .draggable({
@@ -36,7 +20,7 @@ interact('.draggable')
         relativePoints: [{ x: 0, y: 0 }],
       }),
       interact.modifiers.restrict({
-        restriction: quickmarkListParent,
+        restriction: document.getElementById('quickmarkList').parentNode,
         elementRect: { top: 0, left: 0, bottom: 1, right: 1 },
         endOnly: true,
       }),
@@ -51,7 +35,7 @@ interact('.draggable')
   })
   .styleCursor(false);
 
-function wait(ms: number) {
+function wait(ms) {
   var start = new Date().getTime();
   var end = start;
   while (end < start + ms) {
@@ -73,7 +57,7 @@ function savePositions() {
   }
 }
 
-function dragMoveListener(event: any) {
+function dragMoveListener(event) {
   var target = event.target;
   let quickmarks = document.querySelectorAll('.quickmark');
   quickmarks.forEach((qm) => {
@@ -107,7 +91,7 @@ function load() {
   }
 
   try {
-    fs.readdir(dir, (_err: any, files: string[]) => {
+    fs.readdir(dir, (err, files) => {
       for (let i = 0; i < files.length; ++i) {
         let file = files[i];
         if (file.endsWith('.json')) {
@@ -139,8 +123,8 @@ function load() {
         $(`#quickmarkList`).append(html);
         if (qm.position != undefined) {
           $(`#${qm.qmID}`).css('transform', qm.position);
-          $(`#${qm.qmID}`).attr('data-x', qm.x ?? 0);
-          $(`#${qm.qmID}`).attr('data-y', qm.y ?? 0);
+          $(`#${qm.qmID}`).attr('data-x', qm.x);
+          $(`#${qm.qmID}`).attr('data-y', qm.y);
         }
       }
 
@@ -159,11 +143,20 @@ function load() {
   }
 }
 
-function getRandomInt(min: number, max: number) {
+function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+type Quickmark = {
+  qmID: string;
+  note: string;
+  color: string;
+  path: string;
+  id: string;
+  createTime: number;
+};
 
 function create() {
   let quickmark: Quickmark = {
@@ -177,7 +170,7 @@ function create() {
   let quickmarkID: string = generateRandomId();
 
   quickmark.qmID = quickmarkID;
-  quickmark.note = $(`#quickmarkNote`).val() as string;
+  quickmark.note = $(`#quickmarkNote`).val().toString();
   quickmark.color = colors[getRandomInt(0, colors.length - 1)];
   quickmark.path = '';
   quickmark.id = '';
@@ -201,7 +194,7 @@ function create() {
   }
 }
 
-function remove(qmID: string) {
+function remove(qmID) {
   let f = path.join(scriptPath, `quickmarks/${qmID}.json`);
   if (fs.existsSync(f)) {
     fs.rmSync(f);
@@ -209,7 +202,7 @@ function remove(qmID: string) {
   }
 }
 
-function open(qmID: string) {
+function open(qmID) {
   runJSX('open_quickmark.jsx', `{"${qmID}"}`);
 }
 
