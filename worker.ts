@@ -28,7 +28,7 @@ function timeout(ms) {
 
 const requestOverloadMsg =
   'Looks like Lytho is overloaded at the moment! Please try again in a few minutes.';
-const cooldown = 100;
+const cooldown = 200;
 
 const host = 'openapi.us-1.lytho.us';
 var headers = {
